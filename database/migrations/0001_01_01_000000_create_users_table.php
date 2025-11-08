@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('contact_number')->nullable();
             $table->text('address')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->rememberToken();
             $table->timestamps(); // created_at, updated_at
         });
 

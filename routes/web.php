@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use Hashids\Hashids;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,4 +30,7 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+    Volt::route('subscribers/subscribers', 'subscribers.subscribers')->name('subscribers');
+    Volt::route('subscribers/add-subscriber', 'subscribers.addsubscriber')->name('subscribers.add');
+    Volt::route('subscribers/edit/{hash}', 'subscribers.editsubscriber')->name('subscribers.edit');
 });

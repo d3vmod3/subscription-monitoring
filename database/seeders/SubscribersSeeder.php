@@ -18,6 +18,7 @@ class SubscribersSeeder extends Seeder
 
         for ($i = 0; $i < 50; $i++) {
             DB::table('subscribers')->insert([
+                'email' => $faker->unique()->safeEmail,
                 'first_name' => $faker->firstName,
                 'middle_name' => $faker->optional()->firstName,
                 'last_name' => $faker->lastName,
