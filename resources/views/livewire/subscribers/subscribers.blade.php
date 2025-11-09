@@ -39,7 +39,7 @@
                             {{ $subscriber->is_active ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
-                    <td class="px-4 py-2 border">
+                    <td class="px-4 py-2 border text-center">
                         <flux:link href="{{ route('subscribers.edit', ['hash' => $hashids->encode($subscriber->id)]) }}">Edit</flux:link>
                     </td>
                 </tr>

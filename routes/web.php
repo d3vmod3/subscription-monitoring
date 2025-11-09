@@ -33,4 +33,14 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('subscribers/subscribers', 'subscribers.subscribers')->name('subscribers');
     Volt::route('subscribers/add-subscriber', 'subscribers.addsubscriber')->name('subscribers.add');
     Volt::route('subscribers/edit/{hash}', 'subscribers.editsubscriber')->name('subscribers.edit');
+
+    // Payment Methods Routes
+    Volt::route('payment-methods/payment-methods', 'payment-methods.payment-methods')->name('payment-methods');
+    Volt::route('payment-methods/add-payment-method', 'payment-methods.add-payment-method')->name('payment-methods.add');
+    Volt::route('payment-method/edit/{hash}', 'payment-methods.edit-payment-method')->name('payment-methods.edit');
+
+    // Payment Methods Routes
+    Volt::route('sectors/sectors', 'sectors.sectors')->name('sectors');
+    Volt::route('sectors/add-sector', 'sectors.add-sector')->name('sectors.add');
+    Volt::route('sectors/edit/{hash}', 'sectors.edit-sector')->name('sectors.edit');
 });
