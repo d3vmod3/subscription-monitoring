@@ -1,4 +1,3 @@
-
 <div class="max-w-3xl mx-auto p-6 bg-white dark:bg-zinc-700 rounded-lg shadow dark:shadow-lg">
     @if (session()->has('message'))
         <div class="mb-4 text-green-600 font-medium">
@@ -6,7 +5,7 @@
         </div>
     @endif
 
-    <h2 class="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Edit Subscriber</h2>
+    <h2 class="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Add Subscriber</h2>
 
     <form wire:submit.prevent="update" class="space-y-4">
         {{-- First & Middle Name --}}
@@ -44,7 +43,7 @@
         {{-- Birthdate & Gender --}}
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
-                <label class="block font-medium text-zinc-900 dark:text-zinc-100">Birthdate {{$birthdate}}</label>
+                <label class="block font-medium text-zinc-900 dark:text-zinc-100">Birthdate</label>
                 <input type="date" wire:model="birthdate" 
                     class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
                 @error('birthdate') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
@@ -69,23 +68,38 @@
             @error('contact_number') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 
-        {{-- Address --}}
+        {{-- Address line 1--}}
         <div>
-            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address</label>
-            <textarea wire:model="address" 
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address Line 1</label>
+            <textarea wire:model="address_line_1" 
                 class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"></textarea>
-            @error('address') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+            @error('address_line_1') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+        </div>
+        {{-- Address line 2--}}
+        <div>
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address Line 2</label>
+            <textarea wire:model="address_line_2" 
+                class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"></textarea>
+            @error('address_line_2') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+        </div>
+
+        {{-- Location Dropdowns --}}
+        <div class="mt-4">
+            <livewire:address.location-dropdowns 
+                wire:model.live:region="region_id" 
+                wire:model:province="province_id" 
+                wire:model:municipality="municipality_id" 
+                wire:model:barangay="barangay_id" />
         </div>
 
         {{-- Status --}}
-        <div>
-            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Status</label>
-            <select wire:model="status" 
-                class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
-            @error('status') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+        <div class="flex justify-end mt-4">
+            <flux:field variant="inline">
+                <flux:label>Active</flux:label>
+                <flux:switch wire:model="is_active" />
+                <flux:error name="is_active" />
+            </flux:field>
+            @error('is_active') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 
         {{-- Buttons --}}
@@ -100,6 +114,6 @@
                 Save Changes
             </button>
         </div>
+        
     </form>
-    <livewire:toast />
 </div>

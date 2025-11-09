@@ -20,8 +20,12 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->string('contact_number')->nullable();
-            $table->string('address_line_1');
+            $table->string('address_line_1')->nullable();
             $table->string('address_line_2')->nullable();
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->unsignedBigInteger('province_id')->nullable();
+            $table->unsignedBigInteger('municipality_id')->nullable();
+            $table->unsignedBigInteger('barangay_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

@@ -1,9 +1,9 @@
+@php use Hashids\Hashids; $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length')); @endphp
+
 <div class="p-4">
     <div class="flex justify-between mb-4">
-        <input type="text" wire:model.live="search" placeholder="Search subscribers..." 
-            class="border rounded px-3 py-2 w-1/3">
-        <flux:link class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" style="text-decoration: none;" href="{{ route('subscribers.add') }}">Add Subscriber</flux:link>
-         
+        <input type="text" wire:model.live="search" placeholder="Search subscribers..." class="border rounded px-3 py-2 w-1/3">
+        <flux:link class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" href="{{ route('subscribers.add') }}" style="text-decoration: none;">Add Subscriber</flux:link>
     </div>
 
     <table class="w-full border border-gray-200">
@@ -11,32 +11,23 @@
             <tr>
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('first_name')">
                     Name
-                    @if($sortField == 'first_name')
-                        @if($sortDirection == 'asc') ▲ @else ▼ @endif
-                    @endif
+                    @if($sortField == 'first_name') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                 </th>
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('email')">
                     Email
-                    @if($sortField == 'email')
-                        @if($sortDirection == 'asc') ▲ @else ▼ @endif
-                    @endif
+                    @if($sortField == 'email') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                 </th>
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('contact_number')">
                     Contact
-                    @if($sortField == 'contact_number')
-                        @if($sortDirection == 'asc') ▲ @else ▼ @endif
-                    @endif
+                    @if($sortField == 'contact_number') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                 </th>
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('status')">
                     Status
-                    @if($sortField == 'status')
-                        @if($sortDirection == 'asc') ▲ @else ▼ @endif
-                    @endif
+                    @if($sortField == 'status') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                 </th>
                 <th class="px-4 py-2 border">Actions</th>
             </tr>
         </thead>
-
         <tbody>
             @forelse ($subscribers as $subscriber)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
@@ -44,14 +35,12 @@
                     <td class="px-4 py-2 border">{{ $subscriber->email ?? '-' }}</td>
                     <td class="px-4 py-2 border">{{ $subscriber->contact_number ?? '-' }}</td>
                     <td class="px-4 py-2 border">
-                        <span class="{{ $subscriber->status == 'active' ? 'text-green-600' : 'text-red-600' }}">
-                            {{ ucfirst($subscriber->status) }}
+                        <span class="{{ $subscriber->is_active ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $subscriber->is_active ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
                     <td class="px-4 py-2 border">
-                        <flux:link href="{{ route('subscribers.edit', ['hash' => Hashids::encode($subscriber->id)]) }}">
-                            Edit
-                        </flux:link>
+                        <flux:link href="{{ route('subscribers.edit', ['hash' => $hashids->encode($subscriber->id)]) }}">Edit</flux:link>
                     </td>
                 </tr>
             @empty

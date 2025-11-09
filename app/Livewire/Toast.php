@@ -9,7 +9,7 @@ class Toast extends Component
 {
     public $show = false;
     public $message = '';
-    public $type = 'success';
+    public $type = null;
     public $duration = 3000;
 
     #[On('show-toast')]
@@ -19,11 +19,25 @@ class Toast extends Component
         $this->type = $data['type'];
         $this->duration = $data['duration'];
         $this->show = true;
+        // dd($this->duration);
+        $this->dispatch('toast-hide', ['duration' => $this->duration]);
+        
     }
 
-    public function hide()
+    #[On('toast-hide')]
+    public function hide(array $data)
+    {
+        sleep($this->duration / 1000);
+        $duration = $data['duration'] ?? 3000;
+        $this->dispatch('hide-toast-complete');
+    }
+
+    #[On('hide-toast-complete')]
+    public function hideComplete()
     {
         $this->show = false;
+        $this->message = '';
+        
     }
 
     public function render()

@@ -21,8 +21,13 @@ class Subscriber extends Model
         'birthdate',
         'gender',
         'contact_number',
-        'address',
-        'status',
+        'address_line_1',
+        'address_line_2',
+        'region_id',
+        'province_id',
+        'municipality_id',
+        'barangay_id',
+        'is_active', // previously 'status', changed to match migration
     ];
 
     // Optional: cast fields
