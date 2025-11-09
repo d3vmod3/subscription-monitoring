@@ -13,12 +13,18 @@ class PaymentMethodsSeeder extends Seeder
      */
     public function run()
     {
-        $methods = ['Cash', 'GCash', 'BDO', 'BPI', 'Maya'];
+        $methods = [
+            'Cash',
+            'Gcash',
+            'BDO',
+            'BPI',
+            'Maya',
+        ];
 
         foreach ($methods as $method) {
             DB::table('payment_methods')->insert([
                 'name' => $method,
-                'description' => $method.' payment',
+                'description' => $method . ' payment method',
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),

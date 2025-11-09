@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plans', function (Blueprint $table) {
+        Schema::create('sectors', function (Blueprint $table) {
             $table->id();
-            $table->string('plan_name');
-            $table->text('plan_description')->nullable();
-            $table->enum('subscription_interval', ['weekly', 'monthly', 'yearly']);
-            $table->decimal('price', 10, 2);
-            $table->boolean('is_active')->default(true);
+            $table->string('sector_name')->unique();
             $table->timestamps();
         });
     }

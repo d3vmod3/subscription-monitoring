@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscriber_id')->constrained('subscribers')->onDelete('cascade');
-            $table->foreignId('plan_id')->constrained('plans')->onDelete('cascade');
+            $table->foreignId('subscriber_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('sector_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('mikrotik_name')->unique();
             $table->date('start_date');
-            $table->date('end_date')->nullable();
-            $table->enum('status', ['active', 'expired', 'cancelled'])->default('active');
+            $table->date('due_date');
+            $table->enum('status', ['active', 'inactive', 'disconnected'])->default('inactive');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('subscriptions');
     }
 };

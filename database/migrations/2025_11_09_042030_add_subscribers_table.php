@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('subscribers', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->unique();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->date('birthdate')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->string('contact_number')->nullable();
-            $table->text('address')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->timestamps(); // created_at & updated_at
+            $table->string('address_line_1');
+            $table->string('address_line_2')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
         });
     }
 
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+        //
     }
 };

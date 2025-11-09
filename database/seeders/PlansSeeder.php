@@ -14,19 +14,23 @@ class PlansSeeder extends Seeder
     public function run()
     {
         $plans = [
-            ['plan_name' => '20Mbps', 'plan_description' => 'Basic 20Mbps internet', 'subscription_interval' => 'monthly', 'price' => 499],
-            ['plan_name' => '40Mbps', 'plan_description' => 'Standard 40Mbps internet', 'subscription_interval' => 'monthly', 'price' => 699],
-            ['plan_name' => '60Mbps', 'plan_description' => 'Fast 60Mbps internet', 'subscription_interval' => 'monthly', 'price' => 899],
-            ['plan_name' => '80Mbps', 'plan_description' => 'Ultra 80Mbps internet', 'subscription_interval' => 'monthly', 'price' => 1199],
-            ['plan_name' => '100Mbps', 'plan_description' => 'Premium 100Mbps internet', 'subscription_interval' => 'monthly', 'price' => 1499],
+            ['20 Mbps', 'Basic plan suitable for light usage', 'monthly', 499.00],
+            ['40 Mbps', 'Standard plan for home users', 'monthly', 699.00],
+            ['60 Mbps', 'Intermediate plan for multiple devices', 'monthly', 999.00],
+            ['80 Mbps', 'High-speed plan for small offices', 'monthly', 1299.00],
+            ['100 Mbps', 'Premium plan for heavy use', 'monthly', 1599.00],
         ];
 
         foreach ($plans as $plan) {
-            DB::table('plans')->insert(array_merge($plan, [
+            DB::table('plans')->insert([
+                'plan_name' => $plan[0],
+                'plan_description' => $plan[1],
+                'subscription_interval' => $plan[2],
+                'price' => $plan[3],
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]));
+            ]);
         }
     }
 }

@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained('subscriptions')->onDelete('cascade');
-            $table->foreignId('payment_method_id')->constrained('payment_methods')->onDelete('restrict');
+            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('payment_method_id')->constrained()->cascadeOnDelete();
             $table->string('reference_number')->nullable();
-            $table->decimal('amount_paid', 10, 2);
             $table->dateTime('paid_at');
+            $table->decimal('amount', 10, 2);
+            $table->enum('payment_category', ['advanced payment', 'monthly bill']);
+            $table->enum('is_approved', ['pending', 'approved'])->default('pending');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('payments');
     }
 };
