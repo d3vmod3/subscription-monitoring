@@ -22,7 +22,7 @@ class EditSubscriber extends Component
     public $province_id;
     public $municipality_id;
     public $barangay_id;
-    public $is_active;
+    public $is_active=false;
 
     protected $listeners = [
         'showToast' => 'showToast',
@@ -77,7 +77,7 @@ class EditSubscriber extends Component
         $this->province_id = $this->subscriber->province_id;
         $this->municipality_id = $this->subscriber->municipality_id;
         $this->barangay_id = $this->subscriber->barangay_id;
-        $this->is_active = $this->subscriber->is_active;
+        $this->is_active = (bool) $this->subscriber->is_active;
     }
 
     public function update()
@@ -98,7 +98,7 @@ class EditSubscriber extends Component
             'barangay_id' => 'nullable|integer',
             'is_active' => 'required|boolean',
         ]);
-
+        // dd($this->barangay_id);
         $this->subscriber->update([
             'first_name' => $this->first_name,
             'middle_name' => $this->middle_name,

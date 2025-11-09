@@ -87,9 +87,9 @@
         <div class="mt-4">
             <livewire:address.location-dropdowns 
                 wire:model.live:region="region_id" 
-                wire:model:province="province_id" 
-                wire:model:municipality="municipality_id" 
-                wire:model:barangay="barangay_id" />
+                wire:model.live:province="province_id" 
+                wire:model.live:municipality="municipality_id" 
+                wire:model.live:barangay="barangay_id" />
         </div>
 
         {{-- Status --}}

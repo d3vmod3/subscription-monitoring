@@ -41,7 +41,7 @@
     <!-- Barangay -->
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Barangay</label>
-        <select wire:model="selectedBarangay"
+        <select wire:model.live="selectedBarangay"
             class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
             @if(!$barangays || $barangays->isEmpty()) disabled @endif>
             <option value="">Select Barangay</option>

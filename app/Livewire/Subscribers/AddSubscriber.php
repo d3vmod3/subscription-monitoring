@@ -96,7 +96,7 @@ class AddSubscriber extends Component
         // Redirect to edit page (if using hashids, inject or instantiate $hashids)
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $hash = $hashids->encode($subscriber->id);
-        $this->dispatchBrowserEvent('show-toast', [
+        $this->dispatch('show-toast', [
             'message' => 'Subscriber added successfully!',
             'type' => 'success',
             'duration' => 3000,
