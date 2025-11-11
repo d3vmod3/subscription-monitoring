@@ -25,20 +25,22 @@ class AddPaymentMethod extends Component
         $paymentMethod = PaymentMethod::create([
             'name' => $this->name,
             'description' => $this->description,
-            'is_active' => $this->is_active,
+            'is_active' => $this->abstract,
         ]);
 
         // Encode ID using Hashids
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $hash = $hashids->encode($paymentMethod->id);
+        $this->dispatch('method-added');
 
+        $this->reset(['name', 'description','is_active']);
         $this->dispatch('show-toast', [
             'message' => 'Payment method added successfully!',
             'type' => 'success',
             'duration' => 3000,
         ]);
 
-        return redirect()->route('payment-methods.edit', ['hash' => $hash]);
+        // return redirect()->route('payment-methods.edit', ['hash' => $hash]);
     }
 
     public function render()

@@ -1,39 +1,37 @@
 <?php
 
-namespace App\Livewire\Sectors;
+namespace App\Livewire\PassiveOpticalNetworks;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Sector;
+use App\Models\PassiveOpticalNetwork;
+use Livewire\Attributes\Url;
 use Hashids\Hashids;
 
-class Sectors extends Component
+class PassiveOpticalNetworks extends Component
 {
     use WithPagination;
 
-    public $search = '';
-    public $sortField = 'created_at';
-    public $sortDirection = 'asc';
+    // ✅ URL search param binding (optional)
+    #[Url(as: 'search')]
+    public ?string $search = '';
 
-    protected $listeners = [
-        'sector-added' => '$refresh',
-        'sector-updated' => '$refresh',
-        'sector-deleted' => '$refresh',
-    ];
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
 
     protected $paginationTheme = 'tailwind';
 
-    /**
-     * Reset pagination when search changes
-     */
+    protected $listeners = [
+        'pon-added' => '$refresh',
+    ];
+
+    // Reset pagination when search changes
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    /**
-     * Sort table by a given field
-     */
+    // Sorting handler
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -44,30 +42,26 @@ class Sectors extends Component
         }
     }
 
-    /**
-     * Render sectors list
-     */
     public function render()
     {
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
-        $sectors = Sector::query()
+        $pons = PassiveOpticalNetwork::query()
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('description', 'like', '%' . $this->search . '%');
+                    $q->where('name', 'like', "%{$this->search}%")
+                      ->orWhere('description', 'like', "%{$this->search}%");
                 });
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
-        // Encode IDs for frontend routes
-        foreach ($sectors as $sector) {
-            $sector->hash = $hashids->encode($sector->id);
+        foreach ($pons as $pon) {
+            $pon->hash = $hashids->encode($pon->id);
         }
 
-        return view('livewire.sectors.sectors', [
-            'sectors' => $sectors,
+        return view('livewire.passive-optical-networks.passive-optical-networks', [
+            'pons' => $pons,
         ]);
     }
 }

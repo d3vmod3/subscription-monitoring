@@ -3,14 +3,14 @@
 <div class="p-4">
     <div class="flex justify-between mb-4">
         <input type="text" wire:model.live="search" placeholder="Search payment methods..." class="border rounded px-3 py-2 w-1/3">
-
-        <flux:link 
-            class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" 
-            href="{{ route('payment-methods.add') }}" 
-            style="text-decoration: none;"
-        >
-            Add Payment Method
-        </flux:link>
+        <div>
+            <flux:modal.trigger name="add-pon">
+                <flux:button>Add Payment Method</flux:button>
+            </flux:modal.trigger>
+            <flux:modal name="add-pon" class="md:w-96">
+                <livewire:payment-methods.add-payment-method/>
+            </flux:modal>
+        </div>
     </div>
 
     <table class="w-full border border-gray-200">

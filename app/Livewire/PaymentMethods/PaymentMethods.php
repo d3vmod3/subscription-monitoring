@@ -18,7 +18,9 @@ class PaymentMethods extends Component
     public $sortDirection = 'desc';     // default sort direction
 
     protected $paginationTheme = 'tailwind';
-
+    protected $listeners = [
+        'pon-added' => '$refresh',
+    ];
     // Reset pagination when search updates
     public function updatingSearch()
     {

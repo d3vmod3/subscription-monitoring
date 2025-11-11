@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire\Sectors;
+namespace App\Livewire\PassiveOpticalNetworks;
 
 use Livewire\Component;
-use App\Models\Sector;
+use App\Models\PassiveOpticalNetwork;
 use Hashids\Hashids;
 
-class EditSector extends Component
+class EditPassiveOpticalNetwork extends Component
 {
-    public $sectorId;
+    public $ponId;
     public $name;
     public $description;
     public $is_active;
@@ -16,7 +16,7 @@ class EditSector extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:sectors,name,' . $this->sectorId,
+            'name' => 'required|string|max:255|unique:pons,name,' . $this->ponId,
             'description' => 'nullable|string|max:500',
         ];
     }
@@ -26,29 +26,29 @@ class EditSector extends Component
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $decoded = $hashids->decode($hash);
 
-        abort_if(empty($decoded), 404, 'Invalid Sector');
+        abort_if(empty($decoded), 404, 'Invalid PON');
 
-        $this->sectorId = $decoded[0];
+        $this->ponId = $decoded[0];
 
-        $sector = Sector::findOrFail($this->sectorId);
-        $this->name = $sector->name;
-        $this->description = $sector->description;
-        $this->is_active = (bool) $sector->is_active;
+        $pon = PassiveOpticalNetwork::findOrFail($this->ponId);
+        $this->name = $pon->name;
+        $this->description = $pon->description;
+        $this->is_active = (bool) $pon->is_active;
     }
 
     public function save()
     {
         $this->validate();
 
-        $sector = Sector::findOrFail($this->sectorId);
-        $sector->update([
+        $pon = PassiveOpticalNetwork::findOrFail($this->ponId);
+        $pon->update([
             'name' => $this->name,
             'description' => $this->description,
             'is_active' => $this->is_active,
         ]);
 
         $this->dispatch('show-toast', [
-            'message' => 'Sector updated successfully!',
+            'message' => 'PON updated successfully!',
             'type' => 'success',
             'duration' => 3000,
         ]);
@@ -56,6 +56,6 @@ class EditSector extends Component
 
     public function render()
     {
-        return view('livewire.sectors.edit-sector');
+        return view('livewire.passive-optical-networks.edit-passive-optical-network');
     }
 }

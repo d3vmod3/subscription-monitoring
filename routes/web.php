@@ -39,8 +39,13 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('payment-methods/add-payment-method', 'payment-methods.add-payment-method')->name('payment-methods.add');
     Volt::route('payment-method/edit/{hash}', 'payment-methods.edit-payment-method')->name('payment-methods.edit');
 
-    // Payment Methods Routes
+    // Sectors Routes
     Volt::route('sectors/sectors', 'sectors.sectors')->name('sectors');
-    Volt::route('sectors/add-sector', 'sectors.add-sector')->name('sectors.add');
-    Volt::route('sectors/edit/{hash}', 'sectors.edit-sector')->name('sectors.edit');
+    // Volt::route('sectors/add-sector', 'sectors.add-sector')->name('sector.add');
+    Volt::route('sectors/edit/{hash}', 'sectors.edit-sector')->name('sector.edit');
+
+    // PONs Routes
+    Volt::route('passive-optical-networks/pons', 'passive-optical-networks.passive-optical-networks')->name('pons');
+    // Volt::route('passive-optical-networks/add-sector', 'passive-optical-networks.add-passive-optical-networks')->name('pon.add');
+    Volt::route('passive-optical-networks/edit/{hash}', 'passive-optical-networks.edit-passive-optical-network')->name('pon.edit');
 });

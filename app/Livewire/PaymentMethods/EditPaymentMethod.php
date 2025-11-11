@@ -37,7 +37,7 @@ class EditPaymentMethod extends Component
         'is_active' => 'boolean',
     ];
 
-    public function update()
+    public function save()
     {
         $this->validate();
 

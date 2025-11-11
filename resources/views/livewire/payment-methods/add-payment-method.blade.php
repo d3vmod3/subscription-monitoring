@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto p-6 bg-white dark:bg-zinc-700 rounded-lg shadow dark:shadow-lg">
+<div class="space-y-6">
     @if (session()->has('message'))
         <div class="mb-4 text-green-600 font-medium">
             {{ session('message') }}
@@ -35,12 +35,7 @@
         </div>
 
         {{-- Buttons --}}
-        <div class="flex flex-col md:flex-row justify-between mt-4 gap-4">
-            <flux:link class="border flex justify-center rounded-xl p-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 dark:hover:text-white transition-colors duration-150"
-                href="{{ route('payment-methods') }}" style="text-decoration: none;">
-                Back
-            </flux:link>
-
+        <div class="flex flex-col md:flex-row justify-end mt-4 gap-4">
             <button type="submit"
                 class="bg-zinc-500 text-white px-4 py-2 cursor-pointer rounded hover:bg-zinc-600 dark:hover:bg-zinc-700 transition-colors">
                 Save Payment Method

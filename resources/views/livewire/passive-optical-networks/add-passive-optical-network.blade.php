@@ -1,25 +1,21 @@
 <div class="space-y-6">
-    <h2 class="text-lg font-semibold">Add New Sector</h2>
-
-    {{-- Name --}}
+    <h2 class="text-lg font-semibold mb-4">Add New PON</h2>
     <div>
         <label class="block text-sm font-medium mb-1">Name</label>
         <input 
             type="text" 
-            wire:model.defer="name" 
+            wire:model="name" 
             class="w-full border rounded px-3 py-2"
-            placeholder="Enter sector name"
+            placeholder="Enter PON name"
         >
         @error('name') 
             <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
         @enderror
     </div>
-
-    {{-- Description --}}
     <div>
         <label class="block text-sm font-medium mb-1">Description</label>
         <textarea 
-            wire:model.defer="description" 
+            wire:model="description" 
             class="w-full border rounded px-3 py-2" 
             rows="3"
             placeholder="Optional description..."
@@ -28,17 +24,15 @@
             <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
         @enderror
     </div>
-
     {{-- Status --}}
-    <div class="flex items-center justify-end mt-2">
-        <flux:switch wire:model.defer="is_active" />
-        <span class="ml-2 text-sm font-medium">Active</span>
-        @error('is_active') 
-            <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
-        @enderror
+    <div class="flex justify-end mt-4">
+        <flux:field variant="inline">
+            <flux:label>Active</flux:label>
+            <flux:switch wire:model="is_active" />
+            <flux:error name="is_active" />
+        </flux:field>
+        @error('is_active') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
     </div>
-
-    {{-- Buttons --}}
     <div class="flex justify-end space-x-2 mt-4">
         <flux:button wire:click="save" variant="primary">Save</flux:button>
     </div>

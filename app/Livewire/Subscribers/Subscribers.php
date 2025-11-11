@@ -40,20 +40,21 @@ class Subscribers extends Component
 
     public function render()
     {
-        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
         $subscribers = Subscriber::query()
-            ->where(function($query) {
-                $query->where('first_name', 'like', '%'.$this->search.'%')
-                    ->orWhere('middle_name', 'like', '%'.$this->search.'%')
-                    ->orWhere('last_name', 'like', '%'.$this->search.'%')
-                    ->orWhere('email', 'like', '%'.$this->search.'%')
-                    ->orWhere('contact_number', 'like', '%'.$this->search.'%');
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('first_name', 'like', "%{$this->search}%")
+                        ->orWhere('middle_name', 'like', "%{$this->search}%")
+                        ->orWhere('last_name', 'like', "%{$this->search}%")
+                        ->orWhere('email', 'like', "%{$this->search}%")
+                        ->orWhere('contact_number', 'like', "%{$this->search}%");
+                });
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
-        // Add hashed IDs for easy access in the Blade
         foreach ($subscribers as $subscriber) {
             $subscriber->hash = $hashids->encode($subscriber->id);
         }
