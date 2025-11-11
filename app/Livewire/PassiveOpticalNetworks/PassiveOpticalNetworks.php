@@ -47,6 +47,7 @@ class PassiveOpticalNetworks extends Component
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
         $pons = PassiveOpticalNetwork::query()
+            ->with('sector')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', "%{$this->search}%")

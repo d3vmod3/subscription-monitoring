@@ -8,15 +8,15 @@
         <input 
             type="text" 
             wire:model.live="search" 
-            placeholder="Search PONs..." 
+            placeholder="Search NAP boxes..." 
             class="border rounded px-3 py-2 w-1/3"
         >
         <div>
-            <flux:modal.trigger name="add-pon">
-                <flux:button>Add PON</flux:button>
+            <flux:modal.trigger name="add-napbox">
+                <flux:button>Add NAP Box</flux:button>
             </flux:modal.trigger>
-            <flux:modal name="add-pon" class="md:w-96">
-                <livewire:passive-optical-networks.add-passive-optical-network/>
+            <flux:modal name="add-napbox" class="md:w-96">
+                <livewire:napboxes.add-napbox/>
             </flux:modal>
         </div>
     </div>
@@ -25,14 +25,14 @@
         <thead>
             <tr>
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('name')">
-                    PON Name
+                    Napbox Name
                     @if($sortField == 'name') 
                         @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                     @endif
                 </th>
 
-                {{-- ✅ Sector Column --}}
-                <th class="px-4 py-2 border">Sector</th>
+                {{-- ✅ Display Parent PON --}}
+                <th class="px-4 py-2 border">PON</th>
 
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('description')">
                     Description
@@ -54,40 +54,41 @@
                         @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                     @endif
                 </th>
+
                 <th class="px-4 py-2 border">Actions</th>
             </tr>
         </thead>
 
         <tbody>
-            @forelse ($pons as $pon)
+            @forelse ($napboxes as $nap)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
-                    <td class="px-4 py-2 border font-semibold">{{ $pon->name }}</td>
+                    <td class="px-4 py-2 border font-semibold">{{ $nap->name }}</td>
 
-                    {{-- ✅ Display Sector --}}
-                    <td class="px-4 py-2 border">{{ $pon->sector->name ?? '-' }}</td>
+                    {{-- ✅ Display PON --}}
+                    <td class="px-4 py-2 border">{{ $nap->pon->name ?? '-' }}</td>
 
-                    <td class="px-4 py-2 border text-gray-700 dark:text-gray-300">{{ $pon->description ?? '-' }}</td>
-                    <td class="px-4 py-2 border text-gray-700 dark:text-gray-300">{{ $pon->created_at->format('Y-m-d') }}</td>
+                    <td class="px-4 py-2 border text-gray-700 dark:text-gray-300">{{ $nap->description ?? '-' }}</td>
+                    <td class="px-4 py-2 border text-gray-700 dark:text-gray-300">{{ $nap->created_at->format('Y-m-d') }}</td>
                     <td class="px-4 py-2 border">
-                        <span class="{{ $pon->is_active ? 'text-green-600' : 'text-red-600' }}">
-                            {{ $pon->is_active ? 'Active' : 'Inactive' }}
+                        <span class="{{ $nap->is_active ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $nap->is_active ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
                     <td class="px-4 py-2 border text-center">
-                        <flux:link href="{{ route('pon.edit', ['hash' => $hashids->encode($pon->id)]) }}">
+                        <flux:link href="{{ route('napbox.edit', ['hash' => $hashids->encode($nap->id)]) }}">
                             Edit
                         </flux:link>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="px-4 py-2 text-center text-gray-500">No PONs found.</td>
+                    <td colspan="6" class="px-4 py-2 text-center text-gray-500">No NAP boxes found.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 
     <div class="mt-4">
-        {{ $pons->links() }}
+        {{ $napboxes->links() }}
     </div>
 </div>

@@ -19,8 +19,8 @@
                     <flux:sidebar.group expandable heading="Network" class="grid">
                         <flux:sidebar.item icon="chart-pie" :href="route('sectors')" :current="request()->routeIs('sectors')" wire:navigate>Sectors</flux:sidebar.item>
                         <flux:sidebar.item :href="route('pons')" :current="request()->routeIs('pons')" wire:navigate>PONs</flux:sidebar.item>
-                        <flux:sidebar.item href="#" wire:navigate>Napboxes</flux:sidebar.item>
-                        <flux:sidebar.item href="#" wire:navigate>Splitters</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('napboxes')" :current="request()->routeIs('napboxes')"  wire:navigate>Napboxes</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('splitters')" :current="request()->routeIs('splitters')"  wire:navigate>Splitters</flux:sidebar.item>
                     </flux:sidebar.group>
                 </flux:navlist.group>
             </flux:navlist>

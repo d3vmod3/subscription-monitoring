@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pons', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->foreignId('sector_id')->constrained('sectors')->cascadeOnDelete();
             $table->text('description')->nullable();
             $table->timestamps();
             $table->boolean('is_active')->default(true);
@@ -30,8 +31,8 @@ return new class extends Migration
 
         Schema::create('napboxes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pon_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('splitter_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('pon_id')->constrained('pons')->cascadeOnDelete();
+            $table->foreignId('splitter_id')->nullable()->constrained('splitters')->cascadeOnDelete();
             $table->string('napbox_code')->unique();
             $table->string('name');
             $table->text('description')->nullable();

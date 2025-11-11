@@ -1,24 +1,7 @@
 <div class="max-w-3xl mx-auto p-6 bg-white dark:bg-zinc-700 rounded-lg shadow space-y-6 dark:shadow-lg">
     <h2 class="text-lg font-semibold mb-4">
-         Edit PON
+        Edit Splitter
     </h2>
-
-    {{-- Sector --}}
-    <div>
-        <label class="block text-sm font-medium mb-1">Sector</label>
-        <select 
-            wire:model="sector_id" 
-            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
-        >
-            <option value="">-- Select Sector --</option>
-            @foreach ($sectors as $sector)
-                <option value="{{ $sector->id }}">{{ $sector->name }}</option>
-            @endforeach
-        </select>
-        @error('sector_id') 
-            <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
-        @enderror
-    </div>
 
     {{-- Name --}}
     <div>
@@ -27,7 +10,7 @@
             type="text" 
             wire:model="name" 
             class="w-full border rounded px-3 py-2"
-            placeholder="Enter PON name"
+            placeholder="Enter splitter name"
         >
         @error('name') 
             <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
@@ -64,6 +47,8 @@
             <span wire:loading.remove>Update</span>
             <span wire:loading>Updating...</span>
         </flux:button>
-        <flux:link href="{{ route('pons') }}" variant="secondary" class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" style="text-decoration: none;">PONs List</flux:link>
+        <flux:link href="{{ route('splitters') }}" variant="secondary" class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" style="text-decoration: none;">
+            Splitters List
+        </flux:link>
     </div>
 </div>

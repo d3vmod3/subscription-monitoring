@@ -4,10 +4,10 @@
     <div class="flex justify-between mb-4">
         <input type="text" wire:model.live="search" placeholder="Search payment methods..." class="border rounded px-3 py-2 w-1/3">
         <div>
-            <flux:modal.trigger name="add-pon">
+            <flux:modal.trigger name="add-payment-method">
                 <flux:button>Add Payment Method</flux:button>
             </flux:modal.trigger>
-            <flux:modal name="add-pon" class="md:w-96">
+            <flux:modal name="add-payment-method" class="md:w-96">
                 <livewire:payment-methods.add-payment-method/>
             </flux:modal>
         </div>

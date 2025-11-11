@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
             SubscriptionsSeeder::class,
             PaymentsSeeder::class,
             UsersSeeder::class,
+            SectorsSeeder::class,
+            PonsSeeder::class,
+            SplittersSeeder::class,
+            NapboxesSeeder::class,
         ]);
     }
 }

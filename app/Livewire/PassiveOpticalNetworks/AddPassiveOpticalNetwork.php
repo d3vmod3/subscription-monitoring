@@ -4,32 +4,43 @@ namespace App\Livewire\PassiveOpticalNetworks;
 
 use Livewire\Component;
 use App\Models\PassiveOpticalNetwork;
+use App\Models\Sector;
 
 class AddPassiveOpticalNetwork extends Component
 {
+    public $sector_id;
     public $name;
     public $description;
     public $is_active = true;
 
+    public $sectors = [];
+
     protected $rules = [
+        'sector_id' => 'required|exists:sectors,id',
         'name' => 'required|string|max:255|unique:pons,name',
         'description' => 'nullable|string|max:500',
+        'is_active' => 'boolean',
     ];
+
+    public function mount()
+    {
+        // Fetch all active sectors
+        $this->sectors = Sector::where('is_active', true)->orderBy('name')->get();
+    }
 
     public function save()
     {
         $this->validate();
 
         PassiveOpticalNetwork::create([
+            'sector_id' => $this->sector_id,
             'name' => $this->name,
             'description' => $this->description,
             'is_active' => $this->is_active,
         ]);
 
-        // Reset inputs after save
-        $this->reset(['name', 'description','is_active']);
+        $this->reset(['sector_id', 'name', 'description', 'is_active']);
 
-        // Trigger event to refresh list in parent component
         $this->dispatch('pon-added');
 
         $this->dispatch('show-toast', [

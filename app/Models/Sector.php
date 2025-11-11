@@ -17,4 +17,9 @@ class Sector extends Model
     ];
 
     public $timestamps = true;
+
+    public function pons()
+    {
+        return $this->hasMany(PassiveOpticalNetwork::class, 'sector_id');
+    }
 }

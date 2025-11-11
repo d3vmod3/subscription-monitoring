@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscriber_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('subscriber_id')->nullable()->constrained('subscribers')->nullOnDelete();
+            $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
             $table->foreignId('sector_id')->nullable()->constrained()->nullOnDelete();
             $table->string('mikrotik_name')->unique();
             $table->date('start_date');

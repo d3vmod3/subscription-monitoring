@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('payment_method_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('subscription_id')->constrained('subscriptions')->cascadeOnDelete();
+            $table->foreignId('payment_method_id')->constrained('payment_methods')->cascadeOnDelete();
             $table->string('reference_number')->nullable();
             $table->dateTime('paid_at');
             $table->decimal('amount', 10, 2);
