@@ -56,7 +56,7 @@
                         {{ $subscription->subscriber ? $subscription->subscriber->first_name . ' ' . $subscription->subscriber->last_name : 'N/A' }}
                     </td>
                     <td class="px-4 py-2 border">
-                        {{ $subscription->plan->plan_name ?? '-' }}
+                        {{ $subscription->plan->name ?? '-' }}
                     </td>
                     <td class="px-4 py-2 border">
                         <span class="@if($subscription->status === 'active') text-green-600 

@@ -78,4 +78,7 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('advance-payments/list', 'advance-payments.payments')->name('payments');
     // Volt::route('plans/edit/{hash}', 'plans.add-napboxes')->name('plan.add');
     Volt::route('advance-payments/edit/{hash}', 'advance-payment.edit-payment')->name('payment.edit');
+
+    // Billings Routes
+    Volt::route('billings/view/{hash}', 'billings.billings')->name('view-billings');
 });

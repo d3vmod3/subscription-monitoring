@@ -41,6 +41,9 @@
                     </td>
                     <td class="px-4 py-2 border text-center">
                         <flux:link href="{{ route('subscribers.edit', ['hash' => $hashids->encode($subscriber->id)]) }}">Edit</flux:link>
+                        <flux:link href="{{ route('view-billings', ['hash' => $hashids->encode($subscriber->id)]) }}">
+                            View Billings
+                        </flux:link>
                     </td>
                 </tr>
             @empty
