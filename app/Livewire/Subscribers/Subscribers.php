@@ -37,19 +37,23 @@ class Subscribers extends Component
             $this->sortDirection = 'asc';
         }
     }
-
     public function render()
     {
-         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        $search = $this->search;
 
         $subscribers = Subscriber::query()
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('first_name', 'like', "%{$this->search}%")
-                        ->orWhere('middle_name', 'like', "%{$this->search}%")
-                        ->orWhere('last_name', 'like', "%{$this->search}%")
-                        ->orWhere('email', 'like', "%{$this->search}%")
-                        ->orWhere('contact_number', 'like', "%{$this->search}%");
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    // Flexible full name search
+                    $q->whereRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ?", ["%{$search}%"])
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
+                    // Fallback to individual fields
+                    ->orWhere('first_name', 'like', "%{$search}%")
+                    ->orWhere('middle_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('contact_number', 'like', "%{$search}%");
                 });
             })
             ->orderBy($this->sortField, $this->sortDirection)
@@ -63,4 +67,5 @@ class Subscribers extends Component
             'subscribers' => $subscribers,
         ]);
     }
+
 }

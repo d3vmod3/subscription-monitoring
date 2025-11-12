@@ -20,18 +20,19 @@ class SubscriptionsSeeder extends Seeder
         $subscriberIds = DB::table('subscribers')->pluck('id')->toArray();
         $planIds = DB::table('plans')->pluck('id')->toArray();
 
-        foreach ($subscriberIds as $subscriberId) {
+        // Create e.g. 50 random subscriptions
+        for ($i = 0; $i < 50; $i++) {
             $startDate = $faker->dateTimeBetween('-2 years', '-1 month');
             $dueDate = (clone $startDate)->modify('+1 month');
             $status = $faker->randomElement(['active', 'inactive', 'disconnected']);
 
             DB::table('subscriptions')->insert([
-                'subscriber_id' => null, // optional if Users is not yet linked
+                'subscriber_id' => $faker->randomElement($subscriberIds),
                 'plan_id' => $faker->randomElement($planIds),
-                'sector_id' => null,
+                'pon_id' => null,
                 'mikrotik_name' => 'MKT-' . Str::upper(Str::random(6)),
                 'start_date' => $startDate,
-                'due_date' => $dueDate,
+                'due_day' => 7,
                 'status' => $status,
                 'created_at' => now(),
                 'updated_at' => now(),

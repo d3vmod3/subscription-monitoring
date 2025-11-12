@@ -23,8 +23,8 @@ class PlansSeeder extends Seeder
 
         foreach ($plans as $plan) {
             DB::table('plans')->insert([
-                'plan_name' => $plan[0],
-                'plan_description' => $plan[1],
+                'name' => $plan[0],
+                'description' => $plan[1],
                 'subscription_interval' => $plan[2],
                 'price' => $plan[3],
                 'is_active' => true,

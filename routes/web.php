@@ -58,4 +58,14 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('splitters/list', 'splitters.splitters')->name('splitters');
     // Volt::route('napboxes/edit/{hash}', 'napboxes.add-napboxes')->name('splitter.edit');
     Volt::route('splitters/edit/{hash}', 'splitters.edit-splitter')->name('splitter.edit');
+
+    // Subscriptions Routes
+    Volt::route('subscriptions/list', 'subscriptions.subscriptions')->name('subscriptions');
+    // Volt::route('subscriptions/edit/{hash}', 'subscriptions.add-napboxes')->name('subscription.add');
+    Volt::route('subscriptions/edit/{hash}', 'subscriptions.edit-subscription')->name('subscription.edit');
+    
+    // Plans Routes
+    Volt::route('plans/list', 'plans.plans')->name('plans');
+    // Volt::route('plans/edit/{hash}', 'plans.add-napboxes')->name('plan.add');
+    Volt::route('plans/edit/{hash}', 'plans.edit-plan')->name('plan.edit');
 });

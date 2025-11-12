@@ -2,43 +2,45 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class PaymentsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
         $faker = Faker::create();
 
-        $subscriptionIds = DB::table('subscriptions')->pluck('id')->toArray();
-        $methodIds = DB::table('payment_methods')->pluck('id')->toArray();
+        $subscriptions = DB::table('subscriptions')
+            ->join('plans', 'subscriptions.plan_id', '=', 'plans.id')
+            ->select('subscriptions.id as subscription_id', 'plans.price')
+            ->get();
 
-        foreach ($subscriptionIds as $subscriptionId) {
-            // 60% chance subscriber has made a payment
-            if ($faker->boolean(60)) {
-                $numPayments = $faker->numberBetween(1, 6); // up to 6 payments
+        $paymentMethodIds = DB::table('payment_methods')->pluck('id')->toArray();
 
-                foreach (range(1, $numPayments) as $i) {
-                    $paidAt = $faker->dateTimeBetween('-1 year', 'now');
+        foreach ($subscriptions as $sub) {
+            // Create 1–5 payments per subscription
+            $paymentsCount = rand(1, 5);
 
-                    DB::table('payments')->insert([
-                        'subscription_id' => $subscriptionId,
-                        'payment_method_id' => $faker->randomElement($methodIds),
-                        'reference_number' => $faker->optional()->uuid(),
-                        'paid_at' => $paidAt,
-                        'amount' => $faker->randomElement([499, 699, 999, 1299, 1599]),
-                        'payment_category' => $faker->randomElement(['advanced payment', 'monthly bill']),
-                        'is_approved' => $faker->randomElement(['approved', 'pending']),
-                        'created_at' => $paidAt,
-                        'updated_at' => $paidAt,
-                    ]);
-                }
+            for ($i = 0; $i < $paymentsCount; $i++) {
+                DB::table('payments')->insert([
+                    'subscription_id' => $sub->subscription_id,
+                    'payment_method_id' => $faker->randomElement($paymentMethodIds),
+                    'reference_number' => $faker->optional()->numerify('REF-#####'),
+                    'paid_at' => $faker->dateTimeBetween('-2 years', 'now'),
+                    'amount' => $sub->price, // Amount is exactly the plan price
+                    'payment_category' => $i === 0 ? 'advanced payment' : 'monthly bill',
+                    'is_approved' => $faker->randomElement(['pending', 'approved']),
+                    'is_first_payment' => $i === 0 ? true : false,
+                    'is_discounted' => $faker->boolean(30), // 30% chance payment is discounted
+                    'has_balance' => $faker->boolean(20), // 20% chance there's remaining balance
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
         }
     }

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('subscriber_id')->nullable()->constrained('subscribers')->nullOnDelete();
             $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
-            $table->foreignId('sector_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('pon_id')->nullable()->constrained()->nullOnDelete();
             $table->string('mikrotik_name')->unique();
             $table->date('start_date');
-            $table->date('due_date');
+            $table->tinyInteger('due_day')->comment('Day of the month the payment is due (1-31)');
             $table->enum('status', ['active', 'inactive', 'disconnected'])->default('inactive');
             $table->timestamps();
         });

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->enum('payment_category', ['advanced payment', 'monthly bill']);
             $table->enum('is_approved', ['pending', 'approved'])->default('pending');
+            $table->boolean('is_first_payment')->default(true);
+            $table->boolean('is_discounted')->default(true);
+            $table->boolean('has_balance')->default(true); // <- updated
             $table->timestamps();
         });
     }
