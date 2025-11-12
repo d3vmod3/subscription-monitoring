@@ -38,6 +38,6 @@ class Subscriber extends Model
     // Optional: helper for full name
     public function getFullNameAttribute()
     {
-        return trim("{$this->first_name} {$this->middle_name} {$this->last_name}");
+        return trim("{$this->first_name} " . ($this->middle_name ? "{$this->middle_name} " : '') . "{$this->last_name}");
     }
 }

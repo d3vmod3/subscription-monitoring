@@ -17,7 +17,7 @@
                         wire:click="selectSubscriber({{ $sub->id }}, '{{ $sub->mikrotik_name }}')" 
                         class="px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
                     >
-                        {{ $sub->mikrotik_name }} 
+                        {{ $sub->display_name }}
                         <span class="text-sm text-gray-600 dark:text-gray-300">
                             ({{ $sub->plan->name ?? 'No Plan' }})
                         </span>

@@ -27,6 +27,12 @@
     <table class="w-full border border-gray-200">
         <thead>
             <tr>
+                <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('subscriber_name')">
+                    Subscriber
+                    @if($sortField == 'subscriber_name') 
+                        @if($sortDirection == 'asc') ▲ @else ▼ @endif 
+                    @endif
+                </th>
                 <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('subscription_id')">
                     Mikrotik Name
                     @if($sortField == 'subscription_id') 
@@ -76,6 +82,9 @@
         <tbody>
             @forelse ($payments as $payment)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
+                    <td class="px-4 py-2 border">
+                        {{ $payment->subscription->subscriber->full_name ?? $payment->subscription->mikrotik_name ?? 'N/A' }}
+                    </td>
                     <td class="px-4 py-2 border">
                         {{ $payment->subscription->mikrotik_name ?? 'N/A' }}
                     </td>

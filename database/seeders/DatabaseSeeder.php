@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethodsSeeder::class,
             SubscriptionsSeeder::class,
             PaymentsSeeder::class,
-            AdvanceBillPaymentsSeeder::class,
+            AdvancePaymentsSeeder::class,
             UsersSeeder::class,
             SectorsSeeder::class,
             PonsSeeder::class,

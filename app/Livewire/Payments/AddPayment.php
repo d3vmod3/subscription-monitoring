@@ -53,12 +53,25 @@ class AddPayment extends Component
 
             $this->subscriber_results = Subscription::with('subscriber')
                 ->where('mikrotik_name', 'like', "%{$search}%")
+                ->orWhereHas('subscriber', function ($query) use ($search) {
+                    $query->whereRaw(
+                        "CONCAT(first_name, ' ', IFNULL(middle_name, ''), ' ', last_name) LIKE ?",
+                        ['%' . $search . '%']
+                    );
+                })
                 ->limit(8)
-                ->get();
+                ->get()
+                ->map(function($sub) {
+                    $fullName = $sub->subscriber ? trim("{$sub->subscriber->first_name} " . ($sub->subscriber->middle_name ?? '') . " {$sub->subscriber->last_name}") : 'N/A';
+                    $sub->display_name = "{$fullName} - {$sub->mikrotik_name}";
+                    return $sub;
+                });
+
         } else {
             $this->subscriber_results = [];
         }
     }
+
 
     public function selectSubscriber($id, $mikrotik_name)
     {

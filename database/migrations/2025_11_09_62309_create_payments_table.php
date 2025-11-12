@@ -37,13 +37,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('advance_bill_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('subscription_id')->constrained('subscriptions');
-            $table->decimal('amount', 10, 2);
-            $table->boolean('is_used')->default(false);
-            $table->timestamps();
-        });
+        // Schema::create('advance_bill_payments', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('subscription_id')->constrained('subscriptions');
+        //     $table->decimal('amount', 10, 2);
+        //     $table->boolean('is_used')->default(false);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -53,6 +53,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('advance_payments');
         Schema::dropIfExists('payments');
-        Schema::dropIfExists('advance_bill_payments');
+        // Schema::dropIfExists('advance_bill_payments');
     }
 };
