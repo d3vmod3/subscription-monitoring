@@ -19,9 +19,17 @@
 
     {{-- Date Range and Payments --}}
         @if($selectedSubscription)
-            <div class="mt-4 p-4 border rounded bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100">
+        <div class="mt-4 p-4 border rounded bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100">
             <span class="font-semibold">Expected Total Amount for {{ $year }}:</span>
             <span class="text-green-600 font-bold">₱{{ number_format($expectedTotal, 2) }}</span>
+            <h3>Total Paid: ₱{{ number_format($totalPaid, 2) }}</h3>
+        </div>
+        <div class="mt-2">
+            <label class="block mb-1 font-medium text-zinc-900 dark:text-zinc-100">Start Date</label>
+            <input type="date" 
+                value="{{ \Carbon\Carbon::parse($selectedSubscription->start_date)->format('Y-m-d') }}" 
+                class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
+                disabled>
         </div>
         <div class="grid grid-cols-2 gap-4 mt-4">
             <div>
@@ -33,7 +41,7 @@
                 <input type="date" value="{{ $selectedSubscription->date_end ?? '' }}" wire:model.live="date_cover_to" class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
             </div>
             <div>
-                <flux:button>Filter</flux:button>
+                <flux:button wire:click="filterPayments">Filter</flux:button>
             </div>
         </div>
 

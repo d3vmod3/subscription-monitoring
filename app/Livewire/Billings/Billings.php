@@ -19,6 +19,7 @@ class Billings extends Component
     public $payments = null;
     public $year;
     public $expectedTotal = 0;
+    public $totalPaid = 0;
     public $date_cover_from;
     public $date_cover_to;
 
@@ -32,11 +33,10 @@ class Billings extends Component
         $this->subscriberId = $decoded[0];
         $this->hash = $hash;
 
-        $this->subscriber = Subscriber::with('subscriptions.payments')->findOrFail($this->subscriberId);
+        $this->subscriber = Subscriber::with('subscriptions.plan', 'subscriptions.payments')
+            ->findOrFail($this->subscriberId);
 
-        // Get this subscriber's subscriptions
         $this->subscriptions = $this->subscriber->subscriptions;
-
         $this->year = now()->year;
     }
 
@@ -47,46 +47,108 @@ class Billings extends Component
 
         if (!empty($decoded)) {
             $subscriptionId = $decoded[0];
-            $this->selectedSubscription = Subscription::with('payments')->findOrFail($subscriptionId);
+            $this->selectedSubscription = Subscription::with(['plan', 'payments'])->findOrFail($subscriptionId);
 
-            // Filter payments of selected year
-            $this->payments = $this->selectedSubscription->payments
-                ->filter(function ($payment) {
-                    return Carbon::parse($payment->date_cover_from)->year == $this->year;
-                })
-                ->sortBy('date_cover_from');
+            $this->date_cover_from = Carbon::parse($this->selectedSubscription->start_date)->format('Y-m-d');
+            $this->date_cover_to = now()->endOfYear()->format('Y-m-d');
 
-            // Calculate expected total for the year
-            $this->calculateExpectedTotal();
+            $this->filterPayments();
         }
     }
 
-    protected function calculateExpectedTotal()
+    public function filterPayments()
     {
-        if (!$this->selectedSubscription) {
-            $this->expectedTotal = 0;
+        if (!$this->selectedSubscription) return;
+
+        $from = $this->date_cover_from ? Carbon::parse($this->date_cover_from) : now()->startOfYear();
+        $to = $this->date_cover_to ? Carbon::parse($this->date_cover_to) : now()->endOfYear();
+
+        $this->payments = $this->selectedSubscription->payments
+            ->filter(fn($p) =>
+                Carbon::parse($p->date_cover_from)->between($from, $to)
+            )
+            ->sortBy('date_cover_from');
+
+        $this->calculateTotals();
+    }
+
+    protected function calculateTotals()
+    {
+        if (!$this->selectedSubscription || !$this->selectedSubscription->plan) {
+            $this->expectedTotal = $this->totalPaid = 0;
             return;
         }
 
-        // Assuming each subscription has a monthly_fee or amount
-        $monthlyFee = $this->selectedSubscription->monthly_fee ?? 0;
+        $subscription = $this->selectedSubscription;
+        $planPrice = abs((float) ($subscription->plan->price ?? 0));
 
-        // Calculate expected total based on year
-        $startYear = Carbon::parse($this->selectedSubscription->date_start)->year;
-        $endYear = Carbon::parse($this->selectedSubscription->date_end)->year ?? $this->year;
+        if ($planPrice == 0) {
+            $this->expectedTotal = $this->totalPaid = 0;
+            return;
+        }
 
-        // Number of months to charge in this year
-        $fromMonth = $this->year == $startYear ? Carbon::parse($this->selectedSubscription->date_start)->month : 1;
-        $toMonth = $this->year == $endYear ? Carbon::parse($this->selectedSubscription->date_end)->month : 12;
+        $from = $this->date_cover_from
+            ? Carbon::parse($this->date_cover_from)
+            : Carbon::parse($subscription->start_date);
 
-        $monthsCount = $toMonth - $fromMonth + 1;
-        $this->expectedTotal = $monthsCount * $monthlyFee;
+        $to = $this->date_cover_to
+            ? Carbon::parse($this->date_cover_to)
+            : now()->endOfYear();
+
+        $subscriptionStart = Carbon::parse($subscription->start_date);
+        $dueDay = $subscription->due_day;
+
+        // Start from later of subscriptionStart or filter start
+        $billingStart = $subscriptionStart->greaterThan($from) ? $subscriptionStart->copy() : $from->copy();
+
+        $total = 0;
+        $firstBilling = true;
+
+        while ($billingStart <= $to) {
+            // Next billing end = billingStart + 1 month, set to dueDay
+            $billingEnd = $billingStart->copy()->addMonth()->day($dueDay);
+
+            // Make sure billingEnd does not exceed filter 'to'
+            if ($billingEnd->greaterThan($to)) {
+                $billingEnd = $to->copy();
+            }
+
+            // Skip billing if billingEnd < billingStart (edge case)
+            if ($billingEnd->lessThan($billingStart)) {
+                break;
+            }
+
+            if ($firstBilling) {
+                // Prorate first billing
+                $daysUsed = $billingEnd->diffInDays($billingStart) + 1;
+                $total += ceil(($planPrice / 30) * $daysUsed);
+                $firstBilling = false;
+            } else {
+                // Full month
+                $total += $planPrice;
+            }
+
+            // Move to next billing period
+            $billingStart = $billingEnd->copy()->addDay();
+        }
+
+        $this->expectedTotal = ABS($total);
+
+        // Total paid within the period
+        $this->totalPaid = $subscription->payments
+            ->filter(fn($payment) =>
+                Carbon::parse($payment->date_cover_from)->between($from, $to)
+                && $payment->status === 'Approved'
+            )
+            ->sum('amount');
     }
+
 
     public function render()
     {
         return view('livewire.billings.billings', [
             'expectedTotal' => $this->expectedTotal,
+            'totalPaid' => $this->totalPaid,
         ]);
     }
 }
