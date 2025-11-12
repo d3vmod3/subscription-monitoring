@@ -47,7 +47,7 @@ class Subscriptions extends Component
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$this->search}%"]);
                 })
                 ->orWhereHas('plan', function($query) {
-                    $query->where('plan_name', 'like', "%{$this->search}%");
+                    $query->where('name', 'like', "%{$this->search}%");
                 });
             })
             ->orderBy($this->sortField, $this->sortDirection)

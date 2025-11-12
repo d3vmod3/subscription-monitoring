@@ -3,43 +3,58 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Payment;
+use App\Models\Subscription;
+use App\Models\PaymentMethod;
+use Illuminate\Support\Str;
 use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB;
 
 class PaymentsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $faker = Faker::create();
 
-        $subscriptions = DB::table('subscriptions')
-            ->join('plans', 'subscriptions.plan_id', '=', 'plans.id')
-            ->select('subscriptions.id as subscription_id', 'plans.price')
-            ->get();
+        $subscriptions = Subscription::with('subscriber')->get();
+        $paymentMethods = PaymentMethod::all();
 
-        $paymentMethodIds = DB::table('payment_methods')->pluck('id')->toArray();
+        foreach ($subscriptions as $subscription) {
+            $numPayments = rand(1, 3);
+            $startDate = now()->subMonths($numPayments);
 
-        foreach ($subscriptions as $sub) {
-            // Create 1–5 payments per subscription
-            $paymentsCount = rand(1, 5);
+            for ($i = 1; $i <= $numPayments; $i++) {
+                $coverFrom = (clone $startDate)->addMonths($i - 1);
+                $coverTo = (clone $coverFrom)->addMonth()->subDay();
 
-            for ($i = 0; $i < $paymentsCount; $i++) {
-                DB::table('payments')->insert([
-                    'subscription_id' => $sub->subscription_id,
-                    'payment_method_id' => $faker->randomElement($paymentMethodIds),
-                    'reference_number' => $faker->optional()->numerify('REF-#####'),
-                    'paid_at' => $faker->dateTimeBetween('-2 years', 'now'),
-                    'amount' => $sub->price, // Amount is exactly the plan price
-                    'payment_category' => $i === 0 ? 'advanced payment' : 'monthly bill',
-                    'is_approved' => $faker->randomElement(['pending', 'approved']),
-                    'is_first_payment' => $i === 0 ? true : false,
-                    'is_discounted' => $faker->boolean(30), // 30% chance payment is discounted
-                    'has_balance' => $faker->boolean(20), // 20% chance there's remaining balance
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                $isDiscounted = $faker->boolean(10);
+
+                // Safely build account name from subscriber fields
+                $subscriber = $subscription->subscriber;
+                $subscriberName = null;
+
+                if ($subscriber) {
+                    if (isset($subscriber->full_name)) {
+                        $subscriberName = $subscriber->full_name;
+                    } elseif (isset($subscriber->first_name) && isset($subscriber->last_name)) {
+                        $subscriberName = "{$subscriber->first_name} {$subscriber->last_name}";
+                    }
+                }
+
+                Payment::create([
+                    'subscription_id'   => $subscription->id,
+                    'payment_method_id' => $paymentMethods->random()->id,
+                    'account_name'      => $faker->boolean(80)
+                        ? ($subscriberName ?? $faker->name())
+                        : $faker->name(),
+                    'reference_number'  => Str::upper(Str::random(10)),
+                    'paid_at'           => $faker->dateTimeBetween('-6 months', 'now'),
+                    'date_cover_from'   => $coverFrom->format('Y-m-d'),
+                    'date_cover_to'     => $coverTo->format('Y-m-d'),
+                    'amount'            => $faker->randomFloat(2, 500, 1500),
+                    'status'            => 'Approved',
+                    'is_discounted'     => $isDiscounted,
+                    'is_first_payment'     => false,
+                    'remarks'           => $isDiscounted ? $faker->sentence() : null,
                 ]);
             }
         }
