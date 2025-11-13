@@ -4,6 +4,11 @@
 @endphp
 
 <div class="p-4 sm:p-6 max-w-full overflow-x-auto">
+    <div class="mb-2">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+            PONs (Passive Optical Networks)
+        </h1>
+    </div>
     {{-- Top Controls --}}
     <div class="flex flex-col sm:flex-row justify-between mb-4 gap-3">
         {{-- 🔍 Search --}}

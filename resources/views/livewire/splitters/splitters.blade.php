@@ -3,8 +3,12 @@
     $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 @endphp
 
-<div class="p-4 max-w-4xl mx-auto">
-
+<div class="p-4">
+    <div class="mb-2">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Splitters
+        </h1>
+    </div>
     {{-- Header & Search/Add --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-3 md:space-y-0">
         <input 
