@@ -95,7 +95,7 @@
                         {{ $payment->paymentMethod->name ?? 'N/A' }}
                     </td>
                     <td class="px-4 py-2 border">
-                        ₱{{ number_format($payment->amount, 2) }}
+                        ₱{{ number_format($payment->paid_amount, 2) }}
                     </td>
                     <td class="px-4 py-2 border">
                         {{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}

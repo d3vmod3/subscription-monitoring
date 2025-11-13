@@ -23,8 +23,7 @@ class PaymentsSeeder extends Seeder
             $startDate = now()->subMonths($numPayments);
 
             for ($i = 1; $i <= $numPayments; $i++) {
-                $coverFrom = (clone $startDate)->addMonths($i - 1);
-                $coverTo = (clone $coverFrom)->addMonth()->subDay();
+                $coverMonth = (clone $startDate)->addMonths($i - 1);
 
                 $isDiscounted = $faker->boolean(10);
 
@@ -48,12 +47,10 @@ class PaymentsSeeder extends Seeder
                         : $faker->name(),
                     'reference_number'  => Str::upper(Str::random(10)),
                     'paid_at'           => $faker->dateTimeBetween('-6 months', 'now'),
-                    'date_cover_from'   => $coverFrom->format('Y-m-d'),
-                    'date_cover_to'     => $coverTo->format('Y-m-d'),
-                    'amount'            => $faker->randomFloat(2, 500, 1500),
+                    'month_year_cover'  => $coverMonth->format('Y-m'),
+                    'paid_amount'       => $faker->randomFloat(2, 500, 1500),
                     'status'            => 'Approved',
                     'is_discounted'     => $isDiscounted,
-                    'is_first_payment'     => false,
                     'remarks'           => $isDiscounted ? $faker->sentence() : null,
                 ]);
             }

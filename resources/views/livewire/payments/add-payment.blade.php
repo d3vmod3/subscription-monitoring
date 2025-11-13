@@ -30,6 +30,23 @@
         @enderror
     </div>
 
+    {{-- Display current plan --}}
+    @if ($subscription_id && $selectedSubscription && $selectedSubscription->plan)
+        <div class="mt-2 p-2 bg-gray-50 dark:bg-gray-700 rounded border space-y-1">
+            <p class="text-sm text-gray-700 dark:text-gray-200">
+                <strong>Current Plan:</strong> {{ $selectedSubscription->plan->name ?? 'No Plan' }}
+            </p>
+            <p class="text-sm text-gray-700 dark:text-gray-200">
+                <strong>Price:</strong> ₱{{ number_format($selectedSubscription->plan->price ?? 0, 2) }}
+            </p>
+            @if ($expected_amount)
+                <p class="text-sm text-blue-600 dark:text-blue-400">
+                    <strong>Expected for selected month:</strong> ₱{{ number_format($expected_amount, 2) }}
+                </p>
+            @endif
+        </div>
+    @endif
+
     {{-- Payment Method --}}
     <div>
         <label class="block text-sm font-medium mb-1">Payment Method</label>
@@ -63,28 +80,26 @@
         @error('paid_at') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
     </div>
 
-    {{-- Date Coverage --}}
-    <div class="grid grid-cols-2 gap-4">
-        <div>
-            <label class="block text-sm font-medium mb-1">Date Cover From</label>
-            <input type="date" wire:model.defer="date_cover_from" class="w-full border rounded px-3 py-2">
-            @error('date_cover_from') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-sm font-medium mb-1">Date Cover To</label>
-            <input type="date" wire:model.defer="date_cover_to" class="w-full border rounded px-3 py-2">
-            @error('date_cover_to') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-    </div>
-
-    {{-- Amount --}}
+    {{-- Month-Year Cover --}}
     <div>
-        <label class="block text-sm font-medium mb-1">Amount</label>
-        <input type="number" step="0.01" wire:model.defer="amount" class="w-full border rounded px-3 py-2" placeholder="Enter amount paid">
-        @error('amount') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+        <label class="block text-sm font-medium mb-1">Month Covered</label>
+        <input type="month" wire:model.live="month_year_cover" class="w-full border rounded px-3 py-2">
+        @error('month_year_cover') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
     </div>
 
-    {{-- Discounted + Approved Switches --}}
+    {{-- Paid Amount --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">Amount Paid</label>
+        <input type="number" step="0.01" wire:model.defer="paid_amount" class="w-full border rounded px-3 py-2" placeholder="Enter amount paid">
+        @error('paid_amount') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+        @if ($expected_amount)
+            <p class="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                Expected amount: ₱{{ number_format($expected_amount, 2) }}
+            </p>
+        @endif
+    </div>
+
+    {{-- Discounted Switch --}}
     <div class="flex flex-col sm:flex-row justify-between mt-4 space-y-3 sm:space-y-0 sm:space-x-4">
         <flux:field variant="inline">
             <flux:label>Discounted</flux:label>

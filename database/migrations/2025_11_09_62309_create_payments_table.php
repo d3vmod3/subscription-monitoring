@@ -13,29 +13,27 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained('subscriptions')->cascadeOnDelete();
-            $table->foreignId('payment_method_id')->constrained('payment_methods')->cascadeOnDelete();
-            $table->string('account_name'); // 🟢 who paid (can be subscriber or other person)
+            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('payment_method_id')->constrained()->cascadeOnDelete();
+            $table->string('account_name');
             $table->string('reference_number')->nullable();
             $table->dateTime('paid_at');
-            $table->date('date_cover_from');
-            $table->date('date_cover_to');
-            $table->decimal('amount', 10, 2);
-            $table->enum('status', ['Approved', 'Disapproved', 'Pending'])->default('Pending');
+            $table->decimal('paid_amount', 12, 2);
+            $table->enum('status', ['Pending', 'Approved', 'Disapproved'])->default('Pending');
+            $table->string('month_year_cover'); // e.g., 2025-10
             $table->boolean('is_discounted')->default(false);
-            $table->boolean('is_first_payment')->default(false);
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
 
         // Advance Payments table
-        Schema::create('advance_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-            $table->decimal('amount', 10, 2);
-            $table->boolean('is_used')->default(false);
-            $table->timestamps();
-        });
+        // Schema::create('advance_payments', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
+        //     $table->decimal('amount', 10, 2);
+        //     $table->boolean('is_used')->default(false);
+        //     $table->timestamps();
+        // });
 
         // Schema::create('advance_bill_payments', function (Blueprint $table) {
         //     $table->id();

@@ -18,24 +18,24 @@ class AddPayment extends Component
     public $payment_method_id;
     public $reference_number;
     public $paid_at;
-    public $date_cover_from;
-    public $date_cover_to;
-    public $amount;
+    public $month_year_cover;
+    public $paid_amount;
     public $is_discounted = false;
     public $remarks;
-    public $account_name; // who paid
+    public $account_name;
 
     public $subscriptions = [];
     public $payment_methods = [];
+    public $selectedSubscription;
+    public $expected_amount = 0; // computed based on month_year_cover
 
     protected $rules = [
         'subscription_id' => 'required|exists:subscriptions,id',
         'payment_method_id' => 'required|exists:payment_methods,id',
         'reference_number' => 'nullable|string|max:50',
         'paid_at' => 'required|date|before_or_equal:today',
-        'date_cover_from' => 'required|date',
-        'date_cover_to' => 'required|date|after:date_cover_from',
-        'amount' => 'required|numeric|min:0',
+        'month_year_cover' => 'required|date_format:Y-m',
+        'paid_amount' => 'required|numeric|min:0',
         'is_discounted' => 'boolean',
         'remarks' => 'nullable|string|required_if:is_discounted,true',
         'account_name' => 'required|string|max:255',
@@ -46,12 +46,17 @@ class AddPayment extends Component
         $this->payment_methods = PaymentMethod::where('is_active', true)->get();
     }
 
+    public function updatedMonthYearCover()
+    {
+        $this->computeExpectedAmount();
+    }
+
     public function updatedSubscriberSearch()
     {
         if (strlen($this->subscriber_search) > 1) {
             $search = $this->subscriber_search;
 
-            $this->subscriber_results = Subscription::with('subscriber')
+            $this->subscriber_results = Subscription::with('subscriber', 'plan')
                 ->where('mikrotik_name', 'like', "%{$search}%")
                 ->orWhereHas('subscriber', function ($query) use ($search) {
                     $query->whereRaw(
@@ -61,35 +66,73 @@ class AddPayment extends Component
                 })
                 ->limit(8)
                 ->get()
-                ->map(function($sub) {
-                    $fullName = $sub->subscriber ? trim("{$sub->subscriber->first_name} " . ($sub->subscriber->middle_name ?? '') . " {$sub->subscriber->last_name}") : 'N/A';
+                ->map(function ($sub) {
+                    $fullName = $sub->subscriber
+                        ? trim("{$sub->subscriber->first_name} " . ($sub->subscriber->middle_name ?? '') . " {$sub->subscriber->last_name}")
+                        : 'N/A';
                     $sub->display_name = "{$fullName} - {$sub->mikrotik_name}";
                     return $sub;
                 });
-
         } else {
             $this->subscriber_results = [];
         }
     }
-
 
     public function selectSubscriber($id, $mikrotik_name)
     {
         $this->subscription_id = $id;
         $this->subscriber_search = $mikrotik_name;
         $this->subscriber_results = [];
+
+        $this->selectedSubscription = Subscription::with('plan')->find($id);
+
+        // Recompute expected amount if month_year_cover is already set
+        $this->computeExpectedAmount();
     }
+
+    public function computeExpectedAmount()
+{
+    $this->expected_amount = 0;
+
+    if (!$this->selectedSubscription || !$this->selectedSubscription->plan || !$this->month_year_cover) {
+        return;
+    }
+
+    $planPrice = $this->selectedSubscription->plan->price;
+    $subscriptionStart = Carbon::parse($this->selectedSubscription->start_date);
+    $coverMonthStart = Carbon::parse($this->month_year_cover . '-01');
+
+    // First month scenario: subscription starts mid-month
+    if ($subscriptionStart->format('Y-m') == $coverMonthStart->format('Y-m')) {
+        // Set the end date as the 7th of next month
+        $coverMonthEnd = $coverMonthStart->copy()->addMonth()->day(7);
+
+        // Calculate active days from start date until 7th of next month
+        $activeDays = $subscriptionStart->diffInDays($coverMonthEnd) + 1;
+
+        $totalDaysInMonth = $coverMonthStart->daysInMonth;
+        $expected = round(($planPrice / $totalDaysInMonth) * $activeDays) + 1;
+
+    } else {
+        $expected = $planPrice;
+    }
+
+    // Subtract any payments already made for this subscription in this month
+    $alreadyPaid = Payment::where('subscription_id', $this->selectedSubscription->id)
+        ->where('month_year_cover', $this->month_year_cover)
+        ->sum('paid_amount');
+
+    $this->expected_amount = max($expected - $alreadyPaid, 0);
+}
+
+
 
     public function save()
     {
         $this->validate();
 
-        // Validate that date_cover_to is in a different month than date_cover_from
-        $from = Carbon::parse($this->date_cover_from);
-        $to = Carbon::parse($this->date_cover_to);
-
-        if ($from->month == $to->month && $from->year == $to->year) {
-            $this->addError('date_cover_to', 'Date Cover To must be in a different month than Date Cover From.');
+        if ($this->paid_amount > $this->expected_amount) {
+            $this->addError('paid_amount', "The amount ₱{$this->paid_amount} exceeds the expected ₱{$this->expected_amount} for {$this->month_year_cover}.");
             return;
         }
 
@@ -98,10 +141,9 @@ class AddPayment extends Component
             'payment_method_id' => $this->payment_method_id,
             'reference_number' => $this->reference_number ?? Str::upper(Str::random(10)),
             'paid_at' => $this->paid_at,
-            'date_cover_from' => $this->date_cover_from,
-            'date_cover_to' => $this->date_cover_to,
-            'amount' => $this->amount,
-            'status' => 'Pending', // default status
+            'month_year_cover' => $this->month_year_cover,
+            'paid_amount' => $this->paid_amount,
+            'status' => 'Pending',
             'is_discounted' => $this->is_discounted,
             'remarks' => $this->is_discounted ? $this->remarks : null,
             'account_name' => $this->account_name,
@@ -111,15 +153,16 @@ class AddPayment extends Component
             'subscription_id',
             'subscriber_search',
             'subscriber_results',
+            'selectedSubscription',
             'payment_method_id',
             'reference_number',
             'paid_at',
-            'date_cover_from',
-            'date_cover_to',
-            'amount',
+            'month_year_cover',
+            'paid_amount',
             'is_discounted',
             'remarks',
             'account_name',
+            'expected_amount',
         ]);
 
         $this->dispatch('payment-added');

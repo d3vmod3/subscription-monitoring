@@ -20,14 +20,14 @@ class Billings extends Component
     public $year;
     public $expectedTotal = 0;
     public $totalPaid = 0;
-    public $date_cover_from;
-    public $date_cover_to;
+    public $month_cover_from;
+    public $month_cover_to;
+    public $billingSummary = [];
 
     public function mount($hash)
     {
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $decoded = $hashids->decode($hash);
-
         abort_if(empty($decoded), 404, 'Invalid Subscriber');
 
         $this->subscriberId = $decoded[0];
@@ -49,8 +49,9 @@ class Billings extends Component
             $subscriptionId = $decoded[0];
             $this->selectedSubscription = Subscription::with(['plan', 'payments'])->findOrFail($subscriptionId);
 
-            $this->date_cover_from = Carbon::parse($this->selectedSubscription->start_date)->format('Y-m-d');
-            $this->date_cover_to = now()->endOfYear()->format('Y-m-d');
+            // Default month cover range: start month -> current month
+            $this->month_cover_from = Carbon::parse($this->selectedSubscription->start_date)->format('Y-m');
+            $this->month_cover_to = now()->format('Y-m');
 
             $this->filterPayments();
         }
@@ -60,19 +61,19 @@ class Billings extends Component
     {
         if (!$this->selectedSubscription) return;
 
-        $from = $this->date_cover_from ? Carbon::parse($this->date_cover_from) : now()->startOfYear();
-        $to = $this->date_cover_to ? Carbon::parse($this->date_cover_to) : now()->endOfYear();
+        $from = $this->month_cover_from 
+            ? Carbon::parse($this->month_cover_from . '-01')->startOfMonth() 
+            : Carbon::parse($this->selectedSubscription->start_date)->startOfMonth();
 
-        $this->payments = $this->selectedSubscription->payments
-            ->filter(fn($p) =>
-                Carbon::parse($p->date_cover_from)->between($from, $to)
-            )
-            ->sortBy('date_cover_from');
+        $to = $this->month_cover_to 
+            ? Carbon::parse($this->month_cover_to . '-01')->endOfMonth() 
+            : now()->endOfMonth();
 
-        $this->calculateTotals();
+        $this->calculateTotals($from, $to);
+        $this->generateBillingSummary($from, $to);
     }
 
-    protected function calculateTotals()
+    protected function calculateTotals($from, $to)
     {
         if (!$this->selectedSubscription || !$this->selectedSubscription->plan) {
             $this->expectedTotal = $this->totalPaid = 0;
@@ -82,67 +83,94 @@ class Billings extends Component
         $subscription = $this->selectedSubscription;
         $planPrice = abs((float) ($subscription->plan->price ?? 0));
 
-        if ($planPrice == 0) {
-            $this->expectedTotal = $this->totalPaid = 0;
+        $billingStart = $from->copy();
+        $totalExpected = 0;
+        $totalPaid = 0;
+
+        while ($billingStart->lessThanOrEqualTo($to)) {
+            $monthCover = $billingStart->format('Y-m');
+
+            // First month prorate if subscription starts mid-month
+            $subscriptionStart = Carbon::parse($subscription->start_date);
+
+            if ($billingStart->format('Y-m') === $subscriptionStart->format('Y-m') && $subscriptionStart->day !== 1) {
+                // First billing: from start date to 7th of next month
+                $firstBillingEnd = $subscriptionStart->copy()->addMonthNoOverflow()->day(7);
+                $daysUsed = $subscriptionStart->diffInDays($firstBillingEnd) + 1; // inclusive
+                $totalDaysInPeriod = $subscriptionStart->diffInDays($firstBillingEnd) + 1;
+
+                $expectedAmount = ceil(($planPrice / $subscriptionStart->daysInMonth) * $daysUsed);
+            } else {
+                // Full month
+                $expectedAmount = $planPrice;
+            }
+
+            // Total paid in this month
+            $paidAmount = $subscription->payments
+                ->where('month_year_cover', $monthCover)
+                ->where('status', 'Approved')
+                ->sum('paid_amount');
+
+            $totalExpected += $expectedAmount;
+            $totalPaid += $paidAmount;
+
+            $billingStart->addMonth();
+        }
+
+        $this->expectedTotal = $totalExpected;
+        $this->totalPaid = $totalPaid;
+    }
+
+    protected function generateBillingSummary($from, $to)
+    {
+        if (!$this->selectedSubscription || !$this->selectedSubscription->plan) {
+            $this->billingSummary = collect();
             return;
         }
 
-        $from = $this->date_cover_from
-            ? Carbon::parse($this->date_cover_from)
-            : Carbon::parse($subscription->start_date);
+        $subscription = $this->selectedSubscription;
+        $planPrice = abs((float) ($subscription->plan->price ?? 0));
+        $billingSummary = collect();
+        $billingStart = $from->copy();
 
-        $to = $this->date_cover_to
-            ? Carbon::parse($this->date_cover_to)
-            : now()->endOfYear();
+        while ($billingStart->lessThanOrEqualTo($to)) {
+            $monthCover = $billingStart->format('Y-m');
 
-        $subscriptionStart = Carbon::parse($subscription->start_date);
-        $dueDay = $subscription->due_day;
-
-        // Start from later of subscriptionStart or filter start
-        $billingStart = $subscriptionStart->greaterThan($from) ? $subscriptionStart->copy() : $from->copy();
-
-        $total = 0;
-        $firstBilling = true;
-
-        while ($billingStart <= $to) {
-            // Next billing end = billingStart + 1 month, set to dueDay
-            $billingEnd = $billingStart->copy()->addMonth()->day($dueDay);
-
-            // Make sure billingEnd does not exceed filter 'to'
-            if ($billingEnd->greaterThan($to)) {
-                $billingEnd = $to->copy();
-            }
-
-            // Skip billing if billingEnd < billingStart (edge case)
-            if ($billingEnd->lessThan($billingStart)) {
-                break;
-            }
-
-            if ($firstBilling) {
-                // Prorate first billing
-                $daysUsed = $billingEnd->diffInDays($billingStart) + 1;
-                $total += ceil(($planPrice / 30) * $daysUsed);
-                $firstBilling = false;
+            // First month prorated
+            $subscriptionStart = Carbon::parse($subscription->start_date);
+            if ($billingStart->format('Y-m') === $subscriptionStart->format('Y-m')
+                && $subscriptionStart->day !== 1) {
+                $daysInMonth = $billingStart->daysInMonth;
+                $daysUsed = $daysInMonth - $subscriptionStart->day + 1;
+                $expectedAmount = ceil(($planPrice / $daysInMonth) * $daysUsed);
             } else {
-                // Full month
-                $total += $planPrice;
+                $expectedAmount = $planPrice;
             }
 
-            // Move to next billing period
-            $billingStart = $billingEnd->copy()->addDay();
+            $paidAmount = $subscription->payments
+                ->where('status', 'Approved')
+                ->filter(function($p) use ($monthCover) {
+                    return Carbon::parse($p->month_year_cover . '-01')->format('Y-m') === $monthCover;
+                })
+                ->sum('paid_amount');
+            
+            $remaining = max($expectedAmount - $paidAmount, 0);
+            $status = $remaining == 0 ? 'Paid' : 'Not Paid';
+
+            $billingSummary->push([
+                'month' => $billingStart->format('F Y'),
+                'expected_amount' => $expectedAmount,
+                'paid_amount' => $paidAmount,
+                'status' => $status,
+                'remaining_balance' => $remaining,
+            ]);
+
+            $billingStart->addMonth();
         }
 
-        $this->expectedTotal = ABS($total);
-
-        // Total paid within the period
-        $this->totalPaid = $subscription->payments
-            ->filter(fn($payment) =>
-                Carbon::parse($payment->date_cover_from)->between($from, $to)
-                && $payment->status === 'Approved'
-            )
-            ->sum('amount');
+        $this->billingSummary = $billingSummary;
+        // dd($billingSummary);
     }
-
 
     public function render()
     {
