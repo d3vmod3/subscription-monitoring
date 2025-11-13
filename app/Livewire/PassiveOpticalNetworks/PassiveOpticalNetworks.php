@@ -43,26 +43,36 @@ class PassiveOpticalNetworks extends Component
     }
 
     public function render()
-    {
-        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+{
+    $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
-        $pons = PassiveOpticalNetwork::query()
-            ->with('sector')
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('description', 'like', "%{$this->search}%");
-                });
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(10);
+    $query = PassiveOpticalNetwork::query()
+        ->leftJoin('sectors', 'pons.sector_id', '=', 'sectors.id')
+        ->select('pons.*')
+        ->with('sector')
+        ->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('pons.name', 'like', "%{$this->search}%")
+                  ->orWhere('pons.description', 'like', "%{$this->search}%");
+            });
+        });
 
-        foreach ($pons as $pon) {
-            $pon->hash = $hashids->encode($pon->id);
-        }
-
-        return view('livewire.passive-optical-networks.passive-optical-networks', [
-            'pons' => $pons,
-        ]);
+    // Handle sorting
+    if ($this->sortField === 'sector_name') {
+        $query->orderBy('sectors.name', $this->sortDirection);
+    } else {
+        $query->orderBy($this->sortField, $this->sortDirection);
     }
+
+    $pons = $query->paginate(10);
+
+    foreach ($pons as $pon) {
+        $pon->hash = $hashids->encode($pon->id);
+    }
+
+    return view('livewire.passive-optical-networks.passive-optical-networks', [
+        'pons' => $pons,
+    ]);
+}
+
 }

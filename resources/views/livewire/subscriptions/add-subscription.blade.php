@@ -35,7 +35,7 @@
             <option value="">-- Select Plan --</option>
             @foreach($plans as $plan)
                 <option value="{{ $plan->id }}">
-                    {{ $plan->plan_name }} - ₱{{ number_format($plan->price, 2) }}
+                    {{ $plan->name }} - ₱{{ number_format($plan->price, 2) }}
                 </option>
             @endforeach
         </select>
@@ -81,21 +81,6 @@
             class="w-full border rounded px-3 py-2"
         >
         @error('start_date') 
-            <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
-        @enderror
-    </div>
-    {{-- Due Day --}}
-    <div>
-        <label class="block text-sm font-medium mb-1">Due Day</label>
-        <input 
-            type="number" 
-            wire:model.defer="due_day" 
-            class="w-full border rounded px-3 py-2"
-            placeholder="Enter due day of the month"
-            min="1"
-            max="28"
-        >
-        @error('due_day') 
             <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
         @enderror
     </div>

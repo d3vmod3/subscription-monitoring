@@ -1,13 +1,14 @@
 <div class="space-y-6">
-    <h2 class="text-lg font-semibold">Add New Splitter</h2>
+
+    <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Add New Splitter</h2>
 
     {{-- Name --}}
     <div>
-        <label class="block text-sm font-medium mb-1">Name</label>
+        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Name</label>
         <input 
             type="text" 
             wire:model.defer="name" 
-            class="w-full border rounded px-3 py-2"
+            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-zinc-400"
             placeholder="Enter splitter name"
         >
         @error('name') 
@@ -17,10 +18,10 @@
 
     {{-- Description --}}
     <div>
-        <label class="block text-sm font-medium mb-1">Description</label>
+        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Description</label>
         <textarea 
             wire:model.defer="description" 
-            class="w-full border rounded px-3 py-2" 
+            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-zinc-400" 
             rows="3"
             placeholder="Optional description..."
         ></textarea>
@@ -30,16 +31,19 @@
     </div>
 
     {{-- Status --}}
-    <div class="flex items-center justify-end mt-2">
+    <div class="flex items-center space-x-2">
         <flux:switch wire:model.defer="is_active" />
-        <span class="ml-2 text-sm font-medium">Active</span>
+        <span class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Active</span>
         @error('is_active') 
             <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
         @enderror
     </div>
 
     {{-- Buttons --}}
-    <div class="flex justify-end space-x-2 mt-4">
-        <flux:button wire:click="save" variant="primary">Save</flux:button>
+    <div class="flex justify-end mt-4">
+        <flux:button wire:click="save" class="bg-zinc-500 hover:bg-zinc-600 text-white rounded px-4 py-2 transition-colors">
+            Save
+        </flux:button>
     </div>
+
 </div>

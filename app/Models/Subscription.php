@@ -15,7 +15,6 @@ class Subscription extends Model
         'pon_id',
         'mikrotik_name',
         'start_date',
-        'due_day',
         'status',
     ];
 

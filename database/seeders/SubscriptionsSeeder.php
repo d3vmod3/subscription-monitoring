@@ -23,7 +23,6 @@ class SubscriptionsSeeder extends Seeder
         // Create e.g. 50 random subscriptions
         for ($i = 0; $i < 50; $i++) {
             $startDate = $faker->dateTimeBetween('-2 years', '-1 month');
-            $dueDate = (clone $startDate)->modify('+1 month');
             $status = $faker->randomElement(['active', 'inactive', 'disconnected']);
 
             DB::table('subscriptions')->insert([
@@ -32,7 +31,6 @@ class SubscriptionsSeeder extends Seeder
                 'pon_id' => null,
                 'mikrotik_name' => 'MKT-' . Str::upper(Str::random(6)),
                 'start_date' => $startDate,
-                'due_day' => 7,
                 'status' => $status,
                 'created_at' => now(),
                 'updated_at' => now(),

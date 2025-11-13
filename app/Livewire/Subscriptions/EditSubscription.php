@@ -20,7 +20,6 @@ class EditSubscription extends Component
     public $pon_id;
     public $mikrotik_name;
     public $start_date;
-    public $due_day;
     public $status;
 
     public $plans = [];
@@ -45,7 +44,6 @@ class EditSubscription extends Component
         $this->pon_id = $this->subscription->pon_id;
         $this->mikrotik_name = $this->subscription->mikrotik_name;
         $this->start_date = Carbon::parse($this->subscription->start_date)->format('Y-m-d');
-        $this->due_day = $this->subscription->due_day;
         $this->status = $this->subscription->status;
 
         $this->plans = Plan::where('is_active', 1)->get();
@@ -60,7 +58,6 @@ class EditSubscription extends Component
             'pon_id' => 'nullable|exists:pons,id',
             'mikrotik_name' => 'required|string|max:255|unique:subscriptions,mikrotik_name,' . $this->subscription->id,
             'start_date' => 'required|date',
-            'due_day' => 'required|integer|min:1|max:31',
             'status' => 'required|in:active,inactive,disconnected',
         ];
     }
@@ -103,7 +100,6 @@ class EditSubscription extends Component
             'pon_id' => $this->pon_id,
             'mikrotik_name' => $this->mikrotik_name,
             'start_date' => $this->start_date,
-            'due_day' => $this->due_day,
             'status' => $this->status,
         ]);
 

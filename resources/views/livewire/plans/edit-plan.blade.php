@@ -2,12 +2,25 @@
 
     <h2 class="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Edit Plan</h2>
 
-    {{-- Name --}}
-    <div>
-        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Name</label>
-        <input type="text" wire:model="name" 
-            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
-        @error('name') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+    {{-- Name & Subscription Interval (side-by-side on md+) --}}
+    <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Name</label>
+            <input type="text" wire:model="name" 
+                class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
+            @error('name') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="flex-1">
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Subscription Interval</label>
+            <select wire:model="subscription_interval"
+                class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
+                <option value="monthly">Monthly</option>
+                <option value="6 months">6 Months</option>
+                <option value="yearly">Yearly</option>
+            </select>
+            @error('subscription_interval') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+        </div>
     </div>
 
     {{-- Description --}}
@@ -37,12 +50,14 @@
     </div>
 
     {{-- Buttons --}}
-    <div class="flex justify-end space-x-2 mt-4">
+    <div class="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-2 mt-4">
         <flux:button wire:click="save" wire:loading.attr="disabled" variant="primary">
             <span wire:loading.remove>Update</span>
             <span wire:loading>Updating...</span>
         </flux:button>
-        <flux:link href="{{ route('plans') }}" variant="secondary" class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" style="text-decoration: none;">
+        <flux:link href="{{ route('plans') }}" variant="secondary" 
+            class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150" 
+            style="text-decoration: none;">
             Plans List
         </flux:link>
     </div>

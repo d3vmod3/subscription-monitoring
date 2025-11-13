@@ -84,22 +84,7 @@
         @enderror
     </div>
 
-    {{-- Due Day --}}
-    <div>
-        <label class="block text-sm font-medium mb-1">Due Day</label>
-        <input 
-            type="number" 
-            wire:model.defer="due_day" 
-            class="w-full border rounded px-3 py-2"
-            placeholder="Enter due day of the month"
-            min="1"
-            max="28"
-        >
-        @error('due_day') 
-            <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
-        @enderror
-    </div>
-
+    
     {{-- Status --}}
     <div>
         <label class="block text-sm font-medium mb-1">Status</label>

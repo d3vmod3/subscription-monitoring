@@ -18,7 +18,6 @@ class AddSubscription extends Component
     public $pon_id;
     public $mikrotik_name;
     public $start_date;
-    public $due_day; // updated
     public $status = 'inactive';
 
     public $plans = [];
@@ -30,7 +29,6 @@ class AddSubscription extends Component
         'pon_id' => 'nullable|exists:pons,id',
         'mikrotik_name' => 'required|string|unique:subscriptions,mikrotik_name|max:255',
         'start_date' => 'required|date',
-        'due_day' => 'required|integer|min:1|max:31', // updated
         'status' => 'required|in:active,inactive,disconnected',
     ];
 
@@ -79,7 +77,6 @@ class AddSubscription extends Component
             'pon_id' => $this->pon_id,
             'mikrotik_name' => $this->mikrotik_name,
             'start_date' => $this->start_date,
-            'due_day' => $this->due_day, // updated
             'status' => $this->status,
         ]);
 
@@ -92,7 +89,6 @@ class AddSubscription extends Component
             'pon_id',
             'mikrotik_name',
             'start_date',
-            'due_day', // updated
             'status'
         ]);
 

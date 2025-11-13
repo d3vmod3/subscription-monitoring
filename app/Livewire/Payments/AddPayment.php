@@ -44,6 +44,7 @@ class AddPayment extends Component
     public function mount()
     {
         $this->payment_methods = PaymentMethod::where('is_active', true)->get();
+        $this->month_year_cover = now()->format('Y-m');
     }
 
     public function updatedMonthYearCover()
