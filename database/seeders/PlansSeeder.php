@@ -25,7 +25,6 @@ class PlansSeeder extends Seeder
             DB::table('plans')->insert([
                 'name' => $plan[0],
                 'description' => $plan[1],
-                'subscription_interval' => $plan[2],
                 'price' => $plan[3],
                 'is_active' => true,
                 'created_at' => now(),

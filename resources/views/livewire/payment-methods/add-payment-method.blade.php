@@ -48,10 +48,10 @@
 
         {{-- Buttons --}}
         <div class="flex justify-end mt-4">
-            <button type="submit"
-                class="bg-zinc-500 text-white px-4 py-2 rounded hover:bg-zinc-600 dark:hover:bg-zinc-700 transition-colors">
+            <flux:button type="submit"
+                variant="primary">
                 Save Payment Method
-            </button>
+            </flux:button>
         </div>
     </form>
 </div>

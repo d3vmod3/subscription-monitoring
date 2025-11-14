@@ -44,10 +44,6 @@
                         Price
                         @if($sortField == 'price') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
-                    <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('subscription_interval')">
-                        Interval
-                        @if($sortField == 'subscription_interval') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
-                    </th>
                     <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('created_at')">
                         Date Created
                         @if($sortField == 'created_at') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
@@ -66,7 +62,6 @@
                         <td class="px-4 py-2 border">{{ $plan->name }}</td>
                         <td class="px-4 py-2 border">{{ $plan->description ?? '-' }}</td>
                         <td class="px-4 py-2 border">₱{{ number_format($plan->price, 2) }}</td>
-                        <td class="px-4 py-2 border">{{ ucfirst($plan->subscription_interval) }}</td>
                         <td class="px-4 py-2 text-center border">{{ $plan->created_at->format('Y-m-d') }}</td>
                         <td class="px-4 py-2 border">
                             <span class="{{ $plan->is_active ? 'text-green-600' : 'text-red-600' }}">

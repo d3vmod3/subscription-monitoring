@@ -2,7 +2,7 @@
 
     <h2 class="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Edit Plan</h2>
 
-    {{-- Name & Subscription Interval (side-by-side on md+) --}}
+    {{-- Name --}}
     <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1">
             <label class="block font-medium text-zinc-900 dark:text-zinc-100">Name</label>

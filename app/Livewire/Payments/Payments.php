@@ -40,7 +40,7 @@ class Payments extends Component
     public function render()
     {
         $query = Payment::query()
-            ->with(['subscription.subscriber', 'paymentMethod']);
+            ->with(['subscription.subscriber','subscription.plan', 'paymentMethod']);
 
         if ($this->search) {
             $query->whereHas('subscription', function ($q) {
@@ -49,7 +49,7 @@ class Payments extends Component
                     $sq->whereRaw(
                         "CONCAT(first_name, ' ', IFNULL(middle_name, ''), ' ', last_name) LIKE ?",
                         ['%' . $this->search . '%']
-                    );
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]));
                 });
             })
             ->orWhere('reference_number', 'like', '%'.$this->search.'%');
@@ -69,10 +69,12 @@ class Payments extends Component
 
         $payments = $query
             ->leftJoin('subscriptions', 'payments.subscription_id', '=', 'subscriptions.id')
+            ->leftJoin('plans', 'plans.id', '=', 'subscriptions.plan_id')
             ->leftJoin('payment_methods', 'payments.payment_method_id', '=', 'payment_methods.id')
             ->orderBy($sortField, $this->sortDirection)
             ->select('payments.*') // important to prevent ambiguous columns
             ->paginate(10);
+        
 
         return view('livewire.payments.payments', [
             'payments' => $payments,

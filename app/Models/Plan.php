@@ -12,7 +12,6 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'description',
-        'subscription_interval',
         'price',
         'is_active',
     ];

@@ -15,17 +15,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
-            SubscribersSeeder::class,
-            PlansSeeder::class,
-            PaymentMethodsSeeder::class,
-            SubscriptionsSeeder::class,
-            PaymentsSeeder::class,
+            // SubscribersSeeder::class,
+            // PlansSeeder::class,
+            // PaymentMethodsSeeder::class,
+            // SubscriptionsSeeder::class,
+            // PaymentsSeeder::class,
             // AdvancePaymentsSeeder::class,
             UsersSeeder::class,
-            SectorsSeeder::class,
-            PonsSeeder::class,
-            SplittersSeeder::class,
-            NapboxesSeeder::class,
+            // SectorsSeeder::class,
+            // PonsSeeder::class,
+            // SplittersSeeder::class,
+            // NapboxesSeeder::class,
         ]);
     }
 }

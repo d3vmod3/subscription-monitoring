@@ -20,18 +20,6 @@
         @error('description') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
     </div>
 
-    {{-- Subscription Interval --}}
-    <div>
-        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Subscription Interval</label>
-        <select wire:model.defer="subscription_interval" 
-            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-zinc-400">
-            <option value="monthly">Monthly</option>
-            <option value="6 months">6 Months</option>
-            <option value="yearly">Yearly</option>
-        </select>
-        @error('subscription_interval') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-    </div>
-
     {{-- Price --}}
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Price</label>
@@ -50,7 +38,7 @@
 
     {{-- Buttons --}}
     <div class="flex justify-end space-x-2 mt-4">
-        <flux:button wire:click="save" class="bg-zinc-500 hover:bg-zinc-600 text-white rounded px-4 py-2 transition-colors">Save</flux:button>
+        <flux:button wire:click="save" variant="primary">Save</flux:button>
     </div>
 
 </div>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
+        @PwaHead
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
@@ -136,7 +137,7 @@
             </flux:dropdown>
         </flux:header>
         {{ $slot }}
-
         @fluxScripts
+        @RegisterServiceWorkerScript
     </body>
 </html>

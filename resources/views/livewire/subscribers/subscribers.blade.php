@@ -4,6 +4,11 @@
 @endphp
 
 <div class="p-4 max-w-full">
+    <div class="mb-2">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Subscribers
+        </h1>
+    </div>
 
     {{-- Top controls --}}
     <div class="flex flex-col sm:flex-row justify-between mb-4 gap-3">

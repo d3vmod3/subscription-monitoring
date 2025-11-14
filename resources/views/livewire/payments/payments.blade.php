@@ -47,6 +47,12 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
+                    <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('plan_id')">
+                        Plan
+                        @if($sortField == 'plan_Id') 
+                            @if($sortDirection == 'asc') ▲ @else ▼ @endif 
+                        @endif
+                    </th>
                     <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('reference_number')">
                         Reference #
                         @if($sortField == 'reference_number') 
@@ -89,6 +95,9 @@
                         </td>
                         <td class="px-4 py-2 border whitespace-nowrap">
                             {{ $payment->subscription->mikrotik_name ?? 'N/A' }}
+                        </td>
+                        <td class="px-4 py-2 border whitespace-nowrap">
+                            {{ $payment->subscription->plan->name . ' - ' . $payment->subscription->plan->price  ?? 'N/A' }}
                         </td>
                         <td class="px-4 py-2 border whitespace-nowrap">
                             {{ $payment->reference_number ?? '—' }}

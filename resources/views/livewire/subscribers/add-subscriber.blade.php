@@ -113,10 +113,9 @@
                 Back
             </flux:link>
 
-            <button type="submit"
-                class="bg-zinc-600 text-white px-4 py-2 cursor-pointer rounded hover:bg-zinc-700 dark:hover:bg-zinc-500 transition-colors w-full md:w-auto">
+            <flux:button type="submit" variant="primary">
                 Save
-            </button>
+            </flux:button>
         </div>
 
     </form>
