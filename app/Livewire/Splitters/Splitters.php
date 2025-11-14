@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Splitter;
 use Hashids\Hashids;
+use App\Models\Napbox;
 
 class Splitters extends Component
 {
@@ -15,6 +16,7 @@ class Splitters extends Component
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
+    
 
     protected $paginationTheme = 'tailwind';
     protected $queryString = ['search'];

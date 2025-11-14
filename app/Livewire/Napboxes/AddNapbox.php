@@ -5,23 +5,23 @@ namespace App\Livewire\Napboxes;
 use Livewire\Component;
 use App\Models\Napbox;
 use App\Models\PassiveOpticalNetwork;
-use App\Models\Splitter;
+// use App\Models\Splitter;
 
 class AddNapbox extends Component
 {
     public $pon_id;
-    public $splitter_id;
+    // public $splitter_id;
     public $napbox_code;
     public $name;
     public $description;
     public $is_active = true;
 
     public $pons;      // For PON dropdown
-    public $splitters; // For Splitter dropdown
+    // public $splitters; // For Splitter dropdown
 
     protected $rules = [
         'pon_id' => 'required|exists:pons,id',
-        'splitter_id' => 'exists:splitters,id',
+        // 'splitter_id' => 'exists:splitters,id',
         'napbox_code' => 'required|string|max:50|unique:napboxes,napbox_code',
         'name' => 'required|string|max:255',
         'description' => 'nullable|string|max:500',
@@ -32,7 +32,7 @@ class AddNapbox extends Component
     {
         // Load active PONs and Splitters for dropdowns
         $this->pons = PassiveOpticalNetwork::where('is_active', true)->orderBy('name')->get();
-        $this->splitters = Splitter::where('is_active', true)->orderBy('name')->get();
+        // $this->splitters = Splitter::where('is_active', true)->orderBy('name')->get();
     }
 
     public function save()
@@ -41,14 +41,13 @@ class AddNapbox extends Component
 
         Napbox::create([
             'pon_id' => $this->pon_id,
-            'splitter_id' => $this->splitter_id,
             'napbox_code' => $this->napbox_code,
             'name' => $this->name,
             'description' => $this->description,
             'is_active' => $this->is_active,
         ]);
 
-        $this->reset(['pon_id', 'splitter_id', 'napbox_code', 'name', 'description', 'is_active']);
+        $this->reset(['pon_id', 'napbox_code', 'name', 'description', 'is_active']);
 
         $this->dispatch('napbox-added');
 

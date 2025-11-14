@@ -16,9 +16,9 @@ class NapboxesSeeder extends Seeder
 
         foreach ($pons as $pon) {
             foreach ($splitters as $index => $splitter) {
+
                 Napbox::create([
                     'pon_id' => $pon->id,
-                    'splitter_id' => $splitter->id,
                     'napbox_code' => strtoupper('NAP-' . $pon->id . '-' . $splitter->id),
                     'name' => $pon->name . ' - ' . $splitter->name . ' Napbox',
                     'description' => 'Napbox connecting ' . $pon->name . ' and ' . $splitter->name,

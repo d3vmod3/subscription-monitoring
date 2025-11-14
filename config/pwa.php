@@ -19,12 +19,12 @@ return [
     */
     'install-button' => true,
     'manifest' => [
-        'name' => 'Laravel PWA',
-        'short_name' => 'LPT',
-        'background_color' => '#6777ef',
+        'name' => env('APP_NAME', 'ISP Portal'),
+        'short_name' => env('APP_NAME', 'ISP Portal'),
+        'background_color' => '#000000ff',
         'display' => 'standalone',
         'description' => 'A Progressive Web Application setup for Laravel projects.',
-        'theme_color' => '#6777ef',
+        'theme_color' => '#ffffffff',
         'icons' => [
             [
                 'src' => 'logo.png',

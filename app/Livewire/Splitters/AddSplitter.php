@@ -4,20 +4,29 @@ namespace App\Livewire\Splitters;
 
 use Livewire\Component;
 use App\Models\Splitter;
+use App\Models\Napbox;
 
 class AddSplitter extends Component
 {
     public $name;
     public $description;
     public $is_active = true;
+    public $napboxes; // For Napboxes dropdown
+    public $napbox_id;
 
     protected $rules = [
+        'napbox_id' => 'required|exists:napboxes,id',
         'name' => 'required|string|max:255|unique:splitters,name',
         'description' => 'nullable|string|max:500',
         'is_active' => 'boolean',
     ];
 
     protected $listeners = ['splitter-added' => '$refresh'];
+
+    public function mount()
+    {
+        $this->napboxes = Napbox::where('is_active', true)->orderBy('name')->get();
+    }
 
     public function save()
     {

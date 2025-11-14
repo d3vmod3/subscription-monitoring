@@ -50,20 +50,6 @@
         @error('pon_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
     </div>
 
-    {{-- ✅ Splitter --}}
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Splitter</label>
-        <select 
-            wire:model="splitter_id"
-            class="w-full border border-gray-300 dark:border-zinc-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-800 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        >
-            <option value="">-- Select Splitter --</option>
-            @foreach ($splitters as $splitter)
-                <option value="{{ $splitter->id }}">{{ $splitter->name }}</option>
-            @endforeach
-        </select>
-        @error('splitter_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-    </div>
 
     {{-- ✅ Status Switch --}}
     <div class="flex justify-end">

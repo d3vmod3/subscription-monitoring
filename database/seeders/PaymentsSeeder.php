@@ -42,6 +42,7 @@ class PaymentsSeeder extends Seeder
                 Payment::create([
                     'subscription_id'   => $subscription->id,
                     'payment_method_id' => $paymentMethods->random()->id,
+                    'user_id' => 3,
                     'account_name'      => $faker->boolean(80)
                         ? ($subscriberName ?? $faker->name())
                         : $faker->name(),

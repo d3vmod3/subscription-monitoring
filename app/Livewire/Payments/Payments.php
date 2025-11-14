@@ -17,6 +17,8 @@ class Payments extends Component
     public $sortField = 'paid_at';
     public $sortDirection = 'desc';
 
+    public $per_page = 10;
+
     protected $paginationTheme = 'tailwind';
     protected $listeners = [
         'payment-added' => '$refresh',
@@ -73,7 +75,7 @@ class Payments extends Component
             ->leftJoin('payment_methods', 'payments.payment_method_id', '=', 'payment_methods.id')
             ->orderBy($sortField, $this->sortDirection)
             ->select('payments.*') // important to prevent ambiguous columns
-            ->paginate(10);
+            ->paginate($this->per_page);
         
 
         return view('livewire.payments.payments', [

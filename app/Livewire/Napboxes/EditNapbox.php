@@ -5,7 +5,7 @@ namespace App\Livewire\Napboxes;
 use Livewire\Component;
 use App\Models\Napbox;
 use App\Models\PassiveOpticalNetwork;
-use App\Models\Splitter;
+// use App\Models\Splitter;
 use Hashids\Hashids;
 
 class EditNapbox extends Component
@@ -16,7 +16,7 @@ class EditNapbox extends Component
     public $description;
     public $is_active;
     public $pon_id;
-    public $splitter_id;
+    // public $splitter_id;
 
     public $pons;
     public $splitters;
@@ -28,7 +28,7 @@ class EditNapbox extends Component
             'description' => 'nullable|string|max:500',
             'is_active' => 'boolean',
             'pon_id' => 'required|exists:pons,id',
-            'splitter_id' => 'required|exists:splitters,id',
+            // 'splitter_id' => 'required|exists:splitters,id',
         ];
     }
 
@@ -48,10 +48,10 @@ class EditNapbox extends Component
         $this->description = $napbox->description;
         $this->is_active = (bool) $napbox->is_active;
         $this->pon_id = $napbox->pon_id;
-        $this->splitter_id = $napbox->splitter_id;
+        // $this->splitter_id = $napbox->splitter_id;
 
         $this->pons = PassiveOpticalNetwork::where('is_active', true)->get();
-        $this->splitters = Splitter::where('is_active', true)->get();
+        // $this->splitters = Splitter::where('is_active', true)->get();
     }
 
     public function save()
@@ -65,7 +65,6 @@ class EditNapbox extends Component
             'description' => $this->description,
             'is_active' => $this->is_active,
             'pon_id' => $this->pon_id,
-            'splitter_id' => $this->splitter_id,
         ]);
 
         $this->dispatch('show-toast', [

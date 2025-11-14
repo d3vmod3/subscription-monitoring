@@ -20,6 +20,7 @@ class Payment extends Model
         'month_year_cover',
         'is_discounted',
         'remarks',
+        'user_id'
     ];
 
     protected $casts = [
@@ -30,6 +31,11 @@ class Payment extends Model
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function paymentMethod()

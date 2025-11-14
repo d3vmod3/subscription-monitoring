@@ -23,8 +23,10 @@ return new class extends Migration
             $table->string('contact_number')->nullable();
             $table->text('address')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->boolean('is_password_resetted')->default(true);
             $table->rememberToken();
             $table->timestamps(); // created_at, updated_at
+            
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

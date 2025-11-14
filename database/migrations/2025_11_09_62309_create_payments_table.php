@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('payment_method_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('subscription_id')->constrained();
+            $table->foreignId('payment_method_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->string('account_name');
             $table->string('reference_number')->nullable();
             $table->dateTime('paid_at');
@@ -27,13 +28,13 @@ return new class extends Migration
         });
 
         // Advance Payments table
-        // Schema::create('advance_payments', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-        //     $table->decimal('amount', 10, 2);
-        //     $table->boolean('is_used')->default(false);
-        //     $table->timestamps();
-        // });
+        Schema::create('advance_payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
+            $table->decimal('amount', 10, 2);
+            $table->boolean('is_used')->default(false);
+            $table->timestamps();
+        });
 
         // Schema::create('advance_bill_payments', function (Blueprint $table) {
         //     $table->id();

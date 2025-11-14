@@ -95,8 +95,8 @@ class Billings extends Component
 
             if ($billingStart->format('Y-m') === $subscriptionStart->format('Y-m') && $subscriptionStart->day !== 1) {
                 // First billing: from start date to 7th of next month
-                $firstBillingEnd = $subscriptionStart->copy()->addMonthNoOverflow()->day(7);
-                $daysUsed = $subscriptionStart->diffInDays($firstBillingEnd) + 1; // inclusive
+                $firstBillingEnd = $subscriptionStart->copy()->addMonthNoOverflow()->day(1);
+                $daysUsed = $subscriptionStart->diffInDays($firstBillingEnd); // inclusive
                 $totalDaysInPeriod = $subscriptionStart->diffInDays($firstBillingEnd) + 1;
 
                 $expectedAmount = ceil(($planPrice / $subscriptionStart->daysInMonth) * $daysUsed);

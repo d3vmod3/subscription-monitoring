@@ -11,7 +11,6 @@ class Napbox extends Model
 
     protected $fillable = [
         'pon_id',
-        'splitter_id',
         'napbox_code',
         'name',
         'description',
@@ -22,8 +21,9 @@ class Napbox extends Model
         return $this->belongsTo(PassiveOpticalNetwork::class, 'pon_id');
     }
 
-    public function splitter()
+    public function splitters()
     {
-        return $this->belongsTo(Splitter::class, 'splitter_id');
+
+        return $this->hasMany(Splitter::class, 'napbox_id');
     }
 }

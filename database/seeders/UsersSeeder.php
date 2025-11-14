@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\User;
 
 class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
-        DB::table('users')->insert([
+        // Create users
+        $users = [
             [
                 'email' => 'admin1@example.com',
                 'password' => Hash::make('password123'),
@@ -27,6 +27,7 @@ class UsersSeeder extends Seeder
                 'contact_number' => '09171234567',
                 'address' => '123 Manila Street, Philippines',
                 'status' => 'active',
+                'is_password_resetted' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -41,11 +42,12 @@ class UsersSeeder extends Seeder
                 'contact_number' => '09179876543',
                 'address' => '456 Quezon Avenue, Philippines',
                 'status' => 'active',
+                'is_password_resetted' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'email' => 'staff1@example.com',
+                'email' => 'user1@example.com',
                 'password' => Hash::make('password123'),
                 'first_name' => 'Pedro',
                 'middle_name' => 'Reyes',
@@ -55,9 +57,30 @@ class UsersSeeder extends Seeder
                 'contact_number' => '09171239876',
                 'address' => '789 Cebu Street, Philippines',
                 'status' => 'active',
+                'is_password_resetted' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        // Insert users
+        DB::table('users')->insert($users);
+
+        // Assign roles
+        $adminEmails = ['admin1@example.com', 'admin2@example.com'];
+        foreach ($adminEmails as $email) {
+            $user = User::where('email', $email)->first();
+            if ($user) {
+                $user->assignRole('admin');
+            }
+        }
+
+        $userEmails = ['user1@example.com'];
+        foreach ($userEmails as $email) {
+            $user = User::where('email', $email)->first();
+            if ($user) {
+                $user->assignRole('user');
+            }
+        }
     }
 }

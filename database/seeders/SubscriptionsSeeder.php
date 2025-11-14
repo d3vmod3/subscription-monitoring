@@ -18,6 +18,7 @@ class SubscriptionsSeeder extends Seeder
         $faker = Faker::create();
 
         $subscriberIds = DB::table('subscribers')->pluck('id')->toArray();
+        $ponIds = DB::table('pons')->pluck('id')->toArray();
         $planIds = DB::table('plans')->pluck('id')->toArray();
 
         // Create e.g. 50 random subscriptions
@@ -28,7 +29,7 @@ class SubscriptionsSeeder extends Seeder
             DB::table('subscriptions')->insert([
                 'subscriber_id' => $faker->randomElement($subscriberIds),
                 'plan_id' => $faker->randomElement($planIds),
-                'pon_id' => null,
+                'pon_id' => $faker->randomElement($ponIds),
                 'mikrotik_name' => 'MKT-' . Str::upper(Str::random(6)),
                 'start_date' => $startDate,
                 'status' => $status,

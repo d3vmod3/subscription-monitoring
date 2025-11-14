@@ -25,7 +25,7 @@ class AddPaymentMethod extends Component
         $paymentMethod = PaymentMethod::create([
             'name' => $this->name,
             'description' => $this->description,
-            'is_active' => $this->abstract,
+            'is_active' => $this->is_active,
         ]);
 
         // Encode ID using Hashids

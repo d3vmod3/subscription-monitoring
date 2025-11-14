@@ -12,7 +12,7 @@ export default defineConfig({
     ],
     server: {
         cors: true,
-        host: "0.0.0.0", // allow all network interfaces (including ZeroTier)
+        host: "10.104.185.99", // allow all network interfaces (including ZeroTier)
         port: 5173, // optional, you can change this if needed
         hmr: {
             host: "10.104.185.99", // e.g. 10.147.17.45

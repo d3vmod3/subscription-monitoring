@@ -20,25 +20,27 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
         });
 
-        Schema::create('splitters', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-            
-        });
-
+        
         Schema::create('napboxes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pon_id')->constrained('pons')->cascadeOnDelete();
-            $table->foreignId('splitter_id')->nullable()->constrained('splitters')->cascadeOnDelete();
             $table->string('napbox_code')->unique();
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
+
+        Schema::create('splitters', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+             $table->foreignId('napbox_id')->nullable()->constrained('napboxes')->cascadeOnDelete();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+            
+        });
+
     }
 
     /**

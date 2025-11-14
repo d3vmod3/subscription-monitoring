@@ -21,7 +21,20 @@
             <p class="text-sm sm:text-base text-gray-700 dark:text-gray-200">
                 <strong>Total Paid for {{ $month_year_cover }}:</strong> ₱{{ number_format($total_paid, 2) }}
             </p>
+            @if ($expected_amount)
+                <p class="text-sm sm:text-base text-blue-600 dark:text-blue-400">
+                    <strong>Expected for selected month:</strong> ₱{{ number_format($expected_amount, 2) }}
+                </p>
+            @else
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+                    <strong>Expected for selected month:</strong> ₱{{ number_format($expected_amount, 2) }}
+                    <br>
+                    <i class="text-orange-600">Payment is already made for this month {{ \Carbon\Carbon::parse($month_year_cover)->format('F Y') }}</i>
+                </p>
+            @endif
+
         </div>
+        
     @endif
 
     {{-- 💳 Payment Info (readonly) --}}
@@ -64,6 +77,12 @@
         <input type="month"
             class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
             value="{{ $month_year_cover }}" readonly>
+    </div>
+
+    {{-- Remarks --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">Remarks</label>
+        <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3" placeholder="Enter discount reason or notes"></textarea>
     </div>
 
     {{-- ⚙️ Status (editable only) --}}

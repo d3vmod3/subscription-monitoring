@@ -94,11 +94,11 @@
         <label class="block text-sm font-medium mb-1">Amount Paid</label>
         <input type="number" step="0.01" wire:model.defer="paid_amount" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter amount paid">
         @error('paid_amount') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        @if ($expected_amount)
-            <p class="text-sm text-blue-600 dark:text-blue-400 mt-1">
-                Expected amount: ₱{{ number_format($expected_amount, 2) }}
-            </p>
-        @endif
+    
+        <p class="text-sm text-blue-600 dark:text-blue-400 mt-1">
+            Expected amount: ₱{{ number_format($expected_amount, 2) }}
+        </p>
+    
     </div>
 
     {{-- Discounted Switch --}}
@@ -110,14 +110,13 @@
         </flux:field>
     </div>
 
-    {{-- Remarks (only for discounted payments) --}}
-    @if ($is_discounted)
-        <div>
-            <label class="block text-sm font-medium mb-1">Remarks (for discounted payments)</label>
-            <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3" placeholder="Enter discount reason or notes"></textarea>
-            @error('remarks') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-    @endif
+    {{-- Remarks --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">Remarks</label>
+        <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3" placeholder="Enter discount reason or notes"></textarea>
+        @error('remarks') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+    
 
     {{-- Buttons --}}
     <div class="flex justify-end space-x-2 mt-4">

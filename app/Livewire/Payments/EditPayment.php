@@ -5,6 +5,7 @@ namespace App\Livewire\Payments;
 use Livewire\Component;
 use App\Models\Payment;
 use Hashids\Hashids;
+use Carbon\Carbon;
 
 class EditPayment extends Component
 {
@@ -21,6 +22,10 @@ class EditPayment extends Component
 
     public $selectedSubscription; // to show plan info
     public $total_paid = 0;
+    public $expected_amount=0.0;
+
+    private $created_at;
+    private $updated_at;
 
     protected function rules()
     {
@@ -54,11 +59,13 @@ class EditPayment extends Component
         $this->remarks = $this->payment->remarks;
         $this->account_name = $this->payment->account_name;
 
+
         // Load subscription info to display plan name & price
         $this->selectedSubscription = $this->payment->subscription;
 
         // Compute total paid for the same subscription and month_year_cover
         $this->computeTotalPaid();
+        $this->computeExpectedAmount();
     }
 
     public function computeTotalPaid()
@@ -70,19 +77,55 @@ class EditPayment extends Component
 
         $this->total_paid = Payment::where('subscription_id', $this->selectedSubscription->id)
             ->where('month_year_cover', $this->month_year_cover)
+            ->where('status', 'Approved')
             ->sum('paid_amount');
+    }
+
+    public function computeExpectedAmount()
+    {
+        $this->expected_amount = 0;
+
+        if (!$this->selectedSubscription || !$this->selectedSubscription->plan || !$this->month_year_cover) {
+            return;
+        }
+
+        $planPrice = $this->selectedSubscription->plan->price;
+        $subscriptionStart = Carbon::parse($this->selectedSubscription->start_date);
+        $coverMonthStart = Carbon::parse($this->month_year_cover . '-01');
+
+        // First month scenario: subscription starts mid-month
+        if ($subscriptionStart->format('Y-m') == $coverMonthStart->format('Y-m')) {
+            // Set the end date as the 7th of next month
+            $coverMonthEnd = $coverMonthStart->copy()->addMonth()->day(1);
+
+            // Calculate active days from start date until 7th of next month
+            $activeDays = $subscriptionStart->diffInDays($coverMonthEnd);
+
+            $totalDaysInMonth = $coverMonthStart->daysInMonth;
+            $expected = round(($planPrice / $totalDaysInMonth) * $activeDays);
+
+        } else {
+            $expected = $planPrice;
+        }
+
+        // Subtract any payments already made for this subscription in this month
+        $alreadyPaid = Payment::where('subscription_id', $this->selectedSubscription->id)
+            ->where('month_year_cover', $this->month_year_cover)
+            ->where('status', 'Approved')
+            ->sum('paid_amount');
+
+        $this->expected_amount = max($expected - $alreadyPaid, 0);
     }
 
     public function save()
     {
         $this->validate();
-
         $this->payment->update([
             'status' => $this->status,
             'paid_amount' => $this->paid_amount,
             'month_year_cover' => $this->month_year_cover,
             'is_discounted' => $this->is_discounted,
-            'remarks' => $this->is_discounted ? $this->remarks : null,
+            'remarks' => $this->remarks,
             'account_name' => $this->account_name,
         ]);
 
@@ -91,6 +134,8 @@ class EditPayment extends Component
             'type' => 'success',
             'duration' => 3000,
         ]);
+
+        
     }
 
     public function render()

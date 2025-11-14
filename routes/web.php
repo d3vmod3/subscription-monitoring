@@ -6,8 +6,8 @@ use Livewire\Volt\Volt;
 use Hashids\Hashids;
 
 Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+    return redirect()->route('login');
+})->name('login');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -81,4 +81,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Billings Routes
     Volt::route('billings/view/{hash}', 'billings.billings')->name('view-billings');
+
+    Volt::route('users/list', 'users.users')->name('users');
+    Volt::route('users/add', 'users.add-user')->name('user.add');
+    Volt::route('users/edit/{hash}', 'user.edit-user')->name('user.edit');
 });

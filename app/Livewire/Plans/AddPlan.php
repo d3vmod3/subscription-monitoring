@@ -28,11 +28,12 @@ class AddPlan extends Component
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
+            'subscription_interval' => "Monthly",
             'is_active' => $this->is_active,
         ]);
 
         // Reset form fields after adding
-        $this->reset(['name', 'description', 'subscription_interval', 'price', 'is_active']);
+        $this->reset(['name', 'description', 'price', 'is_active']);
         $this->dispatch('plan-added');
         // Dispatch event for toast notification
         $this->dispatch('show-toast', [

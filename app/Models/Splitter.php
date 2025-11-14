@@ -12,10 +12,11 @@ class Splitter extends Model
     protected $fillable = [
         'name',
         'description',
+        'napbox_id'
     ];
 
-    public function napboxes()
+    public function napbox()
     {
-        return $this->hasMany(Napbox::class, 'splitter_id');
+        return $this->belongsTo(Napbox::class);
     }
 }

@@ -2,6 +2,23 @@
 
     <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Add New Splitter</h2>
 
+    {{-- ✅ Napbox Select --}}
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Napbox</label>
+        <select 
+            wire:model="napbox_id" 
+            class="w-full border border-gray-300 dark:border-zinc-600 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-zinc-800"
+        >
+            <option value="">-- Select Napbox --</option>
+            @foreach($napboxes as $napbox)
+                <option value="{{ $napbox->id }}">
+                    {{ $napbox->name }} ({{ $napbox->name ?? 'No Napbox' }})
+                </option>
+            @endforeach
+        </select>
+        @error('napbox_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
     {{-- Name --}}
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Name</label>
