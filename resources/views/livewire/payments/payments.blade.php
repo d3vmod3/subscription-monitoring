@@ -30,21 +30,22 @@
         </div>
     </div>
 
+    {{-- Pagination --}}
+    <div class="mb-4 mt-4 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <label for="">Per Page</label>
+            <flux:select class="w-xs" wire:model.live="per_page">
+                <flux:select.option>10</flux:select.option>
+                <flux:select.option>25</flux:select.option>
+                <flux:select.option>50</flux:select.option>
+                <flux:select.option>100</flux:select.option>
+            </flux:select>
+        </div>
+        {{ $payments->links() }}
+    </div>
+
     {{-- Table wrapper for horizontal scroll on mobile --}}
     <div class="overflow-x-auto">
-        {{-- Pagination --}}
-        <div class="mb-4 mt-4 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <label for="">Per Page</label>
-                <flux:select class="w-xs" wire:model.live="per_page">
-                    <flux:select.option>10</flux:select.option>
-                    <flux:select.option>25</flux:select.option>
-                    <flux:select.option>50</flux:select.option>
-                    <flux:select.option>100</flux:select.option>
-                </flux:select>
-            </div>
-            {{ $payments->links() }}
-        </div>
         <table class="min-w-full border border-gray-200">
             <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
@@ -84,9 +85,9 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
-                    <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('paid_at')">
-                        Paid At
-                        @if($sortField == 'paid_at') 
+                    <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('created_at')">
+                        Created At
+                        @if($sortField == 'created_at') 
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
@@ -125,7 +126,7 @@
                             ₱{{ number_format($payment->paid_amount, 2) }}
                         </td>
                         <td class="px-4 py-2 border whitespace-nowrap">
-                            {{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}
+                            {{ \Carbon\Carbon::parse($payment->created_at)->format('Y-m-d') }}
                         </td>
                         <td class="px-4 py-2 border whitespace-nowrap">
                             {{ $payment->user->getFullNameAttribute() ?? 'N/A' }}
