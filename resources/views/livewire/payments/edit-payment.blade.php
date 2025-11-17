@@ -15,7 +15,9 @@
 
     {{-- 📦 Current Plan --}}
     @if($selectedSubscription && $selectedSubscription->plan)
+        Subscription Details
         <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded border space-y-1">
+            <p class="text-sm sm:text-base"><strong>Mikrotik Name:</strong> {{ $selectedSubscription->mikrotik_name }}</p>
             <p class="text-sm sm:text-base"><strong>Current Plan:</strong> {{ $selectedSubscription->plan->name }}</p>
             <p class="text-sm sm:text-base"><strong>Price:</strong> ₱{{ number_format($selectedSubscription->plan->price, 2) }}</p>
             <p class="text-sm sm:text-base text-gray-700 dark:text-gray-200">
@@ -62,13 +64,21 @@
                 class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
                 value="{{ $payment->paymentMethod->name }}" readonly>
         </div>
-
         <div>
-            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Paid At</label>
-            <input type="date"
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Reference Number</label>
+            <input type="text"
                 class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
-                value="{{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}" readonly>
+                value="{{ $payment->reference }}" readonly>
         </div>
+
+        
+    </div>
+    {{-- Paid at  }}
+    <div>
+        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Paid At</label>
+        <input type="date"
+            class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
+            value="{{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}" readonly>
     </div>
 
     {{-- 🗓️ Month Covered --}}

@@ -151,14 +151,14 @@ class AddPayment extends Component
             'subscription_id' => $this->subscription_id,
             'user_id' => Auth::user()->id,
             'payment_method_id' => $this->payment_method_id,
-            'reference_number' => $this->reference_number ?? Str::upper(Str::random(10)),
+            'reference_number' => $this->reference_number,
             'paid_at' => $this->paid_at,
             'month_year_cover' => $this->month_year_cover,
             'paid_amount' => $this->paid_amount,
             'status' => 'Pending',
             'is_discounted' => $this->is_discounted,
             'discount_amount' => $this->discount_amount,
-            'remarks' => $this->is_discounted ? $this->remarks : null,
+            'remarks' => $this->remarks,
             'account_name' => $this->account_name,
         ]);
 

@@ -15,15 +15,13 @@
 
     {{-- 📦 Current Plan --}}
     @if($selectedSubscription && $selectedSubscription->plan)
+        Subscription Details
         <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded border space-y-1">
+            <p class="text-sm sm:text-base"><strong>Mikrotik Name:</strong> {{ $selectedSubscription->mikrotik_name }}</p>
             <p class="text-sm sm:text-base"><strong>Current Plan:</strong> {{ $selectedSubscription->plan->name }}</p>
             <p class="text-sm sm:text-base"><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($selectedSubscription->start_date)->format('F m, Y') }}</p>
             <p class="text-sm sm:text-base"><strong>Price:</strong> ₱{{ number_format($selectedSubscription->plan->price, 2) }}</p>
-            <p class="text-sm sm:text-base text-gray-700 dark:text-gray-200">
-                <strong>Total Paid ₱{{ number_format($paid_amount, 2) }}
-            </p>
         </div>
-        
     @endif
 
     {{-- 💳 Payment Info (readonly) --}}
@@ -91,24 +89,19 @@
     @if($status == "Approved")
     {{-- Is used Switch --}}
     <div class="mt-4">
-        <flux:field variant="inline" class="flex items-center space-x-2">
-            <flux:label>Use this Advance Payment</flux:label>
-            <flux:switch wire:model.live="is_used" />
-            <flux:error name="is_used" />
-        </flux:field>
+        <div class="flex items-center justify-between space-x-2">
+            <flux:field variant="inline">
+                <flux:label>Use this Advance Payment</flux:label>
+                <flux:switch wire:model.live="is_used" />
+                <flux:error name="is_used" />
+            </flux:field>
             @if($is_used)
             {{-- 🗓️ Month Covered --}}
             <div class="w-full">
-                <label class="block font-medium text-zinc-900 dark:text-zinc-100">Month Covered
-                    <span class="text-sm italic text-orange-400">(Please Input Month Cover)</span>
-                </label>
-                <input type="month"
-                    class="border w-full rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
-                    value="{{ $month_year_cover }}">
-                
+                <input type="month" class="border w-full rounded px-3 py-2 bg-gray-100 dark:bg-zinc-600 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600" wire:model.live="month_year_cover" readonly>
             </div>
             @endif
-        
+        </div>
     </div>
     @error('month_year_cover') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
     @endif
@@ -117,7 +110,7 @@
     <div class="flex flex-col sm:flex-row justify-end gap-2 mt-4">
         <flux:button wire:click="save" wire:loading.attr="disabled" variant="primary">
             <span wire:loading.remove>Update Changes</span>
-            <span wire:loading>Updating...</span>
+            <span wire:loading>Please Wait</span>
         </flux:button>
 
         <flux:link href="{{ route('payments') }}" variant="secondary"

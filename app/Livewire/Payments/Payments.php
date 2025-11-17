@@ -45,17 +45,26 @@ class Payments extends Component
             ->with(['subscription.subscriber','subscription.plan', 'paymentMethod']);
 
         if ($this->search) {
-            $query->whereHas('subscription', function ($q) {
-                $q->where('mikrotik_name', 'like', '%'.$this->search.'%')
-                ->orWhereHas('subscriber', function($sq) {
-                    $sq->whereRaw(
-                        "CONCAT(first_name, ' ', IFNULL(middle_name, ''), ' ', last_name) LIKE ?",
-                        ['%' . $this->search . '%']
-                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]));
-                });
-            })
-            ->orWhere('reference_number', 'like', '%'.$this->search.'%');
+            $search = $this->search; // define a local variable for closures
+
+            $query->where(function ($query) use ($search) {
+                // Search in subscription.mikrotik_name or subscriber full name
+                $query->whereHas('subscription', function ($q) use ($search) {
+                    $q->where('mikrotik_name', 'like', '%' . $search . '%')
+                    ->orWhereHas('subscriber', function ($sq) use ($search) {
+                        $sq->whereRaw(
+                            "CONCAT(first_name, ' ', IFNULL(middle_name, ''), ' ', last_name) LIKE ?",
+                            ['%' . $search . '%']
+                        )->orWhereRaw(
+                            "CONCAT(first_name, ' ', last_name) LIKE ?",
+                            ['%' . $search . '%']
+                        );
+                    });
+                })
+                ->orWhere('reference_number', 'like', '%' . $search . '%');
+            });
         }
+
 
         // Only allow sorting by actual columns
         $allowedSorts = [

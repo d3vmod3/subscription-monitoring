@@ -7,6 +7,7 @@ use App\Models\AdvancePayment;
 use App\Models\Payment;
 use Hashids\Hashids;
 use Carbon\Carbon;
+use Auth;
 
 class EditAdvancePayment extends Component
 {
@@ -19,6 +20,7 @@ class EditAdvancePayment extends Component
     public $paid_amount;
     public $month_year_cover;
     public $is_discounted;
+    public $subscription_id;
     public $discount_amount;
     public $remarks;
     public $account_name;
@@ -48,37 +50,39 @@ class EditAdvancePayment extends Component
         $this->payment = AdvancePayment::with('subscription.plan', 'subscription.subscriber', 'paymentMethod')
             ->findOrFail($this->paymentId);
 
+
         // Map current values to editable fields
         $this->status = $this->payment->status;
         $this->paid_amount = $this->payment->paid_amount;
-        $this->month_year_cover = $this->payment->month_year_cover;
+
+        
         $this->is_discounted = $this->payment->is_discounted;
         $this->discount_amount = $this->payment->discount_amount;
         $this->remarks = $this->payment->remarks;
         $this->account_name = $this->payment->account_name;
         $this->is_used = $this->payment->is_used;
 
-
         // Load subscription info to display plan name & price
         $this->selectedSubscription = $this->payment->subscription;
-
+        $subscriptionStart = Carbon::parse($this->selectedSubscription->start_date);
+        $this->month_year_cover = $subscriptionStart->addMonth(5)->format('Y-m');
         // Compute total paid for the same subscription and month_year_cover
-        $this->computeTotalPaid();
+        // $this->computeTotalPaid();
         $this->computeExpectedAmount();
     }
 
-    public function computeTotalPaid()
-    {
-        if (!$this->selectedSubscription || !$this->month_year_cover) {
-            $this->total_paid = 0;
-            return;
-        }
+    // public function computeTotalPaid()
+    // {
+    //     if (!$this->selectedSubscription || !$this->month_year_cover) {
+    //         $this->total_paid = 0;
+    //         return;
+    //     }
 
-        $this->total_paid = Payment::where('subscription_id', $this->selectedSubscription->id)
-            ->where('month_year_cover', $this->month_year_cover)
-            ->where('status', 'Approved')
-            ->sum('paid_amount');
-    }
+    //     $this->total_paid = Payment::where('subscription_id', $this->selectedSubscription->id)
+    //         ->where('month_year_cover', $this->month_year_cover)
+    //         ->where('status', 'Approved')
+    //         ->sum('paid_amount');
+    // }
 
     public function computeExpectedAmount()
     {
@@ -126,39 +130,34 @@ class EditAdvancePayment extends Component
             'is_discounted' => $this->is_discounted,
             'remarks' => $this->remarks,
             'account_name' => $this->account_name,
+            'is_used' => $this->is_used,
         ]);
 
         if($this->is_used && $this->status === 'Approved')
         {
             //check if already paid
-            if ($this->isMonthCoverIsAlreadyPaid() != true)
+            if ($this->validateAdvancePayment())
             {
                 Payment::create([
-                    'subscription_id' => $this->subscription_id,
+                    'subscription_id' => $this->payment->subscription_id,
                     'user_id' => Auth::user()->id,
-                    'payment_method_id' => $this->payment_method_id,
-                    'reference_number' => $this->reference_number ?? Str::upper(Str::random(10)),
-                    'paid_at' => $this->paid_at,
+                    'payment_method_id' => $this->payment->payment_method_id,
+                    'reference_number' => $this->payment->reference_number ,
+                    'paid_at' => $this->payment->paid_at,
                     'month_year_cover' => $this->month_year_cover,
-                    'paid_amount' => $this->paid_amount,
+                    'paid_amount' => $this->payment->paid_amount,
                     'status' => 'Pending',
-                    'is_discounted' => $this->is_discounted,
-                    'discount_amount' => $this->discount_amount,
-                    'remarks' => $this->is_discounted ? $this->remarks : null,
+                    'is_discounted' => $this->payment->is_discounted,
+                    'discount_amount' => $this->payment->discount_amount,
+                    'remarks' => $this->payment->remarks,
                     'account_name' => $this->account_name,
+                    
                 ]);
             }
-            else
-            {
-                //add error
-                $this->addError('month_year_cover', "The selected month cover is already paid");
-                return;
-            }
-
         }
 
         $this->dispatch('show-toast', [
-            'message' => 'Adavence Payment updated successfully!',
+            'message' => 'Advance Payment updated successfully!',
             'type' => 'success',
             'duration' => 3000,
         ]);
@@ -166,19 +165,31 @@ class EditAdvancePayment extends Component
         
     }
 
-    public function isMonthCoverIsAlreadyPaid()
+    public function validateAdvancePayment()
     {
         $alreadyPaid = Payment::where('subscription_id', $this->selectedSubscription->id)
             ->where('month_year_cover', $this->month_year_cover)
-            ->where('status', 'Approved')
+            ->whereNot('status', 'Disapproved')
             ->sum('paid_amount');
-        dd($alreadyPaid);
+        $alreadyPaidStatus = Payment::where('subscription_id', $this->selectedSubscription->id)->get();
+        $paymentStatus = Payment::where('subscription_id', $this->selectedSubscription->id)
+            ->latest('paid_at')
+            ->value('status');
         if($alreadyPaid == $this->selectedSubscription->plan->price)
         {
-            return true;
+            $this->addError('month_year_cover', "The selected month cover advance payment is already " . $paymentStatus);
+            return false;
         }
 
-        return false;
+        // $isSixMonths = false;
+        // $subscriptionStart = Carbon::parse($this->selectedSubscription->start_date);
+        // $coverMonthStart = Carbon::parse($this->month_year_cover . '-01');
+        // if($subscriptionStart->copy()->addMonth(5)->format('F Y') !== $coverMonthStart->format('F Y'))
+        // {
+        //     $this->addError('month_year_cover', "The selected month cover is already paid");
+        //     return false;
+        // }
+        return true;
     }
 
     

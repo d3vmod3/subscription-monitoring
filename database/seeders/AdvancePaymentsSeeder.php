@@ -50,10 +50,11 @@ class AdvancePaymentsSeeder extends Seeder
                         : $faker->name(),
                     'reference_number'  => Str::upper(Str::random(10)),
                     'paid_at'           => $faker->dateTimeBetween('-6 months', 'now'),
-                    'paid_amount'       => $faker->randomFloat(2, 500, 1500),
+                    'paid_amount'       => $subscription->plan->price,
                     'status'            => 'Approved',
                     'discount_amount'     => 0.00,
                     'remarks'           => $isDiscounted ? $faker->sentence() : null,
+                    'is_used' => false,
                 ]);
             }
         }
