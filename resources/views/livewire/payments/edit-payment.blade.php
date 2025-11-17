@@ -79,10 +79,19 @@
             value="{{ $month_year_cover }}" readonly>
     </div>
 
+    {{-- Discount--}}
+    <div class="flex justify-between space-x-8 items-center mt-4">
+        <div class="w-full">
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Discount</label>
+            <input type="number" step="0.01" wire:model.defer="discount_amount" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter discount amount" readonly>
+        </div>
+    </div>
+    @error('discount_amount') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+
     {{-- Remarks --}}
     <div>
         <label class="block text-sm font-medium mb-1">Remarks</label>
-        <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3"></textarea>
+        <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3" readonly></textarea>
     </div>
 
     {{-- ⚙️ Status (editable only) --}}
