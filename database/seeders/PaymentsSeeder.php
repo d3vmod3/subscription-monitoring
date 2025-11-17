@@ -20,7 +20,7 @@ class PaymentsSeeder extends Seeder
 
         foreach ($subscriptions as $subscription) {
             $numPayments = rand(1, 3);
-            $startDate = now()->subMonths($numPayments);
+            $startDate = \Carbon\Carbon::parse($subscription->start_date);
 
             for ($i = 1; $i <= $numPayments; $i++) {
                 $coverMonth = (clone $startDate)->addMonths($i - 1);
@@ -51,7 +51,8 @@ class PaymentsSeeder extends Seeder
                     'month_year_cover'  => $coverMonth->format('Y-m'),
                     'paid_amount'       => $faker->randomFloat(2, 500, 1500),
                     'status'            => 'Approved',
-                    'is_discounted'     => $isDiscounted,
+                    'is_discounted'     => false,
+                    'discount_amount'     => 0.00,
                     'remarks'           => $isDiscounted ? $faker->sentence() : null,
                 ]);
             }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->dateTime('paid_at');
             $table->decimal('paid_amount', 12, 2);
             $table->enum('status', ['Pending', 'Approved', 'Disapproved'])->default('Pending');
-            $table->string('month_year_cover'); // e.g., 2025-10
+            $table->string('month_year_cover');
             $table->boolean('is_discounted')->default(false);
             $table->decimal('discount_amount', 12, 2)->default(0.00);
             $table->text('remarks')->nullable();
@@ -31,8 +31,17 @@ return new class extends Migration
         // Advance Payments table
         Schema::create('advance_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-            $table->decimal('amount', 10, 2);
+            $table->foreignId('subscription_id')->constrained();
+            $table->foreignId('payment_method_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->string('account_name');
+            $table->string('reference_number')->nullable();
+            $table->dateTime('paid_at');
+            $table->decimal('paid_amount', 12, 2);
+            $table->enum('status', ['Pending', 'Approved', 'Disapproved'])->default('Pending');
+            $table->boolean('is_discounted')->default(false);
+            $table->decimal('discount_amount', 12, 2)->default(0.00);
+            $table->text('remarks')->nullable();
             $table->boolean('is_used')->default(false);
             $table->timestamps();
         });

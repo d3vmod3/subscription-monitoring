@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Livewire\Payments;
+namespace App\Livewire\AdvancePayments;
 
 use Livewire\Component;
-use App\Models\Payment;
+use App\Models\AdvancePayment;
 use App\Models\Subscription;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Auth;
 
-class AddPayment extends Component
+class AddAdvancePayment extends Component
 {
     public $subscription_id;
     public $subscriber_search = '';
@@ -31,7 +31,14 @@ class AddPayment extends Component
     public $selectedSubscription;
     public $expected_amount = 0; // computed based on month_year_cover
 
-    protected $rules = [
+    public function mount()
+    {
+        $this->payment_methods = PaymentMethod::where('is_active', true)->get();
+        $this->month_year_cover = now()->format('Y-m');
+        $this->paid_at = now()->format('Y-m-d');
+    }
+
+     protected $rules = [
         'subscription_id' => 'required|exists:subscriptions,id',
         'payment_method_id' => 'required|exists:payment_methods,id',
         'reference_number' => 'nullable|string|max:50',
@@ -42,13 +49,6 @@ class AddPayment extends Component
         'discount_amount' => 'nullable|numeric|required_if:is_discounted,true',
         'account_name' => 'required|string|max:255',
     ];
-
-    public function mount()
-    {
-        $this->payment_methods = PaymentMethod::where('is_active', true)->get();
-        $this->month_year_cover = now()->format('Y-m');
-        $this->paid_at = now()->format('Y-m-d');
-    }
 
     public function updatedMonthYearCover()
     {
@@ -95,12 +95,9 @@ class AddPayment extends Component
         $this->subscriber_results = [];
 
         $this->selectedSubscription = Subscription::with('plan')->find($id);
-
-        // Recompute expected amount if month_year_cover is already set
-        $this->computeExpectedAmount();
     }
 
-    public function computeExpectedAmount()
+     public function computeExpectedAmount()
     {
         $this->expected_amount = 0;
 
@@ -109,57 +106,33 @@ class AddPayment extends Component
         }
 
         $planPrice = $this->selectedSubscription->plan->price;
-        $subscriptionStart = Carbon::parse($this->selectedSubscription->start_date);
-        $coverMonthStart = Carbon::parse($this->month_year_cover . '-01');
+        
 
-        // First month scenario: subscription starts mid-month
-        if ($subscriptionStart->format('Y-m') == $coverMonthStart->format('Y-m')) {
-            // Set the end date as the 7th of next month
-            $coverMonthEnd = $coverMonthStart->copy()->addMonth()->day(1);
-
-            // Calculate active days from start date until 7th of next month
-            $activeDays = $subscriptionStart->diffInDays($coverMonthEnd);
-
-            $totalDaysInMonth = $coverMonthStart->daysInMonth;
-            $expected = round(($planPrice / $totalDaysInMonth) * $activeDays);
-
-        } else {
-            $expected = $planPrice;
-        }
-
-        // Subtract any payments already made for this subscription in this month
-        $alreadyPaid = Payment::where('subscription_id', $this->selectedSubscription->id)
-            ->where('month_year_cover', $this->month_year_cover)
-            ->where('status', 'Approved')
-            ->sum('paid_amount');
-
-        $this->expected_amount = max($expected - $alreadyPaid, 0);
+        $this->expected_amount = max($planPrice, 2);
     }
-
-
 
     public function save()
     {
         $this->validate();
-        
-        if ($this->paid_amount > $this->expected_amount) {
-            $this->addError('paid_amount', "The amount ₱{$this->paid_amount} exceeds the expected ₱{$this->expected_amount} for {$this->month_year_cover}.");
+
+        if ($this->paid_amount < $this->expected_amount) {
+            $this->addError('paid_amount', "Paid amount must be exactly ₱{$this->expected_amount}.");
             return;
         }
 
-        Payment::create([
+        AdvancePayment::create([
             'subscription_id' => $this->subscription_id,
             'user_id' => Auth::user()->id,
             'payment_method_id' => $this->payment_method_id,
             'reference_number' => $this->reference_number ?? Str::upper(Str::random(10)),
             'paid_at' => $this->paid_at,
-            'month_year_cover' => $this->month_year_cover,
             'paid_amount' => $this->paid_amount,
             'status' => 'Pending',
             'is_discounted' => $this->is_discounted,
             'discount_amount' => $this->discount_amount,
             'remarks' => $this->is_discounted ? $this->remarks : null,
             'account_name' => $this->account_name,
+            'is_used' => false,
         ]);
 
         $this->reset([
@@ -188,8 +161,9 @@ class AddPayment extends Component
         ]);
     }
 
+
     public function render()
     {
-        return view('livewire.payments.add-payment');
+        return view('livewire.advance-payments.add-advance-payment');
     }
 }

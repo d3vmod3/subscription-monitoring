@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Livewire\Payments;
+namespace App\Livewire\AdvancePayments;
 
 use Livewire\Component;
+use App\Models\AdvancePayment;
 use App\Models\Payment;
 use Hashids\Hashids;
 use Carbon\Carbon;
 
-class EditPayment extends Component
+class EditAdvancePayment extends Component
 {
+
     public $paymentId;
     public $payment;
 
@@ -25,8 +27,7 @@ class EditPayment extends Component
     public $total_paid = 0;
     public $expected_amount=0.0;
 
-    private $created_at;
-    private $updated_at;
+    public $is_used;
 
     protected function rules()
     {
@@ -44,7 +45,7 @@ class EditPayment extends Component
 
         $this->paymentId = $decoded[0];
 
-        $this->payment = Payment::with('subscription.plan', 'subscription.subscriber', 'paymentMethod')
+        $this->payment = AdvancePayment::with('subscription.plan', 'subscription.subscriber', 'paymentMethod')
             ->findOrFail($this->paymentId);
 
         // Map current values to editable fields
@@ -55,6 +56,7 @@ class EditPayment extends Component
         $this->discount_amount = $this->payment->discount_amount;
         $this->remarks = $this->payment->remarks;
         $this->account_name = $this->payment->account_name;
+        $this->is_used = $this->payment->is_used;
 
 
         // Load subscription info to display plan name & price
@@ -119,12 +121,44 @@ class EditPayment extends Component
         $this->validate();
         $this->payment->update([
             'status' => $this->status,
+            'paid_amount' => $this->paid_amount,
+            'month_year_cover' => $this->month_year_cover,
+            'is_discounted' => $this->is_discounted,
+            'remarks' => $this->remarks,
             'account_name' => $this->account_name,
         ]);
 
+        if($this->is_used && $this->status === 'Approved')
+        {
+            //check if already paid
+            if ($this->isMonthCoverIsAlreadyPaid() != true)
+            {
+                Payment::create([
+                    'subscription_id' => $this->subscription_id,
+                    'user_id' => Auth::user()->id,
+                    'payment_method_id' => $this->payment_method_id,
+                    'reference_number' => $this->reference_number ?? Str::upper(Str::random(10)),
+                    'paid_at' => $this->paid_at,
+                    'month_year_cover' => $this->month_year_cover,
+                    'paid_amount' => $this->paid_amount,
+                    'status' => 'Pending',
+                    'is_discounted' => $this->is_discounted,
+                    'discount_amount' => $this->discount_amount,
+                    'remarks' => $this->is_discounted ? $this->remarks : null,
+                    'account_name' => $this->account_name,
+                ]);
+            }
+            else
+            {
+                //add error
+                $this->addError('month_year_cover', "The selected month cover is already paid");
+                return;
+            }
+
+        }
 
         $this->dispatch('show-toast', [
-            'message' => 'Payment updated successfully!',
+            'message' => 'Adavence Payment updated successfully!',
             'type' => 'success',
             'duration' => 3000,
         ]);
@@ -132,8 +166,24 @@ class EditPayment extends Component
         
     }
 
+    public function isMonthCoverIsAlreadyPaid()
+    {
+        $alreadyPaid = Payment::where('subscription_id', $this->selectedSubscription->id)
+            ->where('month_year_cover', $this->month_year_cover)
+            ->where('status', 'Approved')
+            ->sum('paid_amount');
+        dd($alreadyPaid);
+        if($alreadyPaid == $this->selectedSubscription->plan->price)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    
     public function render()
     {
-        return view('livewire.payments.edit-payment');
+        return view('livewire.advance-payments.edit-advance-payment');
     }
 }

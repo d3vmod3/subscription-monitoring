@@ -9,9 +9,20 @@ class AdvancePayment extends Model
 {
     use HasFactory;
 
+    protected $table = 'advance_payments';
+
     protected $fillable = [
         'subscription_id',
-        'amount',
+        'payment_method_id',
+        'account_name',
+        'reference_number',
+        'paid_at',
+        'paid_amount',
+        'status',
+        'is_discounted',
+        'discount_amount',
+        'remarks',
+        'user_id',
         'is_used',
     ];
 
@@ -19,9 +30,18 @@ class AdvancePayment extends Model
         'is_used' => 'boolean',
     ];
 
-    // Relationships
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
     }
 }
