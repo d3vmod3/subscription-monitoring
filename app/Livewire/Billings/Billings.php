@@ -7,6 +7,7 @@ use App\Models\Subscriber;
 use App\Models\Subscription;
 use Carbon\Carbon;
 use Hashids\Hashids;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Billings extends Component
 {
@@ -33,7 +34,6 @@ class Billings extends Component
 
         $this->subscriberId = $decoded[0];
         $this->hash = $hash;
-
         $this->subscriber = Subscriber::with('subscriptions.plan', 'subscriptions.payments')
             ->findOrFail($this->subscriberId);
 
@@ -46,16 +46,26 @@ class Billings extends Component
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $decoded = $hashids->decode($hash);
 
-        if (!empty($decoded)) {
-            $subscriptionId = $decoded[0];
-            $this->selectedSubscription = Subscription::with(['plan', 'payments'])->findOrFail($subscriptionId);
-
-            // Default month cover range: start month -> current month
-            $this->month_cover_from = Carbon::parse($this->selectedSubscription->start_date)->format('Y-m');
-            $this->month_cover_to = now()->format('Y-m');
-
-            $this->filterPayments();
+        if($this->subscriptionHash == "")
+        {
+            $selectedSubscription = null;
         }
+        else
+        {
+            if (!empty($decoded))
+            {
+                $subscriptionId = $decoded[0];
+                $this->selectedSubscription = Subscription::with(['plan', 'payments'])->findOrFail($subscriptionId);
+
+                // Default month cover range: start month -> current month
+                $this->month_cover_from = Carbon::parse($this->selectedSubscription->start_date)->format('Y-m');
+                $this->month_cover_to = now()->format('Y-m');
+
+                $this->filterPayments();
+            }
+        }
+
+        
     }
 
     public function filterPayments()
@@ -187,6 +197,35 @@ class Billings extends Component
 
         $this->billingSummary = $billingSummary;
         // dd($billingSummary);
+    }
+
+
+    protected function utf8ize($mixed)
+    {
+        if (is_array($mixed) || $mixed instanceof \Illuminate\Support\Collection) {
+            foreach ($mixed as $key => $value) {
+                $mixed[$key] = $this->utf8ize($value);
+            }
+            return $mixed instanceof \Illuminate\Support\Collection ? collect($mixed) : $mixed;
+        } elseif (is_string($mixed)) {
+            // Force UTF-8
+            $mixed = mb_convert_encoding($mixed, 'UTF-8', 'UTF-8');
+            // Remove invalid control characters
+            $mixed = preg_replace('/[^\P{C}\n\t]+/u', '', $mixed);
+            return $mixed;
+        }
+        return $mixed;
+    }
+
+    public function generatePdf()
+    {
+        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        $subscriptionHash = $hashids->encode($this->selectedSubscription->id);
+        return redirect()->route('pdf.billing', [
+            'subscriptionHash' => $subscriptionHash,
+            'month_cover_from' => $this->month_cover_from,
+            'month_cover_to' => $this->month_cover_to,
+        ]);
     }
 
     public function render()

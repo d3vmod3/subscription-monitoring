@@ -2,14 +2,13 @@
     <h2 class="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-zinc-100 break-words">
         Subscriber Billings: {{ $subscriber->full_name }}
     </h2>
-
     {{-- Select Subscription --}}
     @if ($subscriptions->count())
         <div class="mt-2">
             <label class="block mb-1 font-medium text-zinc-900 dark:text-zinc-100">Choose Mikrotik Name</label>
             <select wire:model.live="subscriptionHash"
                 class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600">
-                <option value="">-- Select Subscription --</option>
+                <option value="">-- Select Mikrotik Name --</option>
                 @php $hashids = new \Hashids\Hashids(config('hashids.salt'), config('hashids.min_length')); @endphp
                 @foreach ($subscriptions as $sub)
                     <option value="{{ $hashids->encode($sub->id) }}">
@@ -21,7 +20,8 @@
     @endif
 
     {{-- Month Cover Range --}}
-    @if ($selectedSubscription)
+    
+    @if($subscriptionHash)
         <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
             <div>
                 <label class="block mb-1 font-medium text-zinc-900 dark:text-zinc-100">Start Date</label>
@@ -88,19 +88,34 @@
                     </tbody>
                 </table>
             </div>
-        @else
-            <p class="text-gray-500 dark:text-zinc-400 mt-4">No payments found for this range.</p>
         @endif
 
         {{-- Billing Summary --}}
         @if ($billingSummary && $billingSummary->count())
-            <h3 class="mt-8 text-lg font-semibold text-zinc-900 dark:text-zinc-100">Billing Status Summary</h3>
+            <div class="flex items-center justify-between">
+                <h3 class="mt-8 text-lg font-semibold text-zinc-900 dark:text-zinc-100">Billing Status Summary</h3>
+                @if($this->subscriptionHash)
+                <flux:link 
+                    class="border hover:bg-zinc-700 bg-zinc-800 dark:bg-white text-white dark:text-black p-2 rounded-xl" 
+                    href="{{ route('pdf.billing', [
+                        'subscriptionHash' => $this->subscriptionHash, 
+                        'monthCoverFrom' => $this->month_cover_from, 
+                        'monthCoverTo' => $this->month_cover_to
+                    ]) }}" 
+                    target="_blank" 
+                    style="text-decoration:none">
+                    Download PDF
+                </flux:link>
+                @endif
+            </div>
             <div class="overflow-x-auto mt-2">
-                <table class="w-full border min-w-[600px] text-zinc-900 dark:text-zinc-100">
+                <table class="w-full border min-w-[600px] text-center text-zinc-900 dark:text-zinc-100">
                     <thead>
                         <tr class="bg-gray-100 dark:bg-zinc-700">
                             <th class="px-4 py-2 border">Month (Year)</th>
+                            <th class="px-4 py-2 border">Expected Amount</th>
                             <th class="px-4 py-2 border">Status</th>
+                            <th class="px-4 py-2 border">Paid Amount</th>
                             <th class="px-4 py-2 border">Remaining Balance</th>
                             <th class="px-4 py-2 border">Discount</th>
                         </tr>
@@ -109,13 +124,17 @@
                         @foreach ($billingSummary as $row)
                             <tr class="hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors duration-150">
                                 <td class="px-4 py-2 border">{{ $row['month'] }}</td>
+                                <td class="px-4 py-2 border font-semibold text-neutral">
+                                    ₱{{ number_format($row['expected_amount'], 2) }}
+                                </td>
                                 <td class="px-4 py-2 border font-semibold {{ $row['status'] === 'Paid' ? 'text-green-600' : 'text-red-600' }}">
                                     {{ $row['status'] }}
                                 </td>
+                                <td class="px-4 py-2 border font-semibold text-neutral">
+                                    ₱{{ number_format($row['paid_amount'], 2) }}
+                                </td>
                                 <td class="px-4 py-2 border text-red-400 font-semibold">
-                                    @if(!empty($row['remaining_balance']))
-                                        ₱{{ number_format($row['remaining_balance'], 2) }}
-                                    @endif
+                                    ₱{{ number_format($row['remaining_balance'], 2) }}
                                 </td>
                                 <td class="px-4 py-2 border font-semibold text-neutral">
                                     ₱{{ number_format($row['discount_amount'], 2) }}
@@ -126,5 +145,12 @@
                 </table>
             </div>
         @endif
+    @else
+    <p class="text-neutral-400">
+        No Billings Available. Please select Mikrotik Name
+    </p>
     @endif
+
 </div>
+
+

@@ -22,7 +22,7 @@ class AddPayment extends Component
     public $month_year_cover;
     public $paid_amount;
     public $is_discounted = false;
-    public $discount_amount;
+    public $discount_amount = 0;
     public $remarks;
     public $account_name;
 
@@ -37,9 +37,9 @@ class AddPayment extends Component
         'reference_number' => 'nullable|string|max:50',
         'paid_at' => 'required|date|before_or_equal:today',
         'month_year_cover' => 'required|date_format:Y-m',
-        'paid_amount' => 'required|numeric|min:0',
+        'paid_amount' => 'required|numeric|min:1',
         'is_discounted' => 'boolean',
-        'discount_amount' => 'nullable|string|required_if:is_discounted,true',
+        'discount_amount' => 'nullable|numeric|required_if:is_discounted,true',
         'account_name' => 'required|string|max:255',
     ];
 

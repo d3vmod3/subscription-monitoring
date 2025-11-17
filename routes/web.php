@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use Hashids\Hashids;
+use App\Http\Controllers\PdfController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -85,4 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('users/list', 'users.users')->name('users');
     Volt::route('users/add', 'users.add-user')->name('user.add');
     Volt::route('users/edit/{hash}', 'user.edit-user')->name('user.edit');
+
+    //generate billing pdf copy
+    Route::get('/pdf-billing/{subscriptionHash}/{monthCoverFrom}/{monthCoverTo}',[PdfController::class, 'generatePdf'])->name('pdf.billing');
 });
