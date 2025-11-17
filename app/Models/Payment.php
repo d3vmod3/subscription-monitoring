@@ -19,6 +19,7 @@ class Payment extends Model
         'status',
         'month_year_cover',
         'is_discounted',
+        'discount_amount',
         'remarks',
         'user_id'
     ];

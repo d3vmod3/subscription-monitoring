@@ -24,7 +24,7 @@
             <flux:modal.trigger name="add-payment">
                 <flux:button>Add Payment</flux:button>
             </flux:modal.trigger>
-            <flux:modal name="add-payment" class="w-full sm:max-w-md md:w-96">
+            <flux:modal name="add-payment" class="w-full">
                 <livewire:payments.add-payment />
             </flux:modal>
         </div>

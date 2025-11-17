@@ -82,7 +82,7 @@
     {{-- Remarks --}}
     <div>
         <label class="block text-sm font-medium mb-1">Remarks</label>
-        <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3" placeholder="Enter discount reason or notes"></textarea>
+        <textarea wire:model.defer="remarks" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3"></textarea>
     </div>
 
     {{-- ⚙️ Status (editable only) --}}

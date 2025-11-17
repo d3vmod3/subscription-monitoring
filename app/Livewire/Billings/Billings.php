@@ -20,6 +20,7 @@ class Billings extends Component
     public $year;
     public $expectedTotal = 0;
     public $totalPaid = 0;
+    public $totalDiscount = 0;
     public $month_cover_from;
     public $month_cover_to;
     public $billingSummary = [];
@@ -86,6 +87,7 @@ class Billings extends Component
         $billingStart = $from->copy();
         $totalExpected = 0;
         $totalPaid = 0;
+        $totalDiscount = 0;
 
         while ($billingStart->lessThanOrEqualTo($to)) {
             $monthCover = $billingStart->format('Y-m');
@@ -111,14 +113,21 @@ class Billings extends Component
                 ->where('status', 'Approved')
                 ->sum('paid_amount');
 
+            $discountAmount = $subscription->payments
+                ->where('month_year_cover', $monthCover)
+                ->where('status', 'Approved')
+                ->sum('discount_amount');
+
             $totalExpected += $expectedAmount;
             $totalPaid += $paidAmount;
+            $totalDiscount += $discountAmount;
 
             $billingStart->addMonth();
         }
 
         $this->expectedTotal = $totalExpected;
         $this->totalPaid = $totalPaid;
+        $this->totalDiscount = $totalDiscount;
     }
 
     protected function generateBillingSummary($from, $to)
@@ -153,15 +162,23 @@ class Billings extends Component
                     return Carbon::parse($p->month_year_cover . '-01')->format('Y-m') === $monthCover;
                 })
                 ->sum('paid_amount');
+            $discountAmount = $subscription->payments
+                ->where('status', 'Approved')
+                ->filter(function($p) use ($monthCover) {
+                    return Carbon::parse($p->month_year_cover . '-01')->format('Y-m') === $monthCover;
+                })
+                ->sum('discount_amount');
             
             $remaining = max($expectedAmount - $paidAmount, 0);
-            $status = $remaining == 0 ? 'Paid' : 'Not Paid';
+            
+            $status = $remaining - $discountAmount == 0 ? 'Paid' : 'Not Paid';
 
             $billingSummary->push([
                 'month' => $billingStart->format('F Y'),
                 'expected_amount' => $expectedAmount,
                 'paid_amount' => $paidAmount,
                 'status' => $status,
+                'discount_amount' => $discountAmount,
                 'remaining_balance' => $remaining,
             ]);
 

@@ -49,11 +49,15 @@
         <div class="mt-4 p-4 border rounded bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 space-y-1">
             <div class="flex justify-between">
                 <span class="font-semibold">Expected Total Amount:</span>
-                <span class="text-green-600 font-bold">₱{{ number_format($expectedTotal, 2) }}</span>
+                <span class="text-neutral font-bold">₱{{ number_format($expectedTotal, 2) }}</span>
             </div>
             <div class="flex justify-between">
                 <span class="font-semibold">Total Paid:</span>
                 <span class="text-blue-600 font-bold">₱{{ number_format($totalPaid, 2) }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Total Discounts:</span>
+                <span class="text-blue-600 font-bold">₱{{ number_format($totalDiscount, 2) }}</span>
             </div>
         </div>
 
@@ -98,6 +102,7 @@
                             <th class="px-4 py-2 border">Month (Year)</th>
                             <th class="px-4 py-2 border">Status</th>
                             <th class="px-4 py-2 border">Remaining Balance</th>
+                            <th class="px-4 py-2 border">Discount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,10 +112,13 @@
                                 <td class="px-4 py-2 border font-semibold {{ $row['status'] === 'Paid' ? 'text-green-600' : 'text-red-600' }}">
                                     {{ $row['status'] }}
                                 </td>
-                                <td class="px-4 py-2 border text-red-600 font-semibold">
+                                <td class="px-4 py-2 border text-red-400 font-semibold">
                                     @if(!empty($row['remaining_balance']))
                                         ₱{{ number_format($row['remaining_balance'], 2) }}
                                     @endif
+                                </td>
+                                <td class="px-4 py-2 border font-semibold text-neutral">
+                                    ₱{{ number_format($row['discount_amount'], 2) }}
                                 </td>
                             </tr>
                         @endforeach

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('status', ['Pending', 'Approved', 'Disapproved'])->default('Pending');
             $table->string('month_year_cover'); // e.g., 2025-10
             $table->boolean('is_discounted')->default(false);
+            $table->decimal('discount_amount', 12, 2)->default(0.00);
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

@@ -1,4 +1,4 @@
-<div class="space-y-6 p-4 max-w-3xl mx-auto">
+<div class="space-y-6 p-4 w-full mx-auto">
     <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center sm:text-left">Add New Payment</h2>
 
     {{-- Subscription (Searchable by mikrotik_name) --}}
@@ -60,7 +60,7 @@
     </div>
 
     {{-- Account Name & Reference Number in flex for larger screens --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2  xl:grid-cols-2 2xl:grid-cols-2 gap-4">
         <div>
             <label class="block text-sm font-medium mb-1">Account Name</label>
             <input type="text" wire:model="account_name" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter account name (required)">
@@ -75,7 +75,7 @@
     </div>
 
     {{-- Paid At & Month-Year Cover in flex for larger screens --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2  xl:grid-cols-2 2xl:grid-cols-2 gap-4">
         <div>
             <label class="block text-sm font-medium mb-1">Paid At</label>
             <input type="date" wire:model.defer="paid_at" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -102,13 +102,21 @@
     </div>
 
     {{-- Discounted Switch --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-4">
+    <div class="flex justify-between space-x-8 items-center mt-4">
         <flux:field variant="inline" class="flex items-center space-x-2">
             <flux:label>Discounted</flux:label>
             <flux:switch wire:model.live="is_discounted" />
             <flux:error name="is_discounted" />
         </flux:field>
+        @if($is_discounted)
+        <div class="w-full">
+            <input type="number" step="0.01" wire:model.defer="discount_amount" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter discount amount">
+            
+        </div>
+        @endif
     </div>
+    @error('discount_amount') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+    
 
     {{-- Remarks --}}
     <div>
@@ -117,7 +125,6 @@
         @error('remarks') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
     </div>
     
-
     {{-- Buttons --}}
     <div class="flex justify-end space-x-2 mt-4">
         <flux:button wire:click="save" variant="primary">Save</flux:button>

@@ -17,6 +17,7 @@ class EditPayment extends Component
     public $paid_amount;
     public $month_year_cover;
     public $is_discounted;
+    public $discount_amount;
     public $remarks;
     public $account_name;
 
@@ -31,11 +32,6 @@ class EditPayment extends Component
     {
         return [
             'status' => 'required|in:Pending,Approved,Disapproved',
-            'paid_amount' => 'required|numeric|min:0',
-            'month_year_cover' => 'required|date_format:Y-m',
-            'account_name' => 'required|string|max:255',
-            'is_discounted' => 'boolean',
-            'remarks' => 'nullable|string|required_if:is_discounted,true',
         ];
     }
 
@@ -56,6 +52,7 @@ class EditPayment extends Component
         $this->paid_amount = $this->payment->paid_amount;
         $this->month_year_cover = $this->payment->month_year_cover;
         $this->is_discounted = $this->payment->is_discounted;
+        $this->discount_amount = $this->payment->discount_amount;
         $this->remarks = $this->payment->remarks;
         $this->account_name = $this->payment->account_name;
 

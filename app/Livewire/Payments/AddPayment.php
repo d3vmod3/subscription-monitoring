@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Auth;
 
 class AddPayment extends Component
 {
@@ -21,6 +22,7 @@ class AddPayment extends Component
     public $month_year_cover;
     public $paid_amount;
     public $is_discounted = false;
+    public $discount_amount;
     public $remarks;
     public $account_name;
 
@@ -37,6 +39,7 @@ class AddPayment extends Component
         'month_year_cover' => 'required|date_format:Y-m',
         'paid_amount' => 'required|numeric|min:0',
         'is_discounted' => 'boolean',
+        'discount_amount' => 'nullable|string|required_if:is_discounted,true',
         'account_name' => 'required|string|max:255',
     ];
 
@@ -145,7 +148,7 @@ class AddPayment extends Component
 
         Payment::create([
             'subscription_id' => $this->subscription_id,
-            'user_id' => Authd::user()->id,
+            'user_id' => Auth::user()->id,
             'payment_method_id' => $this->payment_method_id,
             'reference_number' => $this->reference_number ?? Str::upper(Str::random(10)),
             'paid_at' => $this->paid_at,
@@ -153,6 +156,7 @@ class AddPayment extends Component
             'paid_amount' => $this->paid_amount,
             'status' => 'Pending',
             'is_discounted' => $this->is_discounted,
+            'discount_amount' => $this->discount_amount,
             'remarks' => $this->is_discounted ? $this->remarks : null,
             'account_name' => $this->account_name,
         ]);
@@ -167,6 +171,7 @@ class AddPayment extends Component
             'paid_at',
             'paid_amount',
             'is_discounted',
+            'discount_amount',
             'remarks',
             'account_name',
             'expected_amount',
