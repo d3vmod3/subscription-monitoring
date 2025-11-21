@@ -97,7 +97,7 @@
         </div>
 
         {{-- Status --}}
-        <div class="flex items-center mt-4">
+        <div class="flex items-center mt-4 justify-end">
             <flux:field variant="inline" class="flex items-center space-x-2">
                 <flux:label>Active</flux:label>
                 <flux:switch wire:model="is_active" />

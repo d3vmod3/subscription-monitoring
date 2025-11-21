@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -20,6 +18,17 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'birthdate',
+        'gender',
+        'contact_number',
+        'address_line_1',
+        'address_line_2',
+        'region_id',
+        'province_id',
+        'municipality_id',
+        'barangay_id',
+        'is_active',
+        'is_password_resetted',
     ];
 
     protected $hidden = [
@@ -31,6 +40,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birthdate'         => 'date',
+        'is_password_resetted' => 'boolean',
         'password' => 'hashed',
     ];
 
@@ -47,4 +58,3 @@ class User extends Authenticatable
         return trim("{$this->first_name} " . ($this->middle_name ? "{$this->middle_name} " : '') . "{$this->last_name}");
     }
 }
-

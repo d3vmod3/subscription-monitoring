@@ -8,7 +8,7 @@
     @endif
 
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
-        Add User
+        Add Subscriber
     </h2>
 
     <form wire:submit.prevent="save" class="space-y-4">
@@ -57,6 +57,7 @@
                 <label class="block font-medium text-zinc-900 dark:text-zinc-100">Gender</label>
                 <select wire:model="gender" 
                     class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">-- Select Gender --</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
@@ -73,40 +74,59 @@
             @error('contact_number') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 
-        {{-- Address --}}
-        <div>
-            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address</label>
-            <textarea wire:model="address" 
-                class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
-            @error('address') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-        </div>
+        <fieldset class="border p-2">
+        <legend>Address</legend>
+            <div class="grid grid-cols-2 gap-4">
+                {{-- Address lines --}}
+                <div>
+                    <div>
+                        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address Line 1</label>
+                        <textarea wire:model="address_line_1" 
+                            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows=5></textarea>
+                        @error('address_line_1') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    </div>
 
-        {{-- Password --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block font-medium text-zinc-900 dark:text-zinc-100">Password</label>
-                <input type="password" wire:model="password" 
-                    class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                @error('password') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label class="block font-medium text-zinc-900 dark:text-zinc-100">Confirm Password</label>
-                <input type="password" wire:model="password_confirmation" 
-                    class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            </div>
-        </div>
+                    <div>
+                        <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address Line 2</label>
+                        <textarea wire:model="address_line_2" 
+                            class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" rows=5></textarea>
+                        @error('address_line_2') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    </div>
+                </div>
 
-        {{-- Role Selection --}}
+                {{-- Location Dropdowns --}}
+                <div class="mt-4">
+                    <livewire:address.location-dropdowns 
+                        wire:model.live:region="region_id" 
+                        wire:model.live:province="province_id" 
+                        wire:model.live:municipality="municipality_id" 
+                        wire:model.live:barangay="barangay_id" />
+                </div>
+            </div>
+        </fieldset>
+
+
+        {{-- Role --}}
         <div>
-            <label class="block font-medium text-zinc-900 dark:text-zinc-100">Role</label>
-            <select wire:model="role"
+            <label class="block font-medium text-zinc-900 dark:text-zinc-100">User Role</label>
+            <select wire:model="role" 
                 class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="">Select Role</option>
-                @foreach($roles as $r)
+                <option value="">-- Select Role --</option>
+                @foreach ($roles as $r)
                     <option value="{{ $r->name }}">{{ ucfirst($r->name) }}</option>
                 @endforeach
             </select>
             @error('role') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+        </div>
+
+        {{-- Status --}}
+        <div class="flex items-center mt-4 justify-end">
+            <flux:field variant="inline" class="flex items-center space-x-2">
+                <flux:label>Active</flux:label>
+                <flux:switch wire:model="is_active" />
+                <flux:error name="is_active" />
+            </flux:field>
+            @error('is_active') <span class="text-red-600 text-sm ml-2">{{ $message }}</span> @enderror
         </div>
 
         {{-- Buttons --}}
@@ -123,3 +143,4 @@
 
     </form>
 </div>
+

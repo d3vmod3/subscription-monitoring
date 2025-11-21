@@ -47,9 +47,9 @@
                         Contact
                         @if($sortField == 'contact_number') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
-                    <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('status')">
+                    <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('is_active')">
                         Status
-                        @if($sortField == 'status') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
+                        @if($sortField == 'is_active') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
                 </tr>
@@ -64,8 +64,8 @@
                         <td class="px-4 py-2 border whitespace-nowrap">{{ $user->email ?? '-' }}</td>
                         <td class="px-4 py-2 border whitespace-nowrap">{{ $user->contact_number ?? '-' }}</td>
                         <td class="px-4 py-2 border whitespace-nowrap">
-                            <span class="{{ $user->status === 'active' ? 'text-green-600' : 'text-red-600' }}">
-                                {{ ucfirst($user->status) }}
+                            <span class="{{ $user->is_active ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $user->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
                         <td class="px-4 py-2 border whitespace-nowrap text-center flex flex-col sm:flex-row justify-center items-center gap-1">
@@ -74,11 +74,6 @@
                                 href="{{ route('user.edit', ['hash' => $hashids->encode($user->id)]) }}">
                                 Edit
                             </flux:link>
-                            <!-- <flux:link 
-                                class="px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150"
-                                href="route('user.view', ['hash' => $hashids->encode($user->id)])">
-                                View
-                            </flux:link> -->
                         </td>
                     </tr>
                 @empty

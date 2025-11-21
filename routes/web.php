@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
 
     Volt::route('users/list', 'users.users')->name('users');
     Volt::route('users/add', 'users.add-user')->name('user.add');
-    Volt::route('users/edit/{hash}', 'user.edit-user')->name('user.edit');
+    Volt::route('users/edit/{hash}', 'users.edit-user')->name('user.edit');
 
     //generate billing pdf copy
     Route::get('/pdf-billing/{subscriptionHash}/{monthCoverFrom}/{monthCoverTo}',[PdfController::class, 'generatePdf'])->name('pdf.billing');
