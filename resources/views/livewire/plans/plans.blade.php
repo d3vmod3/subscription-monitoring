@@ -17,6 +17,7 @@
             placeholder="Search plans..." 
             class="border rounded px-3 py-2 w-full md:w-1/3"
         >
+        @can('add plans')
         <div class="flex justify-start md:justify-end">
             <flux:modal.trigger name="add-plan">
                 <flux:button>Add Plan</flux:button>
@@ -25,6 +26,7 @@
                 <livewire:plans.add-plan/>
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     {{-- Table --}}
@@ -52,7 +54,9 @@
                         Status
                         @if($sortField == 'is_active') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
+                    @can('edit plans')
                     <th class="px-4 py-2 border">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -68,9 +72,11 @@
                                 {{ $plan->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
+                        @can('edit plans')
                         <td class="px-4 py-2 border text-center">
                             <flux:link href="{{ route('plan.edit', ['hash' => $hashids->encode($plan->id)]) }}">Edit</flux:link>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

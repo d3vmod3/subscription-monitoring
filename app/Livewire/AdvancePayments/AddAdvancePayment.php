@@ -113,6 +113,10 @@ class AddAdvancePayment extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add advance payments'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         if ($this->paid_amount < $this->expected_amount) {

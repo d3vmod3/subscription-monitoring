@@ -20,14 +20,16 @@
         >
 
         {{-- ➕ Add Napbox Button --}}
+        @can('add napboxes')
         <div class="flex-shrink-0">
             <flux:modal.trigger name="add-napbox">
-                <flux:button>Add NAP Box</flux:button>
+                <flux:button>Add NAPbox</flux:button>
             </flux:modal.trigger>
             <flux:modal name="add-napbox" class="w-full sm:max-w-md md:w-96">
                 <livewire:napboxes.add-napbox />
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     {{-- 🧾 Table Wrapper for horizontal scroll on mobile --}}
@@ -64,8 +66,9 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
-
+                    @can('edit napboxes')
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -81,11 +84,13 @@
                                 {{ $nap->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
+                        @can('edit napboxes')
                         <td class="px-4 py-2 border whitespace-nowrap text-center">
                             <flux:link href="{{ route('napbox.edit', ['hash' => $hashids->encode($nap->id)]) }}">
                                 Edit
                             </flux:link>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

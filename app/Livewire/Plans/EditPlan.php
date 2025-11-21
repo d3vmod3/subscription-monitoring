@@ -5,6 +5,7 @@ namespace App\Livewire\Plans;
 use Livewire\Component;
 use App\Models\Plan;
 use Hashids\Hashids;
+use Auth;
 
 class EditPlan extends Component
 {
@@ -42,6 +43,10 @@ class EditPlan extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit plans'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $plan = Plan::findOrFail($this->planId);
@@ -61,6 +66,10 @@ class EditPlan extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit plans'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.plans.edit-plan');
     }
 }

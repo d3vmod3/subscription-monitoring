@@ -17,6 +17,7 @@
             placeholder="Search payment methods..." 
             class="border rounded px-3 py-2 w-full md:w-1/3"
         >
+        @can('add payment methods')
         <div class="flex justify-start md:justify-end">
             <flux:modal.trigger name="add-payment-method">
                 <flux:button>Add Payment Method</flux:button>
@@ -25,6 +26,7 @@
                 <livewire:payment-methods.add-payment-method/>
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     {{-- 📋 Table --}}
@@ -44,7 +46,9 @@
                         Status
                         @if($sortField == 'is_active') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
+                    @can('edit payment methods')
                     <th class="px-4 py-2 border">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 

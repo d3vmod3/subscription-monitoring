@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Napbox;
 use Hashids\Hashids;
+use Auth;
 
 class Napboxes extends Component
 {
@@ -41,6 +42,11 @@ class Napboxes extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('view napboxes'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
+
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
         $napboxes = Napbox::with('pon.sector') // load PON and sector

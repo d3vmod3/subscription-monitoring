@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Sector;
 use Hashids\Hashids;
+use Auth;
 
 class Sectors extends Component
 {
@@ -49,6 +50,10 @@ class Sectors extends Component
      */
     public function render()
     {
+        if (!Auth::user()->can('view sectors'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
         $sectors = Sector::query()

@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Subscriber;
 use Livewire\Attributes\Url;
 use Hashids\Hashids;
+use Auth;
 
 class Subscribers extends Component
 {
@@ -39,6 +40,12 @@ class Subscribers extends Component
     }
     public function render()
     {
+
+        if (!Auth::user()->can('view subscribers'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
+
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $search = $this->search;
 

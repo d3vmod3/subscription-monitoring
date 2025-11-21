@@ -21,6 +21,7 @@
         >
 
         {{-- Add User Button --}}
+        @can('add users')
         <flux:link 
             class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 w-full sm:w-auto text-center"
             href="{{ route('user.add') }}" 
@@ -28,6 +29,7 @@
         >
             Add User
         </flux:link>
+        @endcan
     </div>
 
     {{-- Table wrapper for horizontal scroll --}}
@@ -51,7 +53,9 @@
                         Status
                         @if($sortField == 'is_active') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
+                    @can('edit users')
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -68,6 +72,7 @@
                                 {{ $user->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
+                        @can('edit users')
                         <td class="px-4 py-2 border whitespace-nowrap text-center flex flex-col sm:flex-row justify-center items-center gap-1">
                             <flux:link 
                                 class="px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150"
@@ -75,6 +80,7 @@
                                 Edit
                             </flux:link>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

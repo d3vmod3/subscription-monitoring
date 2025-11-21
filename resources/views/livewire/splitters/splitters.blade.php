@@ -17,6 +17,7 @@
             placeholder="Search Splitters..." 
             class="border rounded px-3 py-2 w-full md:w-1/3 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-zinc-400"
         >
+        @can('add splitters')
         <div>
             <flux:modal.trigger name="add-splitter" class="border">
                 <flux:button class="bg-zinc-500 hover:bg-zinc-600 text-white rounded px-4 py-2 transition-colors">
@@ -27,6 +28,7 @@
                 <livewire:splitters.add-splitter />
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     {{-- Table with horizontal scroll --}}
@@ -46,7 +48,9 @@
                         Status
                         @if($sortField == 'is_active') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
+                    @can('edit splitters')
                     <th class="px-4 py-2 border text-center">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -60,12 +64,14 @@
                                 {{ $splitter->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
+                        @can('edit splitters')
                         <td class="px-4 py-2 border text-center">
                             <flux:link href="{{ route('splitter.edit', ['hash' => $splitter->hash]) }}"
                                 class="text-zinc-700 dark:text-zinc-100 hover:underline">
                                 Edit
                             </flux:link>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

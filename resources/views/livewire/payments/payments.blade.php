@@ -20,6 +20,7 @@
         >
 
         {{-- ➕ Add Payment Button --}}
+        @can('add payments')
         <div class="flex-shrink-0">
             <flux:modal.trigger name="add-payment">
                 <flux:button>Add Payment</flux:button>
@@ -28,6 +29,7 @@
                 <livewire:payments.add-payment />
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     {{-- Pagination --}}
@@ -100,7 +102,9 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
+                    @can('edit payments')
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -143,11 +147,13 @@
                                 {{ $payment->status ?? 'Pending' }}
                             </span>
                         </td>
+                        @can('edit payments')
                         <td class="px-4 py-2 border whitespace-nowrap text-center">
                             <flux:link href="{{ route('payment.edit', ['hash' => $hashids->encode($payment->id)]) }}">
                                 Edit
                             </flux:link>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

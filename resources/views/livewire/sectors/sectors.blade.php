@@ -18,6 +18,7 @@
         >
 
         <!-- Add Sector Modal Trigger -->
+        @can('add sectors')
         <div>
             <flux:modal.trigger name="add-sector" class="flex justify-end">
                 <flux:button>Add Sector</flux:button>
@@ -26,6 +27,7 @@
                 <livewire:sectors.add-sector />
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     <table class="w-full border border-gray-200">
@@ -37,16 +39,20 @@
                         @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                     @endif
                 </th>
+                @can('edit sectors')
                 <th class="px-4 py-2 border">Actions</th>
+                @endcan
             </tr>
         </thead>
         <tbody>
             @forelse ($sectors as $sector)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
                     <td class="px-4 py-2 border font-semibold">{{ $sector->name }}</td>
+                    @can('edit sectors')
                     <td class="px-4 py-2 border text-center">
                         <flux:link href="{{ route('sector.edit', ['hash' => $hashids->encode($sector->id)]) }}">Edit</flux:link>
                     </td>
+                    @endcan
                 </tr>
             @empty
                 <tr>

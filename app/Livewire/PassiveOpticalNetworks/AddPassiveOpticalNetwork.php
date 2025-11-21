@@ -5,6 +5,7 @@ namespace App\Livewire\PassiveOpticalNetworks;
 use Livewire\Component;
 use App\Models\PassiveOpticalNetwork;
 use App\Models\Sector;
+use Auth;
 
 class AddPassiveOpticalNetwork extends Component
 {
@@ -30,6 +31,10 @@ class AddPassiveOpticalNetwork extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add passive optical networks'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         PassiveOpticalNetwork::create([

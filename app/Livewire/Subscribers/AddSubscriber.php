@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Subscriber;
 use Masmerise\Toaster\Toaster;
 use Hashids\Hashids;
+use Auth;
 
 class AddSubscriber extends Component
 {
@@ -74,6 +75,10 @@ class AddSubscriber extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add subscribers'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $subscriber = Subscriber::create([
@@ -106,6 +111,10 @@ class AddSubscriber extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('add subscribers'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.subscribers.add-subscriber');
     }
 }

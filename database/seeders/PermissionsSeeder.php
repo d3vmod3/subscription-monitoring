@@ -13,8 +13,9 @@ class PermissionsSeeder extends Seeder
     {
         // Convert CamelCase → spaced words (e.g., PassiveOpticalNetwork → "passive optical network")
         $spaced = preg_replace('/(?<!^)([A-Z])/', ' $1', $name);
+        $clean = str($spaced)->lower();
 
-        return str($spaced)->lower()->plural();   // pluralized
+        return $clean->plural();
     }
 
     public function run(): void
@@ -43,7 +44,7 @@ class PermissionsSeeder extends Seeder
         foreach ($models as $model) {
 
             $modelName = class_basename($model);
-            $cleanName = $this->cleanModelName($modelName);   // pluralized name
+            $cleanName = $this->cleanModelName($modelName);// pluralized name
 
             foreach (['view', 'add', 'edit', 'delete'] as $action) {
                 Permission::firstOrCreate([

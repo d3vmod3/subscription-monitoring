@@ -47,6 +47,10 @@ class EditPassiveOpticalNetwork extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit passive optical networks'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $pon = PassiveOpticalNetwork::findOrFail($this->ponId);
@@ -66,6 +70,10 @@ class EditPassiveOpticalNetwork extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit passive optical networks'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.passive-optical-networks.edit-passive-optical-network');
     }
 }

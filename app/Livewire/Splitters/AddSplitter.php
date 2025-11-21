@@ -5,6 +5,7 @@ namespace App\Livewire\Splitters;
 use Livewire\Component;
 use App\Models\Splitter;
 use App\Models\Napbox;
+use Auth;
 
 class AddSplitter extends Component
 {
@@ -30,6 +31,10 @@ class AddSplitter extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add splitters'))
+        {
+             abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         Splitter::create([

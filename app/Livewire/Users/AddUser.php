@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class AddUser extends Component
 {
@@ -49,6 +50,10 @@ class AddUser extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add users'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
         // Create User
         $user = User::create([
@@ -80,6 +85,10 @@ class AddUser extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('addd users'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.users.add-user', [
             'roles' => Role::all(), // <--- send roles to view
         ]);

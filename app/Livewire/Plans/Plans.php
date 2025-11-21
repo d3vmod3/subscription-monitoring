@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Plan;
 use Hashids\Hashids;
+use Auth;
 
 class Plans extends Component
 {
@@ -50,6 +51,10 @@ class Plans extends Component
      */
     public function render()
     {
+        if (!Auth::user()->can('view plans'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
         $plans = Plan::query()

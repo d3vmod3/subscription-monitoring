@@ -4,6 +4,7 @@ namespace App\Livewire\Plans;
 
 use Livewire\Component;
 use App\Models\Plan;
+use Auth;
 
 class AddPlan extends Component
 {
@@ -22,6 +23,10 @@ class AddPlan extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add plans'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         Plan::create([

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Payment;
 use Livewire\Attributes\Url;
+use Auth;
 
 class Payments extends Component
 {
@@ -41,6 +42,10 @@ class Payments extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('view payments'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
         $query = Payment::query()
             ->with(['subscription.subscriber','subscription.plan', 'paymentMethod']);
 

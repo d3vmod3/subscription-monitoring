@@ -22,14 +22,15 @@
                     </flux:sidebar.group>
                     
                     <flux:navlist.item icon="globe-alt" :href="route('plans')" :current="request()->routeIs('plans')" wire:navigate>{{ __('Plans') }}</flux:navlist.item>
-                    <flux:navlist.item icon="users" :href="route('subscribers')" :current="request()->routeIs('subscribers')" wire:navigate>{{ __('Subscribers') }}</flux:navlist.item>
-                    <flux:navlist.item icon="users" :href="route('subscriptions')" :current="request()->routeIs('subscriptions')" wire:navigate>{{ __('Subscriptions') }}</flux:navlist.item>
+                    <flux:navlist.item icon="user-group" :href="route('subscribers')" :current="request()->routeIs('subscribers')" wire:navigate>{{ __('Subscribers') }}</flux:navlist.item>
+                    <flux:navlist.item icon="bell-alert" :href="route('subscriptions')" :current="request()->routeIs('subscriptions')" wire:navigate>{{ __('Subscriptions') }}</flux:navlist.item>
                     <flux:sidebar.group expandable heading="Network" class="grid">
                         <flux:sidebar.item icon="chart-pie" :href="route('sectors')" :current="request()->routeIs('sectors')" wire:navigate>Sectors</flux:sidebar.item>
                         <flux:sidebar.item :href="route('pons')" :current="request()->routeIs('pons')" wire:navigate>PONs</flux:sidebar.item>
                         <flux:sidebar.item :href="route('napboxes')" :current="request()->routeIs('napboxes')"  wire:navigate>Napboxes</flux:sidebar.item>
                         <flux:sidebar.item :href="route('splitters')" :current="request()->routeIs('splitters')"  wire:navigate>Splitters</flux:sidebar.item>
                     </flux:sidebar.group>
+                    <flux:navlist.item icon="cog" :href="route('uac')" :current="request()->routeIs('uac')" wire:navigate>{{ __('User Access Control') }}</flux:navlist.item>
                     <flux:navlist.item icon="users" :href="route('users')" :current="request()->routeIs('users')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>

@@ -5,6 +5,7 @@ namespace App\Livewire\Sectors;
 use Livewire\Component;
 use App\Models\Sector;
 use Hashids\Hashids;
+use Auth;
 
 class EditSector extends Component
 {
@@ -38,6 +39,10 @@ class EditSector extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit sectors'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $sector = Sector::findOrFail($this->sectorId);
@@ -56,6 +61,10 @@ class EditSector extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit sectors'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.sectors.edit-sector');
     }
 }

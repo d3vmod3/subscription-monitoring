@@ -7,6 +7,7 @@ use App\Models\Napbox;
 use App\Models\PassiveOpticalNetwork;
 // use App\Models\Splitter;
 use Hashids\Hashids;
+use Auth;
 
 class EditNapbox extends Component
 {
@@ -56,6 +57,11 @@ class EditNapbox extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit napboxes'))
+        {
+            abort(403, 'Unauthorized action');
+        }
+        
         $this->validate();
 
         $napbox = Napbox::findOrFail($this->napboxId);
@@ -76,6 +82,10 @@ class EditNapbox extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit napboxes'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.napboxes.edit-napbox');
     }
 }

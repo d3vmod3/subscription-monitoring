@@ -19,7 +19,7 @@
             placeholder="Search subscribers..." 
             class="border rounded px-3 py-2 w-full sm:w-1/3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
-
+        @can('add subscribers')
         {{-- Add Subscriber Button --}}
         <flux:link 
             class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 w-full sm:w-auto text-center"
@@ -28,6 +28,7 @@
         >
             Add Subscriber
         </flux:link>
+        @endcan
     </div>
 
     {{-- Table wrapper for horizontal scroll --}}
@@ -51,7 +52,9 @@
                         Status
                         @if($sortField == 'status') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
+                    @if(Auth::user()->canAny(['view billings', 'edit subscribers']))
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
+                    @endif
                 </tr>
             </thead>
 
@@ -68,19 +71,24 @@
                                 {{ $subscriber->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
+                        @if(Auth::user()->canAny(['view billings', 'edit subscribers']))
                         <td class="px-4 py-2 border whitespace-nowrap text-center flex flex-col sm:flex-row justify-center items-center gap-1">
+                            @can('view billings')
                             <flux:link 
                                 class="px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150"
                                 href="{{ route('view-billings', ['hash' => $hashids->encode($subscriber->id)]) }}">
                                 View Billings
                             </flux:link>
+                            @endcan
+                            @can('edit subscribers')
                             <flux:link 
                                 class="px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150"
                                 href="{{ route('subscribers.edit', ['hash' => $hashids->encode($subscriber->id)]) }}">
                                 Edit
                             </flux:link>
-                            
+                            @endcan
                         </td>
+                        @endif
                     </tr>
                 @empty
                     <tr>

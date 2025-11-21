@@ -116,6 +116,10 @@ class EditPayment extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit payments'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
         $this->payment->update([
             'status' => $this->status,
@@ -134,6 +138,10 @@ class EditPayment extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit payments'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.payments.edit-payment');
     }
 }

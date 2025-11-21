@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Auth;
 
 class Billings extends Component
 {
@@ -25,6 +26,7 @@ class Billings extends Component
     public $month_cover_from;
     public $month_cover_to;
     public $billingSummary = [];
+
 
     public function mount($hash)
     {
@@ -230,6 +232,10 @@ class Billings extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('view billings'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
         return view('livewire.billings.billings', [
             'expectedTotal' => $this->expectedTotal,
             'totalPaid' => $this->totalPaid,

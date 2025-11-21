@@ -3,19 +3,19 @@
     <h1 class="text-3xl font-bold mb-6">User Access Control</h1>
 
     {{-- Role Selector --}}
-    <div class="rounded flex items-start space-x-2 mb-6">
-        <h2 class="text-xl font-semibold">Roles</h2>
+    <div class="rounded flex items-center space-x-2 mb-6">
+        <h2 class="text-xl font-semibold">Role</h2>
         <select
             wire:change="selectRole($event.target.value)"
             class="border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600"
         >
-            <option value="">— Select Role —</option>
+            <option value="">-- Select Role --</option>
             @foreach ($roles as $role)
                 <option
                     value="{{ $role->id }}"
                     @if ($selectedRole && $selectedRole->id == $role->id) selected @endif
                 >
-                    {{ $role->name }}
+                    {{ ucwords($role->name) }}
                 </option>
             @endforeach
         </select>
@@ -28,7 +28,7 @@
             <div class="border rounded p-4">
 
                 {{-- Module Header --}}
-                <h3 class="text-lg font-semibold mb-2 capitalize">
+                <h3 class="text-lg font-semibold mb-2 capitalize bg-dark">
                     {{ $module }}
                 </h3>
 
@@ -51,5 +51,4 @@
         @endforeach
     </div>
     
-
 </div>

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\User;
 use Hashids\Hashids;
 use Spatie\Permission\Models\Role;
+use Auth;
 
 class EditUser extends Component
 {
@@ -102,6 +103,10 @@ class EditUser extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit users'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
         $this->user->update([
             'first_name' => $this->first_name,
@@ -132,6 +137,10 @@ class EditUser extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit users'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.users.edit-user',['roles' => Role::all(),]);
     }
 }

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\AdvancePayment;
 use Livewire\Attributes\Url;
+use Auth;
 
 class AdvancePayments extends Component
 {
@@ -40,6 +41,11 @@ class AdvancePayments extends Component
     }
     public function render()
     {
+        if (!Auth::user()->can('view advance payments'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
+
         $query = AdvancePayment::query()
             ->with(['subscription.subscriber','subscription.plan', 'paymentMethod']);
 

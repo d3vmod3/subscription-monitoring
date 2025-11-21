@@ -4,6 +4,7 @@ namespace App\Livewire\Sectors;
 
 use Livewire\Component;
 use App\Models\Sector;
+use Auth;
 
 class AddSector extends Component
 {
@@ -21,6 +22,10 @@ class AddSector extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add sectors'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         Sector::create([

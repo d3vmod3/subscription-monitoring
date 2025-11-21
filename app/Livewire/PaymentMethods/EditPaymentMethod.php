@@ -5,6 +5,7 @@ namespace App\Livewire\PaymentMethods;
 use Livewire\Component;
 use App\Models\PaymentMethod;
 use Hashids\Hashids;
+use Auth;
 
 class EditPaymentMethod extends Component
 {
@@ -39,6 +40,10 @@ class EditPaymentMethod extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit payment methods'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $this->paymentMethod->update([
@@ -56,6 +61,10 @@ class EditPaymentMethod extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit payment methods'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.payment-methods.edit-payment-method');
     }
 }

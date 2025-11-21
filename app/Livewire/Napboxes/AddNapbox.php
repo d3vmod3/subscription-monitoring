@@ -37,6 +37,10 @@ class AddNapbox extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add napboxes'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         Napbox::create([

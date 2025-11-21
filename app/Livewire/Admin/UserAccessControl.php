@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Auth;
 
 class UserAccessControl extends Component
 {
@@ -100,6 +101,14 @@ class UserAccessControl extends Component
 
     public function render()
     {
-        return view('livewire.admin.user-access-control');
+        if(Auth::user()->hasRole('admin'))
+        {
+            return view('livewire.admin.user-access-control');
+        }
+        else
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
+        
     }
 }

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\PaymentMethod;
 use Livewire\Attributes\Url;
+use Auth;
 
 class PaymentMethods extends Component
 {
@@ -40,6 +41,10 @@ class PaymentMethods extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('view payment methods'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
         $paymentMethods = PaymentMethod::query()
             ->where(function($query) {
                 $query->where('name', 'like', '%'.$this->search.'%')

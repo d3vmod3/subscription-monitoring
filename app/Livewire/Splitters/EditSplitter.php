@@ -5,6 +5,7 @@ namespace App\Livewire\Splitters;
 use Livewire\Component;
 use App\Models\Splitter;
 use Hashids\Hashids;
+use Auth;
 
 class EditSplitter extends Component
 {
@@ -40,6 +41,10 @@ class EditSplitter extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit splitters'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $splitter = Splitter::findOrFail($this->splitterId);
@@ -59,6 +64,10 @@ class EditSplitter extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit splitters'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.splitters.edit-splitter');
     }
 }

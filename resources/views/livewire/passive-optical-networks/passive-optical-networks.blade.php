@@ -20,6 +20,7 @@
         >
 
         {{-- ➕ Add PON Button --}}
+        @can(add passive optical networks)
         <div class="flex-shrink-0">
             <flux:modal.trigger name="add-pon">
                 <flux:button>Add PON</flux:button>
@@ -28,6 +29,7 @@
                 <livewire:passive-optical-networks.add-passive-optical-network/>
             </flux:modal>
         </div>
+        @endcan
     </div>
 
     {{-- Table Wrapper for Horizontal Scroll --}}
@@ -59,7 +61,9 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
+                    @can('edit passive optical networks')
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -75,9 +79,11 @@
                             </span>
                         </td>
                         <td class="px-4 py-2 border text-center whitespace-nowrap">
+                            @can('edit passive optical networks')
                             <flux:link href="{{ route('pon.edit', ['hash' => $hashids->encode($pon->id)]) }}">
                                 Edit
                             </flux:link>
+                            @endcan
                         </td>
                     </tr>
                 @empty

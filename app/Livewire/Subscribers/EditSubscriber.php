@@ -5,6 +5,7 @@ namespace App\Livewire\Subscribers;
 use Livewire\Component;
 use App\Models\Subscriber;
 use Hashids\Hashids;
+use Auth;
 
 class EditSubscriber extends Component
 {
@@ -82,6 +83,10 @@ class EditSubscriber extends Component
 
     public function update()
     {
+        if (!Auth::user()->can('edit subscribers'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
@@ -125,6 +130,10 @@ class EditSubscriber extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit subscribers'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.subscribers.edit-subscriber');
     }
 }

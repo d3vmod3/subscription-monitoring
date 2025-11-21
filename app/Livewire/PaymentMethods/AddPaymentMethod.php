@@ -5,6 +5,7 @@ namespace App\Livewire\PaymentMethods;
 use Livewire\Component;
 use App\Models\PaymentMethod;
 use Hashids\Hashids;
+use Auth;
 
 class AddPaymentMethod extends Component
 {
@@ -20,6 +21,10 @@ class AddPaymentMethod extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add payment methods'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $paymentMethod = PaymentMethod::create([

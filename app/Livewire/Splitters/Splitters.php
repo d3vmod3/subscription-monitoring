@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Splitter;
 use Hashids\Hashids;
 use App\Models\Napbox;
+use Auth;
 
 class Splitters extends Component
 {
@@ -40,6 +41,10 @@ class Splitters extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('view splitters'))
+        {
+            abort(403, 'You are not allowed to view this page');
+        }
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
         $splitters = Splitter::query()
