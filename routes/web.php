@@ -89,4 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
     //generate billing pdf copy
     Route::get('/pdf-billing/{subscriptionHash}/{monthCoverFrom}/{monthCoverTo}',[PdfController::class, 'generatePdf'])->name('pdf.billing');
+
+    //User Access Control
+    Volt::route('admin/user-access-control', 'admin.user-access-control')->name('uac');
 });
