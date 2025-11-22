@@ -15,23 +15,42 @@
                 {{Auth::user()->getFullNameAttribute()}}
                 <flux:navlist.group :heading="__('Menu')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    @can('view payment methods')
                     <flux:navlist.item icon="credit-card" :href="route('payment-methods')" :current="request()->routeIs('payment-methods')" wire:navigate>{{ __('Payment Methods') }}</flux:navlist.item>
+                    @endcan
+                    @if(Auth::user()->canAny(['view payments', 'view advance payments']))
                     <flux:sidebar.group expandable heading="Payments" class="grid">
-                         <flux:sidebar.item icon="credit-card" :href="route('payments')" :current="request()->routeIs('payments')" wire:navigate>Payments</flux:sidebar.item>
-                         <flux:sidebar.item icon="banknotes" :href="route('advance-payments')" :current="request()->routeIs('advance-payments')" wire:navigate>Advance Payments</flux:sidebar.item>
+                        @can('view payments')
+                        <flux:sidebar.item icon="credit-card" :href="route('payments')" :current="request()->routeIs('payments')" wire:navigate>Payments</flux:sidebar.item>
+                        @endcan
+                        @can('view advance payments')
+                        <flux:sidebar.item icon="banknotes" :href="route('advance-payments')" :current="request()->routeIs('advance-payments')" wire:navigate>Advance Payments</flux:sidebar.item>
+                        @endcan
                     </flux:sidebar.group>
-                    
+                    @endif
+                    @can('view plans')
                     <flux:navlist.item icon="globe-alt" :href="route('plans')" :current="request()->routeIs('plans')" wire:navigate>{{ __('Plans') }}</flux:navlist.item>
+                    @endcan
+                    @can('view subscribers')
                     <flux:navlist.item icon="user-group" :href="route('subscribers')" :current="request()->routeIs('subscribers')" wire:navigate>{{ __('Subscribers') }}</flux:navlist.item>
+                    @endcan
+                    @can('view subscriptions')
                     <flux:navlist.item icon="bell-alert" :href="route('subscriptions')" :current="request()->routeIs('subscriptions')" wire:navigate>{{ __('Subscriptions') }}</flux:navlist.item>
+                    @endcan
+                    @canany(['view sectors', 'view passive optical networks', 'view napboxes', 'view splitters'])
                     <flux:sidebar.group expandable heading="Network" class="grid">
                         <flux:sidebar.item icon="chart-pie" :href="route('sectors')" :current="request()->routeIs('sectors')" wire:navigate>Sectors</flux:sidebar.item>
                         <flux:sidebar.item :href="route('pons')" :current="request()->routeIs('pons')" wire:navigate>PONs</flux:sidebar.item>
                         <flux:sidebar.item :href="route('napboxes')" :current="request()->routeIs('napboxes')"  wire:navigate>Napboxes</flux:sidebar.item>
                         <flux:sidebar.item :href="route('splitters')" :current="request()->routeIs('splitters')"  wire:navigate>Splitters</flux:sidebar.item>
                     </flux:sidebar.group>
-                    <flux:navlist.item icon="cog" :href="route('uac')" :current="request()->routeIs('uac')" wire:navigate>{{ __('User Access Control') }}</flux:navlist.item>
-                    <flux:navlist.item icon="users" :href="route('users')" :current="request()->routeIs('users')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                    @endcanany
+                    @hasrole('admin')
+                        <flux:navlist.item icon="cog" :href="route('uac')" :current="request()->routeIs('uac')" wire:navigate>{{ __('User Access Control') }}</flux:navlist.item>
+                        @can('view users')
+                        <flux:navlist.item icon="users" :href="route('users')" :current="request()->routeIs('users')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                        @endcan
+                    @endhasrole
                 </flux:navlist.group>
             </flux:navlist>
 

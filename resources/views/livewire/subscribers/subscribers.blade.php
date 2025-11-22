@@ -52,9 +52,9 @@
                         Status
                         @if($sortField == 'status') @if($sortDirection == 'asc') ▲ @else ▼ @endif @endif
                     </th>
-                    @if(Auth::user()->canAny(['view billings', 'edit subscribers']))
+                    @canAny(['view billings', 'edit subscribers']))
                     <th class="px-4 py-2 border whitespace-nowrap text-center">Actions</th>
-                    @endif
+                    @endcanAny
                 </tr>
             </thead>
 
@@ -71,7 +71,7 @@
                                 {{ $subscriber->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
-                        @if(Auth::user()->canAny(['view billings', 'edit subscribers']))
+                        @canAny(['view billings', 'edit subscribers']))
                         <td class="px-4 py-2 border whitespace-nowrap text-center flex flex-col sm:flex-row justify-center items-center gap-1">
                             @can('view billings')
                             <flux:link 
@@ -88,7 +88,7 @@
                             </flux:link>
                             @endcan
                         </td>
-                        @endif
+                        @endcanany
                     </tr>
                 @empty
                     <tr>
