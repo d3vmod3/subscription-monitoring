@@ -7,6 +7,7 @@ use App\Models\User;
 use Hashids\Hashids;
 use Spatie\Permission\Models\Role;
 use Auth;
+use Illuminate\Support\Facades\Hash;
 
 class EditUser extends Component
 {
@@ -26,7 +27,7 @@ class EditUser extends Component
     public $municipality_id;
     public $barangay_id;
     public $is_active=false;
-    public $is_password_resetted;
+    public $is_password_reset;
     public $role;
 
     protected $listeners = [
@@ -97,7 +98,7 @@ class EditUser extends Component
         $this->municipality_id = $this->user->municipality_id;
         $this->barangay_id = $this->user->barangay_id;
         $this->is_active = (bool) $this->user->is_active;
-        $this->is_password_resetted = (bool) $this->user->is_password_resetted;
+        $this->is_password_reset = (bool) $this->user->is_password_reset;
         $this->role = $this->user->getRoleNames()->first();
     }
 
@@ -123,13 +124,26 @@ class EditUser extends Component
             'municipality_id' => $this->municipality_id,
             'barangay_id' => $this->barangay_id,
             'is_active' => $this->is_active,
-            'is_password_resetted' => $this->is_password_resetted,
         ]);
 
         $this->user->syncRoles([$this->role]);
 
         $this->dispatch('show-toast', [
             'message' => 'User updated successfully!',
+            'type' => 'success',
+            'duration' => 3000,
+        ]);
+    }
+
+    public function reset_password()
+    {
+        $this->user->update([
+            'password' => Hash::make('password123'),
+            'is_password_reset' => true,
+        ]);
+
+         $this->dispatch('show-toast', [
+            'message' => 'Password reset successfully for ' . $this->first_name . "!",
             'type' => 'success',
             'duration' => 3000,
         ]);

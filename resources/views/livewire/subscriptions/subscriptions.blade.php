@@ -4,6 +4,11 @@
 @endphp
 
 <div class="p-4">
+    <div class="mb-2">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Subscriptions
+        </h1>
+    </div>
     <div class="flex justify-between mb-4">
         <input 
             type="text" 

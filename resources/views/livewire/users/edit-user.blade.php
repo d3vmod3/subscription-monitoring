@@ -1,16 +1,29 @@
 <div class="max-w-3xl mx-auto p-6 bg-white dark:bg-zinc-700 rounded-lg shadow dark:shadow-lg">
-
-    {{-- Success Message --}}
-    @if (session()->has('message'))
-        <div class="mb-4 text-green-600 font-medium text-center sm:text-left">
-            {{ session('message') }}
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
+            Edit User
+        </h2>
+        <div>
+            <flux:modal.trigger name="reset-password">
+                <flux:button variant="primary" color="orange" wire:click>Reset Password</flux:button>
+            </flux:modal.trigger>
+            <flux:modal name="reset-password" class="md:w-96">
+                <div class="space-y-6">
+                    <div>
+                        <flux:heading size="lg">Reset Password Confirmation</flux:heading>
+                        <flux:text class="mt-2">Are you sure you want to reset this user's account password?</flux:text>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <flux:spacer />
+                        <flux:button variant="primary" wire:click="reset_password" x-on:click="$flux.modal('reset-password').close()" color="orange">Yes</flux:button>
+                        <flux:button variant="primary" color="zinc" x-on:click="$flux.modal('reset-password').close()">
+                            No
+                        </flux:button>
+                    </div>
+                </div>
+            </flux:modal>
         </div>
-    @endif
-
-    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
-        Add Subscriber
-    </h2>
-
+    </div>
     <form wire:submit.prevent="save" class="space-y-4">
 
         {{-- First & Middle Name --}}
@@ -76,7 +89,7 @@
 
         <fieldset class="border p-2">
         <legend>Address</legend>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2  xl:grid-cols-2  2xl:grid-cols-2 gap-4">
                 {{-- Address lines --}}
                 <div>
                     <div>

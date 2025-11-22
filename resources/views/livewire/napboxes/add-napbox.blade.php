@@ -64,7 +64,7 @@
     </div>
 
     {{-- ✅ Buttons --}}
-    <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 dark:border-zinc-700">
+    <div class="flex justify-end space-x-2 pt-4 border-gray-200 dark:border-zinc-700">
         <flux:button wire:click="save" variant="primary">
             Save
         </flux:button>

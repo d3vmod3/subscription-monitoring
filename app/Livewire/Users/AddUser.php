@@ -24,7 +24,7 @@ class AddUser extends Component
     public $municipality_id;
     public $barangay_id;
     public $is_active;
-    public $is_password_resetted;
+    public $is_password_reset;
 
     protected $rules = [
         'first_name' => 'required|string|max:255',
@@ -68,7 +68,7 @@ class AddUser extends Component
             'contact_number' => $this->contact_number,
             'address' => $this->address,
             'status' => $this->status,
-            'is_password_resetted' => true,
+            'is_password_reset' => true,
         ]);
 
         // Assign Role
@@ -80,12 +80,13 @@ class AddUser extends Component
             'type' => 'success',
             'duration' => 3000,
         ]);
+        
         return redirect()->route('user.edit', ['hash' => $hash]);
     }
 
     public function render()
     {
-        if (!Auth::user()->can('addd users'))
+        if (!Auth::user()->can('add users'))
         {
             abort(403, 'You are not allowed to this page');
         }

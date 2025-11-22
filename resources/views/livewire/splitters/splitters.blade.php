@@ -19,8 +19,8 @@
         >
         @can('add splitters')
         <div>
-            <flux:modal.trigger name="add-splitter" class="border">
-                <flux:button class="bg-zinc-500 hover:bg-zinc-600 text-white rounded px-4 py-2 transition-colors">
+            <flux:modal.trigger name="add-splitter"  class="border">
+                <flux:button>
                     Add Splitter
                 </flux:button>
             </flux:modal.trigger>

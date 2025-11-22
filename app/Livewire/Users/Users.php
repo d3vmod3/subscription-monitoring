@@ -7,7 +7,7 @@ use Livewire\WithPagination;
 use App\Models\User;
 use Livewire\Attributes\Url;
 use Hashids\Hashids;
-use Authl;
+use Auth;
 
 class Users extends Component
 {

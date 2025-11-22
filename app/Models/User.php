@@ -28,7 +28,7 @@ class User extends Authenticatable
         'municipality_id',
         'barangay_id',
         'is_active',
-        'is_password_resetted',
+        'is_password_reset',
     ];
 
     protected $hidden = [
@@ -41,7 +41,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'birthdate'         => 'date',
-        'is_password_resetted' => 'boolean',
+        'is_password_reset' => 'boolean',
         'password' => 'hashed',
     ];
 

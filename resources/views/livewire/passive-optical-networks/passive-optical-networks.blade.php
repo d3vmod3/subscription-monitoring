@@ -20,7 +20,7 @@
         >
 
         {{-- ➕ Add PON Button --}}
-        @can(add passive optical networks)
+        @can('add passive optical networks')
         <div class="flex-shrink-0">
             <flux:modal.trigger name="add-pon">
                 <flux:button>Add PON</flux:button>
@@ -78,13 +78,14 @@
                                 {{ $pon->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
+                        @can('edit passive optical networks')
                         <td class="px-4 py-2 border text-center whitespace-nowrap">
-                            @can('edit passive optical networks')
+                            
                             <flux:link href="{{ route('pon.edit', ['hash' => $hashids->encode($pon->id)]) }}">
                                 Edit
                             </flux:link>
-                            @endcan
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

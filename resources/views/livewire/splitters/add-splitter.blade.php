@@ -58,7 +58,7 @@
 
     {{-- Buttons --}}
     <div class="flex justify-end mt-4">
-        <flux:button wire:click="save" class="bg-zinc-500 hover:bg-zinc-600 text-white rounded px-4 py-2 transition-colors">
+        <flux:button wire:click="save" variant="primary">
             Save
         </flux:button>
     </div>

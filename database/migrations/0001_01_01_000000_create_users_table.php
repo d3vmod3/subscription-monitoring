@@ -28,7 +28,7 @@ return new class extends Migration
             $table->unsignedBigInteger('municipality_id')->nullable();
             $table->unsignedBigInteger('barangay_id')->nullable();
             $table->boolean('is_active')->default(false);
-            $table->boolean('is_password_resetted')->default(true);
+            $table->boolean('is_password_reset')->default(true);
             $table->rememberToken();
             $table->timestamps(); // created_at, updated_at
             

@@ -8,7 +8,7 @@
     @endif
 
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
-        Add Subscriber
+        Add User
     </h2>
 
     <form wire:submit.prevent="save" class="space-y-4">
@@ -74,9 +74,9 @@
             @error('contact_number') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 
-        <fieldset class="border p-2">
+        <fieldset class="border rounded-lg p-2">
         <legend>Address</legend>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2  xl:grid-cols-2  2xl:grid-cols-2 gap-4">
                 {{-- Address lines --}}
                 <div>
                     <div>
