@@ -54,12 +54,23 @@ class PermissionsSeeder extends Seeder
             }
 
             // Optional special case (still valid)
-            if ($modelName === 'Payment') {
-                Permission::firstOrCreate([
-                    'name' => 'add payments',
-                    'guard_name' => 'web'
-                ]);
-            }
+            // if ($modelName === 'Payment') {
+            //     Permission::firstOrCreate([
+            //         'name' => 'add payments',
+            //         'guard_name' => 'web'
+            //     ]);
+            // }
         }
+
+        //create dashboards permissions
+        Permission::firstOrCreate([
+            'name' => "view dashboard",
+            'guard_name' => 'web',
+        ]);
+        
+        Permission::firstOrCreate([
+            'name' => "view user dashboard",
+            'guard_name' => 'web',
+        ]);
     }
 }

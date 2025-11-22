@@ -8,13 +8,14 @@
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+            <a href="{{ route(Auth::user()->hasRole('admin') ? 'dashboard' : 'user.dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
             </a>
             <flux:navlist variant="outline">
                 {{Auth::user()->getFullNameAttribute()}}
                 <flux:navlist.group :heading="__('Menu')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    
+                    <flux:navlist.item icon="home" :href="route(Auth::user()->hasRole('admin') ? 'dashboard' : 'user.dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     @can('view payment methods')
                     <flux:navlist.item icon="credit-card" :href="route('payment-methods')" :current="request()->routeIs('payment-methods')" wire:navigate>{{ __('Payment Methods') }}</flux:navlist.item>
                     @endcan

@@ -194,6 +194,10 @@ class AddPayment extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('add payments'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.payments.add-payment');
     }
 }

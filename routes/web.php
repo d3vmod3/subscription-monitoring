@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\PdfController;
+use Illuminate\Support\Facades\Auth;
 // use App\Http\Middleware\ForceResetPassword;
 
 /*
@@ -40,7 +41,14 @@ Route::middleware(['auth', 'force.reset'])->group(function () {
     Volt::route('user/reset-password', 'user.reset-password')
         ->name('user.reset.password');
 
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    // Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', function (Request $request) {
+        if (!Auth::user()->can('view dashboard')) {
+           abort(403, 'You are not allowed to this page');
+        }
+        return view('dashboard'); // Return the actual dashboard
+    })->name('dashboard');
+
 
     Route::redirect('settings', 'settings/profile');
 
@@ -148,6 +156,7 @@ Route::middleware(['auth', 'force.reset'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Volt::route('payments/list', 'payments.payments')->name('payments');
+    Volt::route('payments/add', 'payments.add-payment')->name('payment.add');
     Volt::route('payments/edit/{hash}', 'payments.edit-payment')->name('payment.edit');
 
 
