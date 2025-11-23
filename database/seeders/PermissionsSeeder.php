@@ -45,21 +45,18 @@ class PermissionsSeeder extends Seeder
 
             $modelName = class_basename($model);
             $cleanName = $this->cleanModelName($modelName);// pluralized name
+            $actions = ['view', 'add', 'edit'];
+            
+            if ($modelName === 'Billing') {
+                $actions = ['view']; // only 'view'
+            }
 
-            foreach (['view', 'add', 'edit', 'delete'] as $action) {
+            foreach ($actions as $action) {
                 Permission::firstOrCreate([
                     'name' => "$action $cleanName",
                     'guard_name' => 'web',
                 ]);
             }
-
-            // Optional special case (still valid)
-            // if ($modelName === 'Payment') {
-            //     Permission::firstOrCreate([
-            //         'name' => 'add payments',
-            //         'guard_name' => 'web'
-            //     ]);
-            // }
         }
 
         //create dashboards permissions

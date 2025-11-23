@@ -49,16 +49,11 @@ class UserAccessControl extends Component
     {
         $this->groupedPermissions = [];
 
-        foreach ($this->permissions as $perm) {
-            /**
-             * Permission format:
-             *   "view payments"
-             *   "edit users"
-             *
-             * Split into:
-             *   action = view/edit/delete/add
-             *   module = users/payments
-             */
+        // Step 1: Sort permissions by name ascending
+        $sortedPermissions = $this->permissions->sortBy('name');
+
+        // Step 2: Group them by module
+        foreach ($sortedPermissions as $perm) {
             $parts = explode(' ', $perm->name, 2);
             $action = $parts[0] ?? '';
             $module = $parts[1] ?? '';
@@ -71,8 +66,10 @@ class UserAccessControl extends Component
                 'name'   => $perm->name,
                 'action' => $action,
             ];
-
         }
+
+        // Step 3: Sort modules alphabetically
+        ksort($this->groupedPermissions);
     }
 
     public function togglePermission($permissionName, $checked)
