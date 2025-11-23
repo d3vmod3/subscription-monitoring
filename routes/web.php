@@ -49,7 +49,7 @@ Route::middleware(['auth', 'force.reset'])->group(function () {
     //     return view('livewire.admin.dashboard'); // Return the actual dashboard
     // })->name('dashboard');
 
-    Volt::route('dashboard', 'admin.dashboard')->name('dashboard');
+     Volt::route('dashboard', 'admin.dashboard')->name('dashboard');
 
 
     Route::redirect('settings', 'settings/profile');

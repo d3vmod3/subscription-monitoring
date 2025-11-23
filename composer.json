@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
+        "consoletvs/charts": "^6.8",
         "erag/laravel-pwa": "^1.9",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",

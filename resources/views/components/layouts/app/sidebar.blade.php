@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
-        @PwaHead
+        
         @livewireStyles
         @include('partials.head')
     </head>
@@ -216,8 +216,6 @@
         {{ $slot }}
         
         @fluxScripts
-        @RegisterServiceWorkerScript
-        @livewireScripts
-        @stack('scripts')
+        
     </body>
 </html>

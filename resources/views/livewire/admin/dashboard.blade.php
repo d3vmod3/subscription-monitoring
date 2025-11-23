@@ -17,18 +17,18 @@
             <!-- Month Range Filter -->
             <div class="flex flex-wrap items-end gap-4">
                 <div class="flex flex-col">
-                    <label for="monthFrom" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    <label for="chartMonthFrom" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                         Month From
                     </label>
-                    <input type="month" id="monthFrom" wire:model.live="chart_monthFrom"
+                    <input type="month" id="chartMonthFrom" wire:model.live="chart_monthFrom"
                         class="border rounded px-3 py-2 dark:bg-zinc-700 dark:text-white focus:ring focus:ring-lime-400">
                 </div>
 
                 <div class="flex flex-col">
-                    <label for="monthTo" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    <label for="chartMonthTo" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                         Month To
                     </label>
-                    <input type="month" id="monthTo" wire:model.live="chart_monthTo"
+                    <input type="month" id="chartMonthTo" wire:model.live="chart_monthTo"
                         class="border rounded px-3 py-2 dark:bg-zinc-700 dark:text-white focus:ring focus:ring-lime-400">
                 </div>
                 @error('monthFrom')
@@ -38,7 +38,10 @@
                     <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
                 @enderror
             </div>
-            <canvas id="salesChart"></canvas>
+            <div wire:ignore>
+                <canvas id="salesChart"></canvas>
+            </div>
+            
         </div>
     </div>
     
@@ -52,18 +55,18 @@
                 <div class="flex flex-wrap items-end gap-4 mb-4">
 
                     <div class="flex flex-col">
-                        <label for="monthFrom" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        <label for="summaryMonthFrom" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                             Month From
                         </label>
-                        <input type="month" id="monthFrom" wire:model.live="monthFrom"
+                        <input type="month" id="summaryMonthFrom" wire:model.live="monthFrom"
                             class="border rounded px-3 py-2 dark:bg-zinc-700 dark:text-white focus:ring focus:ring-lime-400">
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="monthTo" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        <label for="summaryMonthTo" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                             Month To
                         </label>
-                        <input type="month" id="monthTo" wire:model.live="monthTo"
+                        <input type="month" id="summaryMonthTo" wire:model.live="monthTo"
                             class="border rounded px-3 py-2 dark:bg-zinc-700 dark:text-white focus:ring focus:ring-lime-400">
                     </div>
                     @error('monthFrom')
@@ -229,24 +232,25 @@
     </div>
 
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@assets
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.js"></script>
+@endassets
+@script
 <script>
-    document.addEventListener('livewire:initialized', () => {
-        const component = @this;
-        const ctx = document.getElementById('salesChart').getContext('2d');
-
-        // Detect if currently in dark mode
-        const isDark = document.documentElement.classList.contains('dark');
-
-        const salesChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: component.get('salesLabels'),
-                datasets: [
+    const ctx = document.getElementById('salesChart');
+    let isDark = document.documentElement.classList.contains('dark');
+    let salesLabels = $wire.salesLabels;
+    let salesData = $wire.salesData;
+    let unpaidSalesData = $wire.unpaidSalesData;
+    
+    let salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+        labels: salesLabels,
+        datasets: [
                     {
                         label: 'Paid',
-                        data: component.get('salesData'),
+                        data: salesData,
                         backgroundColor: 'rgba(54, 162, 235, 0.3)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 2,
@@ -254,52 +258,47 @@
                     },
                     {
                         label: 'Unpaid',
-                        data: component.get('unpaidSalesData'),
+                        data:unpaidSalesData,
                         backgroundColor: 'rgba(255, 99, 132, 0.3)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 2,
                         fill: true
                     }
                 ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: {
-                            color: isDark ? "#ffffff" : "#000000",
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: value => '₱' + value.toLocaleString(),
-                            color: isDark ? "#ffffff" : "#000000",
-                        }
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    ticks: {
+                        color: isDark ? "#ffffff" : "#000000",
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => '₱' + value.toLocaleString(),
+                        color: isDark ? "#ffffff" : "#000000",
                     }
                 }
             }
-        });
-
-        // Update chart when data changes
-        component.on('salesUpdated', () => {
-            salesChart.data.labels = component.get('salesLabels');
-            salesChart.data.datasets[0].data = component.get('salesData');
-            salesChart.update();
-        });
-
-        // Optional: listen for dark mode toggle
-        const observer = new MutationObserver(() => {
-            const dark = document.documentElement.classList.contains('dark');
-            salesChart.options.scales.x.ticks.color = dark ? "#ffffff" : "#000000";
-            salesChart.options.scales.y.ticks.color = dark ? "#ffffff" : "#000000";
-            salesChart.update();
-        });
-        observer.observe(document.documentElement, { attributes: true });
+        }
     });
+
+    $wire.on('salesUpdated', (payload) => {
+        // console.log(payload[0].labels);
+        salesChart.data.labels = payload[0].labels;
+        salesChart.data.datasets[0].data = payload[0].paid;
+        salesChart.data.datasets[1].data = payload[0].unpaid;
+        salesChart.update();
+    });
+    const observer = new MutationObserver(() => {
+        const dark = document.documentElement.classList.contains('dark');
+        salesChart.options.scales.x.ticks.color = dark ? "#ffffff" : "#000000";
+        salesChart.options.scales.y.ticks.color = dark ? "#ffffff" : "#000000";
+        salesChart.update();
+    });
+
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 </script>
-
-
-
-
-
+@endscript
