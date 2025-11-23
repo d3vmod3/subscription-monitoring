@@ -80,7 +80,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-4">
                 <!-- Summary Card -->
                     <div
-                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -97,7 +97,7 @@
 
                     </div>
                     <div
-                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -114,7 +114,7 @@
 
                     </div>
                     <div
-                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -131,7 +131,7 @@
 
                     </div>
                     <div
-                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -159,7 +159,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-4">
                 <!-- Summary Card -->
                     <div
-                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -172,7 +172,7 @@
                         </p>
                     </div>
                     <div
-                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -186,7 +186,7 @@
 
                     </div>
                     <div
-                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -199,7 +199,7 @@
                         </p>
                     </div>
                     <div
-                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
@@ -213,7 +213,7 @@
 
                     </div>
                     <div
-                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex items-center justify-between">
+                        class="p-6 space-x-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200 flex flex-col sm:flex-col md:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center 2xl:items-center justify-between">
 
                         <div>
                             <h3 class="text-md font-semibold text-zinc-900 dark:text-zinc-100">
