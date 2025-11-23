@@ -232,71 +232,71 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('livewire:initialized', () => {
-    const component = @this;
-    const ctx = document.getElementById('salesChart').getContext('2d');
+    document.addEventListener('livewire:initialized', () => {
+        const component = @this;
+        const ctx = document.getElementById('salesChart').getContext('2d');
 
-    // Detect if currently in dark mode
-    const isDark = document.documentElement.classList.contains('dark');
+        // Detect if currently in dark mode
+        const isDark = document.documentElement.classList.contains('dark');
 
-    const salesChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: component.get('salesLabels'),
-            datasets: [
-                {
-                    label: 'Paid',
-                    data: component.get('salesData'),
-                    backgroundColor: 'rgba(54, 162, 235, 0.3)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 2,
-                    fill: true
-                },
-                {
-                    label: 'Unpaid',
-                    data: component.get('unpaidSalesData'),
-                    backgroundColor: 'rgba(255, 99, 132, 0.3)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2,
-                    fill: true
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    ticks: {
-                        color: isDark ? "#ffffff" : "#000000",
+        const salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: component.get('salesLabels'),
+                datasets: [
+                    {
+                        label: 'Paid',
+                        data: component.get('salesData'),
+                        backgroundColor: 'rgba(54, 162, 235, 0.3)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Unpaid',
+                        data: component.get('unpaidSalesData'),
+                        backgroundColor: 'rgba(255, 99, 132, 0.3)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: true
                     }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: value => '₱' + value.toLocaleString(),
-                        color: isDark ? "#ffffff" : "#000000",
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        ticks: {
+                            color: isDark ? "#ffffff" : "#000000",
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: value => '₱' + value.toLocaleString(),
+                            color: isDark ? "#ffffff" : "#000000",
+                        }
                     }
                 }
             }
-        }
-    });
+        });
 
-    // Update chart when data changes
-    component.on('salesUpdated', () => {
-        salesChart.data.labels = component.get('salesLabels');
-        salesChart.data.datasets[0].data = component.get('salesData');
-        salesChart.update();
-    });
+        // Update chart when data changes
+        component.on('salesUpdated', () => {
+            salesChart.data.labels = component.get('salesLabels');
+            salesChart.data.datasets[0].data = component.get('salesData');
+            salesChart.update();
+        });
 
-    // Optional: listen for dark mode toggle
-    const observer = new MutationObserver(() => {
-        const dark = document.documentElement.classList.contains('dark');
-        salesChart.options.scales.x.ticks.color = dark ? "#ffffff" : "#000000";
-        salesChart.options.scales.y.ticks.color = dark ? "#ffffff" : "#000000";
-        salesChart.update();
+        // Optional: listen for dark mode toggle
+        const observer = new MutationObserver(() => {
+            const dark = document.documentElement.classList.contains('dark');
+            salesChart.options.scales.x.ticks.color = dark ? "#ffffff" : "#000000";
+            salesChart.options.scales.y.ticks.color = dark ? "#ffffff" : "#000000";
+            salesChart.update();
+        });
+        observer.observe(document.documentElement, { attributes: true });
     });
-    observer.observe(document.documentElement, { attributes: true });
-});
 </script>
 
 

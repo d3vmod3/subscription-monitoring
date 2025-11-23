@@ -110,9 +110,9 @@
         <select wire:model.defer="status"
             class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 
                    border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="Pending">Pending</option>
             <option value="Approved">Approved</option>
             <option value="Disapproved">Disapproved</option>
+            <option value="Pending">Pending</option>
         </select>
         @error('status') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
     </div>

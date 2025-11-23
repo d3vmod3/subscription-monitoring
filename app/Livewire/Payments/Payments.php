@@ -18,7 +18,12 @@ class Payments extends Component
     public $sortField = 'paid_at';
     public $sortDirection = 'desc';
 
+    public $status="";
+
     public $per_page = 10;
+
+    public $selectAll = false;
+    public $selectedItems = [];
 
     protected $paginationTheme = 'tailwind';
     protected $listeners = [
@@ -27,6 +32,7 @@ class Payments extends Component
 
     public function updatingSearch()
     {
+        $this->selectAll=false;
         $this->resetPage();
     }
 
@@ -40,60 +46,129 @@ class Payments extends Component
         }
     }
 
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $payments = $this->getPayments();
+            $this->selectedItems = $payments->pluck('id')->toArray();
+            $this->resetValidation();
+        } else {
+            $this->selectedItems = [];
+        }
+    }
+
+    public function updatedSelectedItems()
+    {
+        $this->resetValidation();
+        $payments = $this->getPayments();
+        $this->selectAll = count($this->selectedItems) === $payments->count();
+    }
+
+    public function resetError()
+    {
+        $this->resetValidation();
+    }
+
+    public function applyBulkStatus()
+    {
+        //validate if there are selected
+        if($this->validateBulkAction())
+        {
+            if (!Auth::user()->can('edit payments'))
+            {
+                abort(403, 'Unauthorized action');
+            }
+            foreach ($this->selectedItems as $id) {
+                
+                Payment::where('id', $id)->where('status','pending')->update([
+                    'status' => $this->status,
+                ]);
+            }
+
+            // Reset selection
+            $this->selectedItems = [];
+            $this->selectAll = false;
+
+            $this->dispatch('show-toast', [
+                'message' => 'Selected payments status have been updated!',
+                'type' => 'success',
+                'duration' => 3000,
+            ]);
+            $this->dispatch('$refresh');
+        }
+    }
+
+    public function validateBulkAction()
+    {
+        if(count($this->selectedItems)==0)
+        {
+            $this->addError('selectAll', "Please select at least one payment.");
+            return false;
+        }
+        if(!$this->status)
+        {
+            $this->addError('status', "Please Select Status");
+            return false;
+        }
+        return true;
+    }
+
+    public function getPayments()
+    {
+        $query = Payment::query()
+            ->with(['subscription.subscriber','subscription.plan','paymentMethod']);
+
+        if ($this->search) {
+            $search = $this->search;
+
+            $query->where(function ($query) use ($search) {
+                $query->whereHas('subscription', function ($q) use ($search) {
+                    $q->where('mikrotik_name', 'like', '%'.$search.'%')
+                    ->orWhereHas('subscriber', function ($sq) use ($search) {
+                        $sq->whereRaw("CONCAT(first_name, ' ', IFNULL(middle_name,''), ' ', last_name) LIKE ?", ['%'.$search.'%'])
+                            ->orWhereRaw("CONCAT(first_name,' ',last_name) LIKE ?", ['%'.$search.'%']);
+                    });
+                })
+                ->orWhere('reference_number','like','%'.$search.'%');
+            });
+        }
+
+        $allowedSorts = [
+            'subscriber_name'    => 'subscribers.last_name', // or whatever field you want
+            'subscription_id'    => 'subscriptions.mikrotik_name',
+            'plan_id'            => 'plans.name',
+            'reference_number'   => 'reference_number',
+            'payment_method_id'  => 'payment_methods.name',
+            'amount'             => 'amount',
+            'created_at'         => 'payments.created_at',
+            'is_approved'        => 'status',
+            'paid_at'            => 'paid_at',
+            'mikrotik_name'      => 'subscriptions.mikrotik_name',
+            'status'             => 'status',
+        ];
+
+        $sortField = $allowedSorts[$this->sortField] ?? 'paid_at';
+
+        return $query
+            ->leftJoin('subscriptions','payments.subscription_id','=','subscriptions.id')
+            ->leftJoin('subscribers','subscriptions.subscriber_id','=','subscribers.id')
+            ->leftJoin('plans','plans.id','=','subscriptions.plan_id')
+            ->leftJoin('payment_methods','payments.payment_method_id','=','payment_methods.id')
+            ->orderBy($sortField, $this->sortDirection)
+            ->select('payments.*')
+            ->paginate($this->per_page);
+    }
+
+
     public function render()
     {
         if (!Auth::user()->can('view payments'))
         {
             abort(403, 'You are not allowed to view this page');
         }
-        $query = Payment::query()
-            ->with(['subscription.subscriber','subscription.plan', 'paymentMethod']);
-
-        if ($this->search) {
-            $search = $this->search; // define a local variable for closures
-
-            $query->where(function ($query) use ($search) {
-                // Search in subscription.mikrotik_name or subscriber full name
-                $query->whereHas('subscription', function ($q) use ($search) {
-                    $q->where('mikrotik_name', 'like', '%' . $search . '%')
-                    ->orWhereHas('subscriber', function ($sq) use ($search) {
-                        $sq->whereRaw(
-                            "CONCAT(first_name, ' ', IFNULL(middle_name, ''), ' ', last_name) LIKE ?",
-                            ['%' . $search . '%']
-                        )->orWhereRaw(
-                            "CONCAT(first_name, ' ', last_name) LIKE ?",
-                            ['%' . $search . '%']
-                        );
-                    });
-                })
-                ->orWhere('reference_number', 'like', '%' . $search . '%');
-            });
-        }
-
-
-        // Only allow sorting by actual columns
-        $allowedSorts = [
-            'paid_at' => 'paid_at',
-            'amount' => 'amount',
-            'reference_number' => 'reference_number',
-            'mikrotik_name' => 'subscriptions.mikrotik_name',
-            'payment_method' => 'payment_methods.name',
-            'status' => 'status',
-        ];
-
-        $sortField = $allowedSorts[$this->sortField] ?? 'paid_at';
-
-        $payments = $query
-            ->leftJoin('subscriptions', 'payments.subscription_id', '=', 'subscriptions.id')
-            ->leftJoin('plans', 'plans.id', '=', 'subscriptions.plan_id')
-            ->leftJoin('payment_methods', 'payments.payment_method_id', '=', 'payment_methods.id')
-            ->orderBy($sortField, $this->sortDirection)
-            ->select('payments.*') // important to prevent ambiguous columns
-            ->paginate($this->per_page);
         
-
         return view('livewire.payments.payments', [
-            'payments' => $payments,
+            'payments' => $this->getPayments(),
         ]);
     }
 
