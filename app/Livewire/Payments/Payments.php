@@ -79,8 +79,9 @@ class Payments extends Component
                 abort(403, 'Unauthorized action');
             }
             foreach ($this->selectedItems as $id) {
-                
-                Payment::where('id', $id)->where('status','pending')->update([
+                Payment::where('id', $id)
+                ->where('status','Pending')
+                ->orWhere('status','Disapproved')->update([
                     'status' => $this->status,
                 ]);
             }
