@@ -62,7 +62,12 @@
                 @forelse ($subscribers as $subscriber)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
                         <td class="px-4 py-2 border whitespace-nowrap">
-                            {{ $subscriber->first_name }} {{ $subscriber->middle_name }} {{ $subscriber->last_name }}
+                            <flux:link 
+                                class="px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150"
+                                href="{{ route('view-billings', ['hash' => $hashids->encode($subscriber->id)]) }}" style="text-decoration:none;">
+                                {{ $subscriber->first_name }} {{ $subscriber->middle_name }} {{ $subscriber->last_name }}
+                            </flux:link>
+                            
                         </td>
                         <td class="px-4 py-2 border whitespace-nowrap">{{ $subscriber->email ?? '-' }}</td>
                         <td class="px-4 py-2 border whitespace-nowrap">{{ $subscriber->contact_number ?? '-' }}</td>

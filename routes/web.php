@@ -42,12 +42,14 @@ Route::middleware(['auth', 'force.reset'])->group(function () {
         ->name('user.reset.password');
 
     // Route::view('dashboard', 'dashboard')->name('dashboard');
-    Route::get('/dashboard', function (Request $request) {
-        if (!Auth::user()->can('view dashboard')) {
-           abort(403, 'You are not allowed to this page');
-        }
-        return view('dashboard'); // Return the actual dashboard
-    })->name('dashboard');
+    // Route::get('/dashboard', function (Request $request) {
+    //     if (!Auth::user()->can('view dashboard')) {
+    //        abort(403, 'You are not allowed to this page');
+    //     }
+    //     return view('livewire.admin.dashboard'); // Return the actual dashboard
+    // })->name('dashboard');
+
+    Volt::route('dashboard', 'admin.dashboard')->name('dashboard');
 
 
     Route::redirect('settings', 'settings/profile');

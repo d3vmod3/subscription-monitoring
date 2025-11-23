@@ -2,15 +2,46 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @PwaHead
+        @livewireStyles
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
+        
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
             <a href="{{ route(Auth::user()->hasRole('admin') ? 'dashboard' : 'user.dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
             </a>
+            <!-- theme selection -->
+            <div x-data="{ appearances: ['light', 'dark', 'system'], current: $flux.appearance }"
+                x-init="$watch('current', value => $flux.appearance = value)">
+                <flux:button 
+                    @click="current = appearances[(appearances.indexOf(current) + 1) % appearances.length]"
+                    class="transition w-full">
+                    
+                    <template x-if="current === 'light'">
+                        <span class="flex items-center space-x-1">
+                            <flux:icon.sun class="w-5 h-5" />
+                            <span>Light</span>
+                        </span>
+                    </template>
+
+                    <template x-if="current === 'dark'">
+                        <span class="flex items-center space-x-1">
+                            <flux:icon.moon class="w-5 h-5" />
+                            <span>Dark</span>
+                        </span>
+                    </template>
+
+                    <template x-if="current === 'system'">
+                        <span class="flex items-center space-x-1">
+                            <flux:icon.computer-desktop class="w-5 h-5" />
+                            <span>System</span>
+                        </span>
+                    </template>
+                </flux:button>
+            </div>
             <flux:navlist variant="outline">
                 {{Auth::user()->getFullNameAttribute()}}
                 <flux:navlist.group :heading="__('Menu')" class="grid">
@@ -109,7 +140,34 @@
         <!-- Mobile User Menu -->
         <flux:header class="lg:hidden">
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+            <div x-data="{ appearances: ['light', 'dark', 'system'], current: $flux.appearance }"
+                x-init="$watch('current', value => $flux.appearance = value)">
+                <flux:button 
+                    @click="current = appearances[(appearances.indexOf(current) + 1) % appearances.length]"
+                    class="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white rounded-full flex items-center space-x-2 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition">
+                    
+                    <template x-if="current === 'light'">
+                        <span class="flex items-center space-x-1">
+                            <flux:icon.sun class="w-5 h-5" />
+                            <span>Light</span>
+                        </span>
+                    </template>
 
+                    <template x-if="current === 'dark'">
+                        <span class="flex items-center space-x-1">
+                            <flux:icon.moon class="w-5 h-5" />
+                            <span>Dark</span>
+                        </span>
+                    </template>
+
+                    <template x-if="current === 'system'">
+                        <span class="flex items-center space-x-1">
+                            <flux:icon.computer-desktop class="w-5 h-5" />
+                            <span>System</span>
+                        </span>
+                    </template>
+                </flux:button>
+            </div>
             <flux:spacer />
 
             <flux:dropdown position="top" align="end">
@@ -156,7 +214,10 @@
             </flux:dropdown>
         </flux:header>
         {{ $slot }}
+        
         @fluxScripts
         @RegisterServiceWorkerScript
+        @livewireScripts
+        @stack('scripts')
     </body>
 </html>

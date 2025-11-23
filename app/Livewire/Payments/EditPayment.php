@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Payment;
 use Hashids\Hashids;
 use Carbon\Carbon;
+use Auth;
 
 class EditPayment extends Component
 {

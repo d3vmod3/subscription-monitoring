@@ -39,7 +39,7 @@
 <h1 style="text-align:center">JIA's Internet</h1>
 <h2>Subscriber: {{$full_name}}</h2>
 <h2>Mikrotik Name: {{$Mikrotik_Name}}</h2>
-<h2>Month(Year) to: {{$Month_Cover_From->format('F Y')}}</h2>
+<h2>Month(Year) from: {{$Month_Cover_From->format('F Y')}}</h2>
 <h2>Month(Year) to: {{$Month_Cover_To->format('F Y')}}</h2>
 <h3>Billing Status Summary</h3>
 <table>

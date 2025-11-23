@@ -9,7 +9,7 @@ class UserDashboard extends Component
 {
     public function render()
     {
-         if (!Auth::user()->can('view user dashboard'))
+        if (!Auth::user()->can('view user dashboard'))
         {
             abort(403, 'You are not allowed to this page');
         }
