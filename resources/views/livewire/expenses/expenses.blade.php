@@ -69,6 +69,12 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
+                    <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('amount')">
+                        Total Amount
+                        @if($sortField == 'amount') 
+                            @if($sortDirection == 'asc') ▲ @else ▼ @endif 
+                        @endif
+                    </th>
                     <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('created_at')">
                         Date and Time Created
                         @if($sortField == 'created_at') 
@@ -100,7 +106,12 @@
                         <td class="px-4 py-2 border whitespace-nowrap">
                             {{ $expense->user->getFullNameAttribute() ?? 'N/A' }}
                         </td>
-                        <td class="px-4 py-2 border font-semibold truncate max-w-[400px]">{{ $expense->created_at }}</td>
+                        <td class="px-4 py-2 border whitespace-nowrap">
+                            ₱{{ number_format($expense->amount, 2) }}
+                        </td>
+                        <td class="px-4 py-2 border font-semibold truncate max-w-[400px]">
+                            {{ \Carbon\Carbon::parse($expense->created_at)->format('Y-m-d h:i A') }}
+                        </td>
                         @can('edit expenses')
                         <td class="px-4 py-2 border text-center">
                             <flux:link href="{{ route('expense.edit', ['hash' => $hashids->encode($expense->id)]) }}">Edit</flux:link>
