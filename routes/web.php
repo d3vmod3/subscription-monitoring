@@ -201,4 +201,14 @@ Route::middleware(['auth', 'force.reset'])->group(function () {
     */
     Volt::route('admin/user-access-control', 'admin.user-access-control')->name('uac');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Expenses
+    |--------------------------------------------------------------------------
+    */
+    Volt::route('expenses/list', 'expenses.expenses')->name('expenses');
+    Volt::route('expenses/add', 'expenses.add-expense')->name('expense.add');
+    Volt::route('expenses/edit/{hash}', 'expenses.edit-expense')->name('expense.edit');
+
 });

@@ -33,10 +33,10 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="mb-4 mt-4 flex items-center justify-between">
+    <div class="mb-4 mt-4 flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row  items-center justify-between">
         <div class="flex items-center space-x-2">
             <label for="">Per Page</label>
-            <flux:select class="w-xs" wire:model.live="per_page">
+            <flux:select class="w-none sm:w-none md:w-none lg:w-xs xl:w-xs 2xl:w-xs" wire:model.live="per_page">
                 <flux:select.option>10</flux:select.option>
                 <flux:select.option>25</flux:select.option>
                 <flux:select.option>50</flux:select.option>
@@ -109,8 +109,11 @@
                                 @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                             @endif
                         </th>
-                        <th class="px-4 py-2 border cursor-pointer whitespace-nowrap">
+                        <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('user')">
                             Added By
+                            @if($sortField == 'user') 
+                                @if($sortDirection == 'asc') ▲ @else ▼ @endif 
+                            @endif
                         </th>
                         <th class="px-4 py-2 border cursor-pointer whitespace-nowrap" wire:click="sortBy('is_approved')">
                             Status
@@ -187,10 +190,10 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="mt-4 flex items-center justify-between">
+    <div class="mt-4 flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row items-center justify-between">
         <div class="flex items-center space-x-2">
             <label for="">Per Page</label>
-            <flux:select class="w-xs" wire:model.live="per_page">
+            <flux:select class="w-none sm:w-none md:w-none lg:w-xs xl:w-xs 2xl:w-xs" wire:model.live="per_page">
                 <flux:select.option>10</flux:select.option>
                 <flux:select.option>25</flux:select.option>
                 <flux:select.option>50</flux:select.option>

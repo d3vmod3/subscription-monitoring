@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             SubscriptionsSeeder::class,
             PaymentsSeeder::class,
             AdvancePaymentsSeeder::class,
+            ExpensesSeeder::class,
         ]);
     }
 }

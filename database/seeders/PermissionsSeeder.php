@@ -69,5 +69,10 @@ class PermissionsSeeder extends Seeder
             'name' => "view user dashboard",
             'guard_name' => 'web',
         ]);
+
+        Permission::firstOrCreate([
+            'name' => "delete expenses",
+            'guard_name' => 'web',
+        ]);
     }
 }

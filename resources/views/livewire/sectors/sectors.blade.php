@@ -29,49 +29,50 @@
         </div>
         @endcan
     </div>
-
-    <table class="w-full border border-gray-200">
-        <thead>
-            <tr>
-                <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('name')">
-                    Sector Name
-                    @if($sortField == 'name') 
-                        @if($sortDirection == 'asc') ▲ @else ▼ @endif 
-                    @endif
-                </th>
-                <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('is_active')">
-                    Status
-                    @if($sortField == 'is_active') 
-                        @if($sortDirection == 'asc') ▲ @else ▼ @endif 
-                    @endif
-                </th>
-                @can('edit sectors')
-                <th class="px-4 py-2 border">Actions</th>
-                @endcan
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($sectors as $sector)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
-                    <td class="px-4 py-2 border font-semibold">{{ $sector->name }}</td>
-                    <td class="px-4 py-2 border whitespace-nowrap">
-                        <span class="{{ $sector->is_active ? 'text-green-600' : 'text-red-600' }}">
-                            {{ $sector->is_active ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
+    <div class="overflow-x-auto">
+        <table class="w-full border border-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('name')">
+                        Sector Name
+                        @if($sortField == 'name') 
+                            @if($sortDirection == 'asc') ▲ @else ▼ @endif 
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('is_active')">
+                        Status
+                        @if($sortField == 'is_active') 
+                            @if($sortDirection == 'asc') ▲ @else ▼ @endif 
+                        @endif
+                    </th>
                     @can('edit sectors')
-                    <td class="px-4 py-2 border text-center">
-                        <flux:link href="{{ route('sector.edit', ['hash' => $hashids->encode($sector->id)]) }}">Edit</flux:link>
-                    </td>
+                    <th class="px-4 py-2 border">Actions</th>
                     @endcan
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="2" class="px-4 py-2 text-center text-gray-500">No sectors found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($sectors as $sector)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
+                        <td class="px-4 py-2 border font-semibold">{{ $sector->name }}</td>
+                        <td class="px-4 py-2 border whitespace-nowrap">
+                            <span class="{{ $sector->is_active ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $sector->is_active ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        @can('edit sectors')
+                        <td class="px-4 py-2 border text-center">
+                            <flux:link href="{{ route('sector.edit', ['hash' => $hashids->encode($sector->id)]) }}">Edit</flux:link>
+                        </td>
+                        @endcan
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="2" class="px-4 py-2 text-center text-gray-500">No sectors found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
     <div class="mt-4">
         {{ $sectors->links() }}

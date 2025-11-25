@@ -122,17 +122,33 @@ class Payments extends Component
         if ($this->search) {
             $search = $this->search;
 
-            $query->where(function ($query) use ($search) {
-                $query->whereHas('subscription', function ($q) use ($search) {
-                    $q->where('mikrotik_name', 'like', '%'.$search.'%')
-                    ->orWhereHas('subscriber', function ($sq) use ($search) {
-                        $sq->whereRaw("CONCAT(first_name, ' ', IFNULL(middle_name,''), ' ', last_name) LIKE ?", ['%'.$search.'%'])
-                            ->orWhereRaw("CONCAT(first_name,' ',last_name) LIKE ?", ['%'.$search.'%']);
-                    });
+            $query->where(function ($q) use ($search) {
+                // Search subscription's mikrotik_name if it exists
+                $q->whereHas('subscription', function ($sq) use ($search) {
+                    $sq->where('mikrotik_name', 'like', "%$search%");
+
+                    // Only search subscriber if relationship exists
+                    if (method_exists($sq->getModel(), 'subscriber')) {
+                        $sq->orWhereHas('subscriber', function ($subq) use ($search) {
+                            $subq->whereRaw(
+                                "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", 
+                                ["%$search%"]
+                            );
+                        });
+                    }
                 })
-                ->orWhere('reference_number','like','%'.$search.'%');
+                // Search user full name
+                ->orWhereHas('user', function ($uq) use ($search) {
+                    $uq->whereRaw(
+                        "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", 
+                        ["%$search%"]
+                    );
+                })
+                // Search payment reference number
+                ->orWhere('reference_number', 'like', "%$search%");
             });
         }
+
 
         $allowedSorts = [
             'subscriber_name'    => 'subscribers.last_name', // or whatever field you want
@@ -146,6 +162,7 @@ class Payments extends Component
             'paid_at'            => 'paid_at',
             'mikrotik_name'      => 'subscriptions.mikrotik_name',
             'status'             => 'status',
+            'user'               => 'users.first_name'
         ];
 
         $sortField = $allowedSorts[$this->sortField] ?? 'paid_at';
@@ -155,6 +172,7 @@ class Payments extends Component
             ->leftJoin('subscribers','subscriptions.subscriber_id','=','subscribers.id')
             ->leftJoin('plans','plans.id','=','subscriptions.plan_id')
             ->leftJoin('payment_methods','payments.payment_method_id','=','payment_methods.id')
+            ->leftJoin('users','users.id','=','payments.user_id')
             ->orderBy($sortField, $this->sortDirection)
             ->select('payments.*')
             ->paginate($this->per_page);

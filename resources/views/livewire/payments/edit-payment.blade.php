@@ -129,6 +129,7 @@
             style="text-decoration: none;">
             Back to Payments
         </flux:link>
+        @endcan
     </div>
 
 </div>

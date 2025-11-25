@@ -45,8 +45,12 @@
             <flux:navlist variant="outline">
                 {{Auth::user()->getFullNameAttribute()}}
                 <flux:navlist.group :heading="__('Menu')" class="grid">
-                    
+                    @can('view dashboard')
                     <flux:navlist.item icon="home" :href="route(Auth::user()->hasRole('admin') ? 'dashboard' : 'user.dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    @endcan
+                    @can('view dashboard')
+                    <flux:navlist.item icon="clipboard-document-list" :href="route('expenses')" :current="request()->routeIs('expenses')" wire:navigate>{{ __('Expenses') }}</flux:navlist.item>
+                    @endcan
                     @can('view payment methods')
                     <flux:navlist.item icon="credit-card" :href="route('payment-methods')" :current="request()->routeIs('payment-methods')" wire:navigate>{{ __('Payment Methods') }}</flux:navlist.item>
                     @endcan

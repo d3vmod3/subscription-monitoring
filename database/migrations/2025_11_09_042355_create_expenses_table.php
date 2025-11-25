@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->text('description');
+            $table->foreignId('payment_method_id')->constrained();
+            $table->string('reference_number')->nullable();
             $table->decimal('amount', 10, 2);
-            $table->boolean('is_approved')->default(false);
+            $table->dateTime('date_time_issued');
+            $table->enum('status', ['Pending', 'Approved', 'Disapproved'])->default('Pending');
             $table->timestamps();
         });
     }
