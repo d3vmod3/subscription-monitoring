@@ -34,7 +34,6 @@ class AddUser extends Component
         'birthdate' => 'nullable|date',
         'gender' => 'required|in:male,female,other',
         'contact_number' => 'nullable|string|max:30',
-        'address' => 'nullable|string',
         'status' => 'required|in:active,inactive',
 
         'role' => 'required|exists:roles,name', // <--- NEW
