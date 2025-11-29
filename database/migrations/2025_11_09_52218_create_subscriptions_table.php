@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('subscriber_id')->nullable()->constrained('subscribers')->nullOnDelete();
             $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
-            $table->foreignId('pon_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('splitter_id')->nullable()->constrained()->nullOnDelete();
             $table->string('mikrotik_name')->unique();
             $table->date('start_date');
             $table->enum('status', ['active', 'inactive', 'disconnected'])->default('inactive');

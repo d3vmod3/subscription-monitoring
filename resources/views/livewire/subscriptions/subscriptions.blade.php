@@ -16,7 +16,7 @@
             placeholder="Search subscriptions..." 
             class="border rounded px-3 py-2 w-1/3"
         >
-
+        @can('add subscribers')
         <div>
             <flux:modal.trigger name="add-subscription">
                 <flux:button>Add Subscription</flux:button>
@@ -26,6 +26,7 @@
                 <livewire:subscriptions.add-subscription />
             </flux:modal>
         </div>
+        @endcan
     </div>
     <div class="overflow-x-auto">
         <table class="w-full border border-gray-200">
@@ -49,7 +50,9 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
+                    @can('edit subscribers')
                     <th class="px-4 py-2 border">Actions</th>
+                    @endcan
                 </tr>
             </thead>
 
@@ -70,12 +73,14 @@
                                 {{ ucfirst($subscription->status) }}
                             </span>
                         </td>
+                        @can('add subscribers')
                         <td class="px-4 py-2 border text-center">
                             <flux:link 
                                 href="{{ route('subscription.edit', ['hash' => $hashids->encode($subscription->id)]) }}">
                                 Edit
                             </flux:link>
                         </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>

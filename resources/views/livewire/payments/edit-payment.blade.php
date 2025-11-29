@@ -119,17 +119,18 @@
 
     {{-- 💾 Buttons --}}
     <div class="flex flex-col sm:flex-row justify-end gap-2 mt-4">
+        @can('edit payments')
         <flux:button wire:click="save" wire:loading.attr="disabled" variant="primary">
             <span wire:loading.remove>Update Status</span>
             <span wire:loading>Updating...</span>
         </flux:button>
-
+        @endcan
         <flux:link href="{{ route('payments') }}" variant="secondary"
             class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 w-full sm:w-auto text-center"
             style="text-decoration: none;">
             Back to Payments
         </flux:link>
-        @endcan
+        
     </div>
 
 </div>

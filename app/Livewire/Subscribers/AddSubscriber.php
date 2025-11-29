@@ -111,10 +111,6 @@ class AddSubscriber extends Component
 
     public function render()
     {
-        if (!Auth::user()->can('add subscribers'))
-        {
-            abort(403, 'You are not allowed to this page');
-        }
         return view('livewire.subscribers.add-subscriber');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Subscription;
 use App\Models\Subscriber;
 use App\Models\Plan;
 use App\Models\PassiveOpticalNetwork;
+use Auth;
 
 class AddSubscription extends Component
 {
@@ -69,6 +70,10 @@ class AddSubscription extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('add subscriptions'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         Subscription::create([

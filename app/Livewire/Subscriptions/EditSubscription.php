@@ -9,6 +9,7 @@ use App\Models\Plan;
 use App\Models\PassiveOpticalNetwork;
 use Hashids\Hashids;
 use Carbon\Carbon;
+use Auth;
 
 class EditSubscription extends Component
 {
@@ -92,6 +93,10 @@ class EditSubscription extends Component
 
     public function save()
     {
+        if (!Auth::user()->can('edit subscriptions'))
+        {
+            abort(403, 'Unauthorized action');
+        }
         $this->validate();
 
         $this->subscription->update([
@@ -112,6 +117,10 @@ class EditSubscription extends Component
 
     public function render()
     {
+        if (!Auth::user()->can('edit subscriptions'))
+        {
+            abort(403, 'You are not allowed to this page');
+        }
         return view('livewire.subscriptions.edit-subscription');
     }
 }

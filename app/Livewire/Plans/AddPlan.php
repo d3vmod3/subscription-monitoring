@@ -33,7 +33,6 @@ class AddPlan extends Component
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
-            'subscription_interval' => "Monthly",
             'is_active' => $this->is_active,
         ]);
 

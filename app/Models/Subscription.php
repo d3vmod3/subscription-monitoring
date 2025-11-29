@@ -12,7 +12,7 @@ class Subscription extends Model
     protected $fillable = [
         'subscriber_id',
         'plan_id',
-        'pon_id',
+        'splitter_id',
         'mikrotik_name',
         'start_date',
         'status',

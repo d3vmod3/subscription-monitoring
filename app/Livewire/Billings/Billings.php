@@ -182,8 +182,14 @@ class Billings extends Component
                 ->sum('discount_amount');
             
             $remaining = max($expectedAmount - $paidAmount, 0);
+
+            if($discountAmount == $remaining)
+            {
+                $remaining = 0.00;
+            }
             
-            $status = $remaining - $discountAmount == 0 ? 'Paid' : 'Not Paid';
+            $totalCovered = $paidAmount + $discountAmount;
+            $status = ($totalCovered >= $expectedAmount) ? 'Paid' : 'Not Paid';
 
             $billingSummary->push([
                 'month' => $billingStart->format('F Y'),

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Hashids\Hashids;
 use Auth;
 
 class AddUser extends Component
@@ -23,8 +24,9 @@ class AddUser extends Component
     public $province_id;
     public $municipality_id;
     public $barangay_id;
-    public $is_active;
+    public $is_active = false;
     public $is_password_reset;
+    public $role;
 
     protected $rules = [
         'first_name' => 'required|string|max:255',
@@ -34,8 +36,7 @@ class AddUser extends Component
         'birthdate' => 'nullable|date',
         'gender' => 'required|in:male,female,other',
         'contact_number' => 'nullable|string|max:30',
-        'status' => 'required|in:active,inactive',
-
+        'is_active' => 'required|boolean',
         'role' => 'required|exists:roles,name', // <--- NEW
     ];
 
@@ -60,20 +61,23 @@ class AddUser extends Component
             'middle_name' => $this->middle_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'password' => Hash::make('password123'), // auto-hashed by cast
-
+            'password' => Hash::make('password123'),
             'birthdate' => $this->birthdate,
             'gender' => $this->gender,
             'contact_number' => $this->contact_number,
-            'address' => $this->address,
-            'status' => $this->status,
-            'is_password_reset' => true,
+            'address_line_1' => $this->address_line_1,
+            'address_line_2' => $this->address_line_2,
+            'region_id' => $this->region_id,
+            'province_id' => $this->province_id,
+            'municipality_id' => $this->municipality_id,
+            'barangay_id' => $this->barangay_id,
+            'is_active' => $this->is_active,
         ]);
 
         // Assign Role
         $user->assignRole($this->role);
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
-        $hash = $hashids->encode($subscriber->id);
+        $hash = $hashids->encode($user->id);
         $this->dispatch('show-toast', [
             'message' => 'User added successfully!',
             'type' => 'success',

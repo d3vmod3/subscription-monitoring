@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Napbox;
 use App\Models\PassiveOpticalNetwork;
 // use App\Models\Splitter;
+use Auth;
 
 class AddNapbox extends Component
 {

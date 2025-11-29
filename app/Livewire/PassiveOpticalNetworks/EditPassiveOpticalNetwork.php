@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\PassiveOpticalNetwork;
 use App\Models\Sector;
 use Hashids\Hashids;
+use Auth;
 
 class EditPassiveOpticalNetwork extends Component
 {

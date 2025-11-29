@@ -14,7 +14,6 @@ class Plan extends Model
         'description',
         'price',
         'is_active',
-        'subscription_interval',
     ];
 
     /**

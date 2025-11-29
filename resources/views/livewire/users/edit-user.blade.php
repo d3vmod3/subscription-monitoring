@@ -110,6 +110,10 @@
                 {{-- Location Dropdowns --}}
                 <div class="mt-4">
                     <livewire:address.location-dropdowns 
+                        :region-id="$region_id"
+                        :province-id="$province_id"
+                        :municipality-id="$municipality_id"
+                        :barangay-id="$barangay_id"
                         wire:model.live:region="region_id" 
                         wire:model.live:province="province_id" 
                         wire:model.live:municipality="municipality_id" 
