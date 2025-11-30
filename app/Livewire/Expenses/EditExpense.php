@@ -97,12 +97,6 @@ class EditExpense extends Component
             abort(403, 'Unauthorized action');
         }
         $this->expense->delete();
-        $this->dispatch('expense-deleted');
-        $this->dispatch('show-toast', [
-            'message' => 'Expenses deleted successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
         $this->expense=null;
     }
 }

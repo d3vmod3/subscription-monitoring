@@ -10,20 +10,32 @@
         </h1>
     </div>
     {{-- Top controls --}}
-    <div class="flex flex-col sm:flex-row justify-between mb-4 gap-3">
-        {{-- 🔍 Search --}}
-        <input 
-            type="text" 
-            wire:model.live="search" 
-            placeholder="Search payments (Mikrotik Name or Ref #)..." 
-            class="border rounded px-3 py-2 w-full sm:w-1/3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        >
+    <div class="flex flex-col sm:flex-row justify-between items-cenrter mb-4 gap-4">
+        <div class="flex flex-col sm:flex-row items-center w-full gap-3">
+            {{-- 🔍 Search or Filter --}}
+            <input 
+                type="text" 
+                wire:model.live="search" 
+                placeholder="Search payments (Mikrotik Name or Ref #)..." 
+                class="border rounded px-3 py-2 w-full sm:w-1/3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+
+            <flux:dropdown>
+                <flux:button icon:trailing="chevron-down" class="w-xs">Filter Status</flux:button>
+                <flux:menu class="w-xs">
+                    <flux:menu.checkbox keep-open wire:model.live="statusAll" checked>All</flux:menu.checkbox>
+                    <flux:menu.checkbox keep-open wire:model.live="statusApproved" checked>Approved</flux:menu.checkbox>
+                    <flux:menu.checkbox keep-open wire:model.live="statusDisapproved">Disapproved</flux:menu.checkbox>
+                    <flux:menu.checkbox keep-open wire:model.live="statusPending">Pending</flux:menu.checkbox>
+                </flux:menu>
+            </flux:dropdown>
+        </div>
 
         {{-- ➕ Add Payment Button --}}
         @can('add payments')
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0 mx-auto">
             <flux:modal.trigger name="add-payment">
-                <flux:button>Add Payment</flux:button>
+                <flux:button class="w-xs">Add Payment</flux:button>
             </flux:modal.trigger>
             <flux:modal name="add-payment" class="w-full">
                 <livewire:payments.add-payment />

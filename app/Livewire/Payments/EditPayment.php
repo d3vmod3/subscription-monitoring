@@ -137,6 +137,21 @@ class EditPayment extends Component
         
     }
 
+    public function delete()
+    {
+        if (!Auth::user()->can('delete expenses'))
+        {
+            abort(403, 'Unauthorized action');
+        }
+        $this->payment->delete();
+        $this->dispatch('show-toast', [
+            'message' => 'Expenses deleted successfully!',
+            'type' => 'success',
+            'duration' => 3000,
+        ]);
+        $this->payment=null;
+    }
+
     public function render()
     {
         if (!Auth::user()->can('edit payments'))

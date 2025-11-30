@@ -1,10 +1,10 @@
 <div class="max-w-3xl mx-auto p-6 bg-white dark:bg-zinc-700 rounded-lg shadow space-y-6 dark:shadow-lg">
-
+    @if($payment)
     {{-- 🧾 Title --}}
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
         Update Payment Status
     </h2>
-
+    
     {{-- 👤 Subscriber --}}
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Subscriber</label>
@@ -21,7 +21,7 @@
             <p class="text-sm sm:text-base"><strong>Current Plan:</strong> {{ $selectedSubscription->plan->name }}</p>
             <p class="text-sm sm:text-base"><strong>Price:</strong> ₱{{ number_format($selectedSubscription->plan->price, 2) }}</p>
             <p class="text-sm sm:text-base text-gray-700 dark:text-gray-200">
-                <strong>Total Paid for {{ $month_year_cover }}:</strong> ₱{{ number_format($total_paid, 2) }}
+                <strong>Total Paid for {{ \Carbon\Carbon::parse($month_year_cover)->format('F Y') }}:</strong> ₱{{ number_format($total_paid, 2) }}
             </p>
             @if ($expected_amount)
                 <p class="text-sm sm:text-base text-blue-600 dark:text-blue-400">
@@ -130,7 +130,42 @@
             style="text-decoration: none;">
             Back to Payments
         </flux:link>
-        
+        @can('delete payments')
+        <div>
+            <flux:modal.trigger name="delete-profile">
+            <flux:button variant="danger" class="border flex justify-center rounded-xl p-2 w-full sm:w-auto text-center">Delete</flux:button>
+            </flux:modal.trigger>
+
+            <flux:modal name="delete-profile" class="min-w-[22rem]">
+                <div class="space-y-6">
+                    <div>
+                        <flux:heading size="lg">Delete Payment</flux:heading>
+                            <flux:text class="mt-2">
+                                Are you sure you want to delete this payment? <br>
+                            </flux:text>
+                    </div>
+                    <div class="flex gap-2">
+                        <flux:spacer />
+                        <flux:button type="submit" variant="danger" wire:click="delete">Yes</flux:button>
+
+                        <flux:modal.close>
+                            <flux:button variant="ghost">Cancel</flux:button>
+                        </flux:modal.close>
+                    </div>
+                </div>
+            </flux:modal>
+        </div>
+        @endcan
     </div>
+    @else
+    <div class="flex flex-col items-center justify-center min-h-screen space-y-4 text-center">
+         <h2 class="text-lg font-semibold text-center">This payment has been deleted</h2>
+        <flux:link href="{{ route('payments') }}" variant="secondary"
+            class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 text-center"
+            style="text-decoration: none;">
+            Back to Payments
+        </flux:link>
+    </div>
+    @endif
 
 </div>

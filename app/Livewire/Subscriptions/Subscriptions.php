@@ -40,7 +40,7 @@ class Subscriptions extends Component
     {
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
 
-        $subscriptions = Subscription::with(['subscriber', 'plan', 'pon'])
+        $subscriptions = Subscription::with(['subscriber', 'plan', 'splitter'])
             ->when($this->search, function($q) {
                 $q->where('mikrotik_name', 'like', "%{$this->search}%")
                 ->orWhereHas('subscriber', function($query) {

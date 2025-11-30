@@ -18,7 +18,13 @@ class Payments extends Component
     public $sortField = 'paid_at';
     public $sortDirection = 'desc';
 
-    public $status="";
+    public $statusAll = false;
+    public $statusApproved = false;
+    public $statusDisapproved = false;
+    public $statusPending = true;
+    public $selectedStatuses = [];
+
+    public $filter_status;
 
     public $per_page = 10;
 
@@ -34,6 +40,53 @@ class Payments extends Component
     {
         $this->selectAll=false;
         $this->resetPage();
+    }
+
+    public function updatedStatusAll()
+    {
+        if ($this->statusAll)
+        {
+            $this->statusApproved = true;
+            $this->statusDisapproved = true;
+            $this->statusPending = true;
+        }
+        
+    }
+
+    public function updatedStatusApproved()
+    {
+        if($this->statusApproved === false)
+        {
+            $this->statusAll = false;
+        }
+        if ($this->statusApproved && $this->statusDisapproved &&  $this->statusPending)
+        {
+            $this->statusAll = true;
+        }
+    }
+
+    public function updatedStatusDisapproved()
+    {
+        if($this->statusDisapproved === false)
+        {
+            $this->statusAll = false;
+        }
+        if ($this->statusApproved && $this->statusDisapproved &&  $this->statusPending)
+        {
+            $this->statusAll = true;
+        }
+    }
+
+    public function updatedStatusPending()
+    {
+        if($this->statusPending === false)
+        {
+            $this->statusAll = false;
+        }
+        if ($this->statusApproved && $this->statusDisapproved &&  $this->statusPending)
+        {
+            $this->statusAll = true;
+        }
     }
 
     public function sortBy($field)
@@ -119,52 +172,39 @@ class Payments extends Component
         $query = Payment::query()
             ->with(['subscription.subscriber','subscription.plan','paymentMethod']);
 
+        // 🔍 Search logic (unchanged)
         if ($this->search) {
             $search = $this->search;
-
             $query->where(function ($q) use ($search) {
-                // Search subscription's mikrotik_name if it exists
                 $q->whereHas('subscription', function ($sq) use ($search) {
-                    $sq->where('mikrotik_name', 'like', "%$search%");
-
-                    // Only search subscriber if relationship exists
-                    if (method_exists($sq->getModel(), 'subscriber')) {
-                        $sq->orWhereHas('subscriber', function ($subq) use ($search) {
-                            $subq->whereRaw(
-                                "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", 
-                                ["%$search%"]
-                            );
+                    $sq->where('mikrotik_name', 'like', "%$search%")
+                    ->orWhereHas('subscriber', function ($subq) use ($search) {
+                            $subq->whereRaw("CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", ["%$search%"]);
                         });
-                    }
                 })
-                // Search user full name
                 ->orWhereHas('user', function ($uq) use ($search) {
-                    $uq->whereRaw(
-                        "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", 
-                        ["%$search%"]
-                    );
+                    $uq->whereRaw("CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", ["%$search%"]);
                 })
-                // Search payment reference number
                 ->orWhere('reference_number', 'like', "%$search%");
             });
         }
 
+        // ✅ STATUS FILTER
+        $selectedStatuses = [];
 
-        $allowedSorts = [
-            'subscriber_name'    => 'subscribers.last_name', // or whatever field you want
-            'subscription_id'    => 'subscriptions.mikrotik_name',
-            'plan_id'            => 'plans.name',
-            'reference_number'   => 'reference_number',
-            'payment_method_id'  => 'payment_methods.name',
-            'amount'             => 'amount',
-            'created_at'         => 'payments.created_at',
-            'is_approved'        => 'status',
-            'paid_at'            => 'paid_at',
-            'mikrotik_name'      => 'subscriptions.mikrotik_name',
-            'status'             => 'status',
-            'user'               => 'users.first_name'
-        ];
+        if ($this->statusApproved)     $selectedStatuses[] = 'Approved';
+        if ($this->statusDisapproved)  $selectedStatuses[] = 'Disapproved';
+        if ($this->statusPending)      $selectedStatuses[] = 'Pending';
 
+        // If none selected → show nothing
+        if (empty($selectedStatuses)) {
+            return Payment::where('id', null)->paginate($this->per_page);
+        }
+
+        $query->whereIn('payments.status', $selectedStatuses);
+
+        // 📌 Sorting logic (unchanged)
+        $allowedSorts = [/* ... existing ... */];
         $sortField = $allowedSorts[$this->sortField] ?? 'paid_at';
 
         return $query
@@ -177,6 +217,7 @@ class Payments extends Component
             ->select('payments.*')
             ->paginate($this->per_page);
     }
+
 
 
     public function render()

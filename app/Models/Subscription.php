@@ -35,9 +35,9 @@ class Subscription extends Model
     }
 
     // A Subscription belongs to a Passive Optical Network (PON)
-    public function pon()
+    public function splitter()
     {
-        return $this->belongsTo(PassiveOpticalNetwork::class, 'pon_id');
+        return $this->belongsTo(Splitter::class, 'splitter_id');
     }
 
     // A Subscription has many Payments

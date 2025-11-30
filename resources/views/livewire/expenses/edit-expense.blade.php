@@ -115,7 +115,7 @@
     </div>
     @else
     <div class="flex flex-col items-center justify-center min-h-screen space-y-4 text-center">
-         <h2 class="text-lg font-semibold text-center">This expense have been deleted</h2>
+         <h2 class="text-lg font-semibold text-center">This expense has been deleted</h2>
         <flux:link href="{{ route('expenses') }}" variant="secondary"
             class="border flex justify-center rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150 text-center"
             style="text-decoration: none;">

@@ -6,7 +6,10 @@ use Livewire\Component;
 use App\Models\Subscription;
 use App\Models\Subscriber;
 use App\Models\Plan;
-use App\Models\PassiveOpticalNetwork;
+use App\Models\Splitter;
+use App\Models\Sector;
+use App\Models\PassiveOpticalNetwork as Pon;
+use App\Models\Napbox;
 use Hashids\Hashids;
 use Carbon\Carbon;
 use Auth;
@@ -18,13 +21,22 @@ class EditSubscription extends Component
     public $subscriber_search = '';
     public $subscriber_results = [];
     public $plan_id;
+
+    public $sector_id;
     public $pon_id;
+    public $napbox_id;
+    public $splitter;
+    public $splitter_id;
     public $mikrotik_name;
     public $start_date;
     public $status;
 
     public $plans = [];
-    public $pons = [];
+
+    protected $listeners = [
+        'splitter-updated' => 'setSplitter',
+    ];
+
 
     public function mount($hash)
     {
@@ -42,13 +54,22 @@ class EditSubscription extends Component
         $this->subscriber_id = $this->subscription->subscriber_id;
         $this->subscriber_search = optional($this->subscription->subscriber)->first_name . ' ' . optional($this->subscription->subscriber)->last_name;
         $this->plan_id = $this->subscription->plan_id;
-        $this->pon_id = $this->subscription->pon_id;
+
+
+        $this->splitter_id = $this->subscription->splitter_id;
+        $this->splitter = Splitter::findOrFail($this->splitter_id);
+        $this->sector_id = $this->splitter->napbox->pon->sector->id;
+        $this->pon_id = $this->splitter->napbox->pon->id;
+        $this->napbox_id = $this->splitter->napbox->id;
+
+
+
+
         $this->mikrotik_name = $this->subscription->mikrotik_name;
         $this->start_date = Carbon::parse($this->subscription->start_date)->format('Y-m-d');
         $this->status = $this->subscription->status;
 
         $this->plans = Plan::where('is_active', 1)->get();
-        $this->pons = PassiveOpticalNetwork::all();
     }
 
     protected function rules()
@@ -56,7 +77,7 @@ class EditSubscription extends Component
         return [
             'subscriber_id' => 'nullable|exists:subscribers,id',
             'plan_id' => 'required|exists:plans,id',
-            'pon_id' => 'nullable|exists:pons,id',
+            'splitter_id' => 'nullable|exists:splitters,id',
             'mikrotik_name' => 'required|string|max:255|unique:subscriptions,mikrotik_name,' . $this->subscription->id,
             'start_date' => 'required|date',
             'status' => 'required|in:active,inactive,disconnected',
@@ -91,6 +112,11 @@ class EditSubscription extends Component
         $this->subscriber_results = [];
     }
 
+    public function setSplitter($data)
+    {
+        $this->splitter_id = $data['splitter_id'];
+    }
+
     public function save()
     {
         if (!Auth::user()->can('edit subscriptions'))
@@ -98,11 +124,10 @@ class EditSubscription extends Component
             abort(403, 'Unauthorized action');
         }
         $this->validate();
-
         $this->subscription->update([
             'subscriber_id' => $this->subscriber_id,
             'plan_id' => $this->plan_id,
-            'pon_id' => $this->pon_id,
+            'splitter_id' => $this->splitter_id,
             'mikrotik_name' => $this->mikrotik_name,
             'start_date' => $this->start_date,
             'status' => $this->status,

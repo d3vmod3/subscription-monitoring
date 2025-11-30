@@ -41,6 +41,31 @@ class Billings extends Component
 
         $this->subscriptions = $this->subscriber->subscriptions;
         $this->year = now()->year;
+
+        $this->autoShowBilling();
+    }
+
+    public function autoShowBilling()
+    {
+       // If subscriber has only one subscription, auto-select it
+        if ($this->subscriptions->count() === 1) {
+            $subscription = $this->subscriptions->first();
+
+            // Encode subscription hash
+            $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+            $this->subscriptionHash = $hashids->encode($subscription->id);
+
+            // Set as selected subscription
+            $this->selectedSubscription = Subscription::with(['plan', 'payments'])
+                ->find($subscription->id);
+
+            // Default range
+            $this->month_cover_from = Carbon::parse($subscription->start_date)->format('Y-m');
+            $this->month_cover_to = now()->format('Y-m');
+
+            // Apply billing filters
+            $this->filterPayments();
+        }
     }
 
     public function updatedSubscriptionHash($hash)

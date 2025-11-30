@@ -50,15 +50,6 @@ class Expenses extends Component
         }
     }
 
-    #[On('expense-deleted')] 
-    public function deleteToast()
-    {
-        $this->dispatch('show-toast', [
-            'message' => 'Expenses deleted successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
-    }
 
     public function render()
     {

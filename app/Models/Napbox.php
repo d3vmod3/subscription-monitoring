@@ -14,6 +14,7 @@ class Napbox extends Model
         'napbox_code',
         'name',
         'description',
+        'is_active'
     ];
 
     public function pon()

@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\Subscription;
 use App\Models\Subscriber;
 use App\Models\Plan;
-use App\Models\PassiveOpticalNetwork;
+use App\Models\Splitter;
 use Auth;
 
 class AddSubscription extends Component
@@ -16,18 +16,21 @@ class AddSubscription extends Component
     public $subscriber_results = [];
 
     public $plan_id;
-    public $pon_id;
+    public $splitter_id;
     public $mikrotik_name;
     public $start_date;
     public $status = 'inactive';
 
     public $plans = [];
-    public $pons = [];
+
+    protected $listeners = [
+        'splitter-updated' => 'setSplitter',
+    ];
 
     protected $rules = [
         'subscriber_id' => 'nullable|exists:subscribers,id',
         'plan_id' => 'required|exists:plans,id',
-        'pon_id' => 'nullable|exists:pons,id',
+        'splitter_id' => 'nullable|exists:splitters,id',
         'mikrotik_name' => 'required|string|unique:subscriptions,mikrotik_name|max:255',
         'start_date' => 'required|date',
         'status' => 'required|in:active,inactive,disconnected',
@@ -36,7 +39,6 @@ class AddSubscription extends Component
     public function mount()
     {
         $this->plans = Plan::where('is_active', 1)->get();
-        $this->pons = PassiveOpticalNetwork::all();
     }
 
     public function updatedSubscriberSearch()
@@ -68,6 +70,11 @@ class AddSubscription extends Component
         $this->subscriber_results = [];
     }
 
+    public function setSplitter($data)
+    {
+        $this->splitter_id = $data['splitter_id'];
+    }
+
     public function save()
     {
         if (!Auth::user()->can('add subscriptions'))
@@ -79,7 +86,7 @@ class AddSubscription extends Component
         Subscription::create([
             'subscriber_id' => $this->subscriber_id,
             'plan_id' => $this->plan_id,
-            'pon_id' => $this->pon_id,
+            'splitter_id' => $this->splitter_id,
             'mikrotik_name' => $this->mikrotik_name,
             'start_date' => $this->start_date,
             'status' => $this->status,
@@ -91,7 +98,7 @@ class AddSubscription extends Component
             'subscriber_search',
             'subscriber_results',
             'plan_id',
-            'pon_id',
+            'splitter_id',
             'mikrotik_name',
             'start_date',
             'status'

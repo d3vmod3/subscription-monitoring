@@ -74,5 +74,10 @@ class PermissionsSeeder extends Seeder
             'name' => "delete expenses",
             'guard_name' => 'web',
         ]);
+
+        Permission::firstOrCreate([
+            'name' => "delete payments",
+            'guard_name' => 'web',
+        ]);
     }
 }

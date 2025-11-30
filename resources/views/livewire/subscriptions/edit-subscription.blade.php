@@ -44,18 +44,14 @@
         @enderror
     </div>
 
-    {{-- PON --}}
-    <div>
-        <label class="block text-sm font-medium mb-1">PON</label>
-        <select wire:model.defer="pon_id" class="w-full border rounded px-3 py-2">
-            <option value="">-- Select PON (optional) --</option>
-            @foreach($pons as $pon)
-                <option value="{{ $pon->id }}">{{ $pon->name }}</option>
-            @endforeach
-        </select>
-        @error('pon_id') 
-            <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
-        @enderror
+    {{-- Splitter selectable network setup dropdowns --}}
+    <div class="mt-4">
+        <livewire:network-setup.network-setup-dropdowns
+            :sector-id="$sector_id"
+            :pon-id="$pon_id"
+            :napbox-id="$napbox_id"
+            :splitter-id="$splitter_id" 
+            wire:model.live:splitter_id="splitter_id" />
     </div>
 
     {{-- Mikrotik Name --}}
