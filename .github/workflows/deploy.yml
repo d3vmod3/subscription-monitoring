@@ -1,0 +1,49 @@
+name: Deploy Laravel Livewire + Flux UI on Windows
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy latest code
+        run: |
+          cd C:\xampp\htdocs\subscription-monitoring
+          git reset --hard
+          git pull origin main
+
+      - name: Install PHP dependencies
+        run: |
+          cd C:\xampp\htdocs\subscription-monitoring
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Install Node dependencies
+        run: |
+          cd C:\xampp\htdocs\subscription-monitoring
+          npm install
+
+      - name: Build Flux UI assets
+        run: |
+          cd C:\xampp\htdocs\subscription-monitoring
+          npm run build
+
+      - name: Clear Laravel caches
+        run: |
+          cd C:\xampp\htdocs\subscription-monitoring
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          php artisan livewire:discover
+
+      - name: Restart Laravel app service (optional)
+        run: |
+          # Example if your Laravel app runs as Windows service
+          # Restart-Service MyLaravelApp
+          echo "Deployment complete"
