@@ -16,38 +16,38 @@ jobs:
           fetch-depth: 1
 
       - name: Allow PowerShell scripts + fix Git safe directory
-        shell: pwsh
+        shell: powershell
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           git config --global --add safe.directory "C:/xampp/htdocs/subscription-monitoring"
 
       - name: Deploy latest code
-        shell: pwsh
+        shell: powershell
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           git reset --hard
           git pull origin main
 
       - name: Install PHP dependencies
-        shell: pwsh
+        shell: powershell
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Install Node dependencies
-        shell: pwsh
+        shell: powershell
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           npm install
 
       - name: Build Flux UI assets
-        shell: pwsh
+        shell: powershell
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           npm run build
 
       - name: Clear Laravel caches
-        shell: pwsh
+        shell: powershell
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           php artisan config:cache
@@ -56,7 +56,7 @@ jobs:
           php artisan livewire:discover
 
       - name: Serve Laravel + Flux UI
-        shell: pwsh
+        shell: powershell
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
 
@@ -69,5 +69,5 @@ jobs:
           echo "Laravel server + Vite started."
 
       - name: Deployment complete
-        shell: pwsh
+        shell: powershell
         run: echo "Deployment finished!"
