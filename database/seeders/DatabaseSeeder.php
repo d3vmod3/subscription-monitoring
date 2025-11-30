@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,22 +11,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Always run these
         $this->call([
             PermissionsSeeder::class,
             RolesSeeder::class,
             UsersSeeder::class,
-            SubscribersSeeder::class,
-            PlansSeeder::class,
-            PaymentMethodsSeeder::class,
-            SectorsSeeder::class,
-            PonsSeeder::class,
-            NapboxesSeeder::class,
-            SplittersSeeder::class,
-            SubscriptionsSeeder::class,
-            PaymentsSeeder::class,
-            AdvancePaymentsSeeder::class,
-            ExpensesSeeder::class,
         ]);
+
+        // If APP_DEBUG = true (local/dev environment), run more seeders
+        if (config('app.debug')) {
+            $this->call([
+                SubscribersSeeder::class,
+                PlansSeeder::class,
+                PaymentMethodsSeeder::class,
+                SectorsSeeder::class,
+                PonsSeeder::class,
+                NapboxesSeeder::class,
+                SplittersSeeder::class,
+                SubscriptionsSeeder::class,
+                PaymentsSeeder::class,
+                AdvancePaymentsSeeder::class,
+                ExpensesSeeder::class,
+            ]);
+        }
     }
 }
