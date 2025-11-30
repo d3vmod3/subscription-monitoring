@@ -44,8 +44,11 @@ jobs:
           php artisan view:cache
           php artisan livewire:discover
 
-      - name: Restart Laravel app service (optional)
+      - name: Serve Laravel + Flux UI
         run: |
-          # Example if your Laravel app runs as Windows service
-          # Restart-Service MyLaravelApp
-          echo "Deployment complete"
+          cd C:\xampp\htdocs\subscription-monitoring
+          start cmd /k "php artisan serve --host=0.0.0.0 --port=8000 & npm run dev"
+          echo "App server started."
+
+      - name: Deployment complete
+        run: echo "Deployment finished!"
