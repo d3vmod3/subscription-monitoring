@@ -15,28 +15,39 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Allow PowerShell scripts + fix Git safe directory
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+          git config --global --add safe.directory "C:/xampp/htdocs/subscription-monitoring"
+
       - name: Deploy latest code
+        shell: pwsh
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           git reset --hard
           git pull origin main
 
       - name: Install PHP dependencies
+        shell: pwsh
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Install Node dependencies
+        shell: pwsh
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           npm install
 
       - name: Build Flux UI assets
+        shell: pwsh
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           npm run build
 
       - name: Clear Laravel caches
+        shell: pwsh
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
           php artisan config:cache
@@ -45,10 +56,18 @@ jobs:
           php artisan livewire:discover
 
       - name: Serve Laravel + Flux UI
+        shell: pwsh
         run: |
           cd C:\xampp\htdocs\subscription-monitoring
-          start cmd /k "php artisan serve --host=0.0.0.0 --port=8000 & npm run dev"
-          echo "App server started."
+
+          # Start Laravel server in background
+          Start-Process powershell -ArgumentList "php artisan serve --host=0.0.0.0 --port=8000"
+
+          # Start Vite hot reload in background
+          Start-Process powershell -ArgumentList "npm run dev"
+
+          echo "Laravel server + Vite started."
 
       - name: Deployment complete
+        shell: pwsh
         run: echo "Deployment finished!"
