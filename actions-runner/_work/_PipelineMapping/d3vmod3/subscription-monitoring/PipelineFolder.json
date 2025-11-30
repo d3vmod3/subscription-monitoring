@@ -1,0 +1,12 @@
+﻿{
+  "repositoryName": "d3vmod3/subscription-monitoring",
+  "pipelineDirectory": "subscription-monitoring",
+  "workspaceDirectory": "subscription-monitoring\\subscription-monitoring",
+  "repositories": {
+    "d3vmod3/subscription-monitoring": {
+      "repositoryPath": "subscription-monitoring\\subscription-monitoring",
+      "lastRunOn": "11/30/2025 11:54:28 +08:00"
+    }
+  },
+  "lastRunOn": "11/30/2025 11:54:28 +08:00"
+}

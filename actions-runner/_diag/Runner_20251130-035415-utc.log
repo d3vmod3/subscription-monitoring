@@ -1,0 +1,175 @@
+[2025-11-30 03:54:15Z INFO HostContext] No proxy settings were found based on environmental variables (http_proxy/https_proxy/HTTP_PROXY/HTTPS_PROXY)
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'Credentials': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'Runner': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.runner'
+[2025-11-30 03:54:15Z INFO Listener] Runner is built for Windows (X64) - win-x64.
+[2025-11-30 03:54:15Z INFO Listener] RuntimeInformation: Microsoft Windows 10.0.26100.
+[2025-11-30 03:54:15Z INFO Listener] Version: 2.329.0
+[2025-11-30 03:54:15Z INFO Listener] Commit: c76c59996c8fa32e989164a5a695efb12608ae5a
+[2025-11-30 03:54:15Z INFO Listener] Culture: en-US
+[2025-11-30 03:54:15Z INFO Listener] UI Culture: en-US
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO Listener] Validating directory permissions for: 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO CommandLineParser] Parse
+[2025-11-30 03:54:15Z INFO CommandLineParser] Parsing 3 args
+[2025-11-30 03:54:15Z INFO CommandLineParser] parsing argument
+[2025-11-30 03:54:15Z INFO CommandLineParser] HasArgs: False
+[2025-11-30 03:54:15Z INFO CommandLineParser] Adding Command: run
+[2025-11-30 03:54:15Z INFO CommandLineParser] parsing argument
+[2025-11-30 03:54:15Z INFO CommandLineParser] HasArgs: True
+[2025-11-30 03:54:15Z INFO CommandLineParser] arg: startuptype
+[2025-11-30 03:54:15Z INFO CommandLineParser] parsing argument
+[2025-11-30 03:54:15Z INFO CommandLineParser] HasArgs: True
+[2025-11-30 03:54:15Z INFO CommandLineParser] Adding option 'startuptype': 'service'
+[2025-11-30 03:54:15Z INFO Listener] Arguments parsed
+[2025-11-30 03:54:15Z INFO Runner] ExecuteCommand
+[2025-11-30 03:54:15Z INFO ConfigurationStore] currentAssemblyLocation: C:\xampp\htdocs\subscription-monitoring\actions-runner\bin\Runner.Listener.dll
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] binPath: C:\xampp\htdocs\subscription-monitoring\actions-runner\bin
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] RootFolder: C:\xampp\htdocs\subscription-monitoring\actions-runner
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'Runner': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.runner'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] ConfigFilePath: C:\xampp\htdocs\subscription-monitoring\actions-runner\.runner
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'MigratedRunner': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.runner_migrated'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] MigratedConfigFilePath: C:\xampp\htdocs\subscription-monitoring\actions-runner\.runner_migrated
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'Credentials': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] CredFilePath: C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'MigratedCredentials': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_migrated'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] MigratedCredFilePath: C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_migrated
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'Service': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.service'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] ServiceConfigFilePath: C:\xampp\htdocs\subscription-monitoring\actions-runner\.service
+[2025-11-30 03:54:15Z INFO CommandSettings] Flag 'help': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Flag 'version': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Flag 'commit': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Flag 'check': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Command 'configure': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Command 'remove': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Command 'warmup': 'False'
+[2025-11-30 03:54:15Z INFO ConfigurationManager] LoadSettings
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsConfigured()
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsConfigured: True
+[2025-11-30 03:54:15Z INFO ConfigurationManager] Is configured: True
+[2025-11-30 03:54:15Z INFO ConfigurationStore] Read setting file: 410 chars
+[2025-11-30 03:54:15Z INFO ConfigurationManager] Settings Loaded
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsServiceConfigured()
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsServiceConfigured: True
+[2025-11-30 03:54:15Z INFO CommandSettings] Command 'run': 'True'
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsConfigured()
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsConfigured: True
+[2025-11-30 03:54:15Z INFO ConfigurationManager] Is configured: True
+[2025-11-30 03:54:15Z INFO Runner] Set runner startup type - Service
+[2025-11-30 03:54:15Z INFO CommandSettings] Flag 'once': 'False'
+[2025-11-30 03:54:15Z INFO CommandSettings] Flag 'once': 'False'
+[2025-11-30 03:54:15Z INFO Runner] RunAsync
+[2025-11-30 03:54:15Z INFO ConfigurationManager] LoadMigratedSettings
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsMigratedConfigured()
+[2025-11-30 03:54:15Z INFO ConfigurationStore] IsMigratedConfigured: False
+[2025-11-30 03:54:15Z INFO Runner] Failed to load migrated settings: No migrated configuration found.
+[2025-11-30 03:54:15Z INFO Runner] Falling back to original .runner settings
+[2025-11-30 03:54:15Z INFO Runner] Using BrokerMessageListener
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] Using provided settings
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] {
+  "AgentId": 3,
+  "AgentName": "DESKTOP-IOLEH6T",
+  "PoolId": 1,
+  "PoolName": "Default",
+  "ServerUrl": "https://pipelinesghubeus15.actions.githubusercontent.com/B5Vfaf26OIWp2P4tbmohSDJZgCsCGF54eL3qjfx31fJEvBbwRs/",
+  "GitHubUrl": "https://github.com/d3vmod3/subscription-monitoring",
+  "WorkFolder": "_work",
+  "UseV2Flow": true,
+  "ServerUrlV2": "https://broker.actions.githubusercontent.com/"
+}
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] Loading Credentials
+[2025-11-30 03:54:15Z INFO ConfigurationStore] HasCredentials()
+[2025-11-30 03:54:15Z INFO ConfigurationStore] stored True
+[2025-11-30 03:54:15Z INFO CredentialManager] GetCredentialProvider
+[2025-11-30 03:54:15Z INFO CredentialManager] Creating type OAuth
+[2025-11-30 03:54:15Z INFO CredentialManager] Creating credential type: OAuth
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:15Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
+[2025-11-30 03:54:15Z INFO HostContext] Well known config file 'RSACredentials': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams'
+[2025-11-30 03:54:15Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] Attempt to create session.
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-11-30 03:54:15Z INFO ConfigurationStore] HasCredentials()
+[2025-11-30 03:54:15Z INFO ConfigurationStore] stored True
+[2025-11-30 03:54:15Z INFO CredentialManager] GetCredentialProvider
+[2025-11-30 03:54:15Z INFO CredentialManager] Creating type OAuth
+[2025-11-30 03:54:15Z INFO CredentialManager] Creating credential type: OAuth
+[2025-11-30 03:54:15Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] VssConnection created
+[2025-11-30 03:54:15Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-11-30 03:54:15Z INFO RunnerServer] EstablishVssConnection
+[2025-11-30 03:54:15Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-11-30 03:54:15Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-11-30 03:54:16Z INFO RunnerServer] EstablishVssConnection
+[2025-11-30 03:54:16Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-11-30 03:54:16Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-11-30 03:54:16Z INFO RunnerServer] EstablishVssConnection
+[2025-11-30 03:54:16Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-11-30 03:54:16Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-11-30 03:54:17Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-11-30 03:54:17Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-11-30 03:54:17Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-11-30 03:54:17Z INFO BrokerMessageListener] VssConnection created
+[2025-11-30 03:54:17Z INFO Terminal] WRITE LINE: 
+[2025-11-30 03:54:17Z INFO Terminal] WRITE LINE: 
+[2025-11-30 03:54:17Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:17Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:18Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-11-30 03:54:19Z INFO BrokerMessageListener] Session created.
+[2025-11-30 03:54:19Z INFO Terminal] WRITE LINE: Current runner version: '2.329.0'
+[2025-11-30 03:54:19Z INFO Terminal] WRITE LINE: 2025-11-30 03:54:19Z: Listening for Jobs
+[2025-11-30 03:54:19Z INFO JobDispatcher] Set runner/worker IPC timeout to 30 seconds.
+[2025-11-30 03:54:20Z INFO BrokerMessageListener] Acknowledging runner request 'fc8baa38-6abf-592d-ad71-354669c8be79'.
+[2025-11-30 03:54:20Z INFO ConfigurationStore] HasCredentials()
+[2025-11-30 03:54:20Z INFO ConfigurationStore] stored True
+[2025-11-30 03:54:20Z INFO CredentialManager] GetCredentialProvider
+[2025-11-30 03:54:20Z INFO CredentialManager] Creating type OAuth
+[2025-11-30 03:54:20Z INFO CredentialManager] Creating credential type: OAuth
+[2025-11-30 03:54:20Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:20Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:20Z INFO RSAEncryptedFileKeyManager] Loading RSA key parameters from file C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials_rsaparams
+[2025-11-30 03:54:23Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-11-30 03:54:23Z WARN GitHubActionsService] Retrieving an AAD auth token took a long time (2.4858025 seconds)
+[2025-11-30 03:54:27Z INFO JobDispatcher] Job request 0 for plan c3f96ab5-fc29-466c-83af-40c2c0d25a8d job fc8baa38-6abf-592d-ad71-354669c8be79 received.
+[2025-11-30 03:54:27Z INFO JobDispatcher] Pull OrchestrationId c3f96ab5-fc29-466c-83af-40c2c0d25a8d.deploy.__default from JWT claims
+[2025-11-30 03:54:27Z INFO BrokerMessageListener] Received job status event. JobState: Busy
+[2025-11-30 03:54:27Z INFO BrokerMessageListener] _getMessagesTokenSource is already disposed.
+[2025-11-30 03:54:27Z INFO Terminal] WRITE LINE: 2025-11-30 03:54:27Z: Running job: deploy
+[2025-11-30 03:54:27Z INFO JobDispatcher] Start renew job request 0 for job fc8baa38-6abf-592d-ad71-354669c8be79.
+[2025-11-30 03:54:28Z INFO JobDispatcher] Successfully renew job fc8baa38-6abf-592d-ad71-354669c8be79, job is valid till 11/30/2025 4:06:02 AM
+[2025-11-30 03:54:28Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper] Starting process:
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   File name: 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin\Runner.Worker.exe'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Arguments: 'spawnclient 2304 2316'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Working directory: 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'True'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Persist current code page: 'False'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper]   High priority process: 'True'
+[2025-11-30 03:54:28Z INFO ProcessInvokerWrapper] Process started with process id 15064, waiting for process exit.
+[2025-11-30 03:54:28Z INFO JobDispatcher] Send job request message to worker for job fc8baa38-6abf-592d-ad71-354669c8be79.
+[2025-11-30 03:54:28Z INFO ProcessChannel] Sending message of length 21465, with hash '0a3f9e46bc6b4729be016e28258343839982a28a3bedafbee116eae960a9180d'
+[2025-11-30 03:54:28Z INFO JobNotification] Entering JobStarted Notification
+[2025-11-30 03:54:28Z INFO JobNotification] Entering StartMonitor
+[2025-11-30 03:55:28Z INFO JobDispatcher] Successfully renew job fc8baa38-6abf-592d-ad71-354669c8be79, job is valid till 11/30/2025 4:07:02 AM
+[2025-11-30 03:56:28Z INFO JobDispatcher] Successfully renew job fc8baa38-6abf-592d-ad71-354669c8be79, job is valid till 11/30/2025 4:08:02 AM
