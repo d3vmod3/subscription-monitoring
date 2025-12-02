@@ -21,6 +21,8 @@ class AddSubscription extends Component
     public $start_date;
     public $status = 'inactive';
 
+    public $module=["sector","pon","napbox","splitter"];
+
     public $plans = [];
 
     protected $listeners = [
@@ -28,12 +30,17 @@ class AddSubscription extends Component
     ];
 
     protected $rules = [
-        'subscriber_id' => 'nullable|exists:subscribers,id',
+        'subscriber_id' => 'required:exists:subscribers,id',
         'plan_id' => 'required|exists:plans,id',
         'splitter_id' => 'nullable|exists:splitters,id',
         'mikrotik_name' => 'required|string|unique:subscriptions,mikrotik_name|max:255',
         'start_date' => 'required|date',
         'status' => 'required|in:active,inactive,disconnected',
+    ];
+
+    protected $messages = [
+        'subscriber_id.required' => 'The Subscriber field is required.',
+        'plan_id.required' => 'The Plan field is required.',
     ];
 
     public function mount()

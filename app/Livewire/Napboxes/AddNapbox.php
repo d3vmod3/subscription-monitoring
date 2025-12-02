@@ -19,7 +19,7 @@ class AddNapbox extends Component
 
     public $pons;      // For PON dropdown
     // public $splitters; // For Splitter dropdown
-
+    public $module=["sector","pon"];
     protected $rules = [
         'pon_id' => 'required|exists:pons,id',
         // 'splitter_id' => 'exists:splitters,id',
@@ -29,6 +29,10 @@ class AddNapbox extends Component
         'is_active' => 'boolean',
     ];
 
+    protected $messages = [
+        'pon_id.required' => 'PON is a required field.',
+    ];
+
     public function mount()
     {
         // Load active PONs and Splitters for dropdowns
@@ -36,8 +40,18 @@ class AddNapbox extends Component
         // $this->splitters = Splitter::where('is_active', true)->orderBy('name')->get();
     }
 
+    protected $listeners = [
+        'pon-updated' => 'setPon',
+    ];
+
+    public function setPon($data)
+    {
+        $this->pon_id = $data['pon_id'];
+    }
+
     public function save()
     {
+        dd($this->pon_id);
         if (!Auth::user()->can('add napboxes'))
         {
             abort(403, 'Unauthorized action');

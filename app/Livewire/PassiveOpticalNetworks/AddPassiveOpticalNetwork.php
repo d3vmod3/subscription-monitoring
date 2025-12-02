@@ -23,6 +23,10 @@ class AddPassiveOpticalNetwork extends Component
         'is_active' => 'boolean',
     ];
 
+    protected $messages = [
+        'sector_id.required' => 'The Sector field is required.',
+    ];
+
     public function mount()
     {
         // Fetch all active sectors

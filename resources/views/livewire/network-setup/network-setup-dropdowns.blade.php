@@ -1,6 +1,7 @@
 <div class="space-y-4">
 
     <!-- Sector -->
+    @if(in_array("sector",$module))
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Sector</label>
         <select wire:model.live="selectedSector"
@@ -11,8 +12,10 @@
             @endforeach
         </select>
     </div>
-
+    @endif
+    
     <!-- PON -->
+    @if(in_array("pon",$module))
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">PON</label>
         <select wire:model.live="selectedPon"
@@ -24,7 +27,8 @@
             @endforeach
         </select>
     </div>
-
+    @endif
+    @if(in_array("napbox",$module))
     <!-- Napbox -->
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Napbox</label>
@@ -39,8 +43,9 @@
             @endforeach
         </select>
     </div>
-
+    @endif
     <!-- Splitter -->
+    @if(in_array("splitter",$module))
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Splitter</label>
         <select wire:model.live="selectedSplitter"
@@ -52,5 +57,6 @@
             @endforeach
         </select>
     </div>
+    @endif
 
 </div>

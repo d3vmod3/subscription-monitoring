@@ -50,6 +50,11 @@ class AddAdvancePayment extends Component
         'account_name' => 'required|string|max:255',
     ];
 
+    protected $messages = [
+        'subscription_id.required' => 'The Mikrotik Name field is required.',
+        'payment_method_id.required' => 'The Payment Method field is required.',
+    ];
+
     public function updatedMonthYearCover()
     {
         $this->computeExpectedAmount();
@@ -96,6 +101,8 @@ class AddAdvancePayment extends Component
 
         $this->selectedSubscription = Subscription::with('plan')->find($id);
     }
+
+    
 
      public function computeExpectedAmount()
     {

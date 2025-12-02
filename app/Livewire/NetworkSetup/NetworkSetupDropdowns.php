@@ -19,8 +19,9 @@ class NetworkSetupDropdowns extends Component
     public $selectedPon = null;
     public $selectedNapbox = null;
     public $selectedSplitter = null;
+    public $module=[];
 
-    public function mount($sectorId = null, $ponId = null, $napboxId = null, $splitterId = null)
+    public function mount($module=[],$sectorId = null, $ponId = null, $napboxId = null, $splitterId = null)
     {
         // load all sectors
         $this->sectors = Sector::where('is_active', true)->get();

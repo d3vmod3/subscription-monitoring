@@ -27,6 +27,10 @@ class EditPassiveOpticalNetwork extends Component
         ];
     }
 
+    protected $messages = [
+        'sector_id.required' => 'The Sector field is required.',
+    ];
+
     public function mount($hash)
     {
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));

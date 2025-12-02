@@ -43,6 +43,11 @@ class AddPayment extends Component
         'account_name' => 'required|string|max:255',
     ];
 
+    protected $messages = [
+        'subscription_id.required' => 'The Mikrotik Name field is required.',
+        'payment_method_id.required' => 'The Payment Method field is required.',
+    ];
+
     public function mount()
     {
         $this->payment_methods = PaymentMethod::where('is_active', true)->get();

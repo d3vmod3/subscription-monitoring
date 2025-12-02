@@ -47,6 +47,7 @@
     {{-- Splitter selectable network setup dropdowns --}}
     <div class="mt-4">
         <livewire:network-setup.network-setup-dropdowns
+            :module="$module"
             :sector-id="$sector_id"
             :pon-id="$pon_id"
             :napbox-id="$napbox_id"

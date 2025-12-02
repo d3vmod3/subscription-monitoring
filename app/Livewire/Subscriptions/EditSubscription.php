@@ -22,6 +22,8 @@ class EditSubscription extends Component
     public $subscriber_results = [];
     public $plan_id;
 
+    public $module=["sector","pon","napbox","splitter"];
+
     public $sector_id;
     public $pon_id;
     public $napbox_id;
@@ -75,7 +77,7 @@ class EditSubscription extends Component
     protected function rules()
     {
         return [
-            'subscriber_id' => 'nullable|exists:subscribers,id',
+            'subscriber_id' => 'require:exists:subscribers,id',
             'plan_id' => 'required|exists:plans,id',
             'splitter_id' => 'nullable|exists:splitters,id',
             'mikrotik_name' => 'required|string|max:255|unique:subscriptions,mikrotik_name,' . $this->subscription->id,
@@ -83,6 +85,11 @@ class EditSubscription extends Component
             'status' => 'required|in:active,inactive,disconnected',
         ];
     }
+
+    protected $messages = [
+        'subscriber_id.required' => 'The Subscriber field is required.',
+        'plan_id.required' => 'The Plan field is required.',
+    ];
 
     public function updatedSubscriberSearch()
     {

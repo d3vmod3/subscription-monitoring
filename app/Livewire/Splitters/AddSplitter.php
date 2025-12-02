@@ -22,6 +22,10 @@ class AddSplitter extends Component
         'is_active' => 'boolean',
     ];
 
+    protected $messages = [
+        'napbox_id.required' => 'The Napbox field is required .',
+    ];
+
     protected $listeners = ['splitter-added' => '$refresh'];
 
     public function mount()

@@ -11,16 +11,18 @@ use Auth;
 
 class EditNapbox extends Component
 {
-    public $napboxId;
+    public $napbox_id;
+     public $sector_id;
+    public $pon_id;
     public $napbox_code;
     public $name;
     public $description;
     public $is_active;
-    public $pon_id;
     // public $splitter_id;
 
     public $pons;
     public $splitters;
+    public $module=["sector","pon"];
 
     protected function rules()
     {
@@ -32,6 +34,19 @@ class EditNapbox extends Component
             // 'splitter_id' => 'required|exists:splitters,id',
         ];
     }
+    
+    protected $messages = [
+        'pon_id.required' => 'PON is a required field.',
+    ];
+
+    protected $listeners = [
+        'pon-updated' => 'setPon',
+    ];
+
+    public function setPon($data)
+    {
+        $this->pon_id = $data['pon_id'];
+    }
 
     public function mount($hash)
     {
@@ -39,15 +54,19 @@ class EditNapbox extends Component
         $decoded = $hashids->decode($hash);
 
         abort_if(empty($decoded), 404, 'Invalid Napbox');
+        
+        $this->napbox_id = $decoded[0];
 
-        $this->napboxId = $decoded[0];
+        $napbox = Napbox::findOrFail($this->napbox_id);
 
-        $napbox = Napbox::findOrFail($this->napboxId);
+        $this->sector_id = $napbox->pon->sector->id;
+        $this->pon_id = $napbox->pon->id;
 
         $this->napbox_code = $napbox->napbox_code;
         $this->name = $napbox->name;
         $this->description = $napbox->description;
         $this->is_active = (bool) $napbox->is_active;
+
         $this->pon_id = $napbox->pon_id;
         // $this->splitter_id = $napbox->splitter_id;
 
@@ -64,7 +83,7 @@ class EditNapbox extends Component
         
         $this->validate();
 
-        $napbox = Napbox::findOrFail($this->napboxId);
+        $napbox = Napbox::findOrFail($this->napbox_id);
 
         $napbox->update([
             'name' => $this->name,

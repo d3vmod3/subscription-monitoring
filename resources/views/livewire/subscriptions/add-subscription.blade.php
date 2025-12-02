@@ -47,6 +47,7 @@
     {{-- Splitter selectable network setup dropdowns --}}
     <div class="mt-4">
         <livewire:network-setup.network-setup-dropdowns
+            :module="$module"
             :splitter-id="$splitter_id" 
         />
     </div>
