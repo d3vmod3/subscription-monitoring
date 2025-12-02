@@ -36,7 +36,7 @@ class EditNapbox extends Component
     }
     
     protected $messages = [
-        'pon_id.required' => 'PON is a required field.',
+        'pon_id.required' => 'The PON is a required field.',
     ];
 
     protected $listeners = [
