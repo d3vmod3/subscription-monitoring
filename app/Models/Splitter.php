@@ -12,7 +12,7 @@ class Splitter extends Model
     protected $fillable = [
         'name',
         'description',
-        'napbox_id'
+        'napbox_id',
     ];
 
     public function napbox()

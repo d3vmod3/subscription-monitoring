@@ -2,6 +2,17 @@
 
     <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Edit Splitter</h2>
 
+    <div class="mt-4">
+        <livewire:network-setup.network-setup-dropdowns
+            :module="$module"
+            :sector-id="$sector_id"
+            :pon-id="$pon_id"
+            :napbox-id="$napbox_id"
+            wire:model.live:napbox_id="napbox_id"
+        />
+        @error('napbox_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+    </div>
+
     {{-- Name --}}
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Name</label>

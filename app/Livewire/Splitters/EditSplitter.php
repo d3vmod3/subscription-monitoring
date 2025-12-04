@@ -4,6 +4,7 @@ namespace App\Livewire\Splitters;
 
 use Livewire\Component;
 use App\Models\Splitter;
+use App\Models\Napbox;
 use Hashids\Hashids;
 use Auth;
 
@@ -13,6 +14,12 @@ class EditSplitter extends Component
     public $name;
     public $description;
     public $is_active;
+    public $napbox_id;
+    public $sector_id;
+    public $pon_id;
+    public $napboxes;
+    public $module=["sector","pon","napbox"];
+    
 
     protected function rules()
     {
@@ -21,6 +28,16 @@ class EditSplitter extends Component
             'description' => 'nullable|string|max:500',
             'is_active' => 'boolean',
         ];
+    }
+
+    protected $listeners = [
+        'splitter-added' => '$refresh',
+        'napbox-updated' => 'setNapbox',
+    ];
+
+    public function setNapbox($data)
+    {
+        $this->napbox_id = $data['napbox_id'];
     }
 
     public function mount($hash)
@@ -34,8 +51,15 @@ class EditSplitter extends Component
 
         $splitter = Splitter::findOrFail($this->splitterId);
 
+        $this->napboxes = Napbox::where('is_active', true)->orderBy('name')->get();
+        
+        
+
         $this->name = $splitter->name;
         $this->description = $splitter->description;
+        $this->sector_id = $splitter->napbox->pon->sector->id;
+        $this->pon_id = $splitter->napbox->pon->id;
+        $this->napbox_id = $splitter->napbox_id;
         $this->is_active = (bool) $splitter->is_active;
     }
 
@@ -53,6 +77,7 @@ class EditSplitter extends Component
             'name' => $this->name,
             'description' => $this->description,
             'is_active' => $this->is_active,
+            'napbox_id' => $this->napbox_id,
         ]);
 
         $this->dispatch('show-toast', [

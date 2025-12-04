@@ -12,7 +12,7 @@ use Auth;
 class EditNapbox extends Component
 {
     public $napbox_id;
-     public $sector_id;
+    public $sector_id;
     public $pon_id;
     public $napbox_code;
     public $name;

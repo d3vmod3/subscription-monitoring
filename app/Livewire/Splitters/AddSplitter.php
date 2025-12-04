@@ -14,6 +14,7 @@ class AddSplitter extends Component
     public $is_active = true;
     public $napboxes; // For Napboxes dropdown
     public $napbox_id;
+    public $module=["sector","pon","napbox"];
 
     protected $rules = [
         'napbox_id' => 'required|exists:napboxes,id',
@@ -26,7 +27,15 @@ class AddSplitter extends Component
         'napbox_id.required' => 'The Napbox field is required .',
     ];
 
-    protected $listeners = ['splitter-added' => '$refresh'];
+    protected $listeners = [
+        'splitter-added' => '$refresh',
+        'napbox-updated' => 'setNapbox',
+    ];
+
+    public function setNapbox($data)
+    {
+        $this->napbox_id = $data['napbox_id'];
+    }
 
     public function mount()
     {
@@ -40,15 +49,15 @@ class AddSplitter extends Component
              abort(403, 'Unauthorized action');
         }
         $this->validate();
-
         Splitter::create([
             'name' => $this->name,
+            'napbox_id' => $this->napbox_id,
             'description' => $this->description,
             'is_active' => $this->is_active,
         ]);
 
         // Reset inputs
-        $this->reset(['name', 'description', 'is_active']);
+        $this->reset(['name', 'description', 'is_active','napbox_id']);
 
         // Trigger refresh in parent
         $this->dispatch('splitter-added');
