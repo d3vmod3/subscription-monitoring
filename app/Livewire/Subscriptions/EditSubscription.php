@@ -46,23 +46,24 @@ class EditSubscription extends Component
         $decoded = $hashids->decode($hash);
         $id = $decoded[0] ?? null;
 
+
         if (!$id) {
             abort(404);
         }
-
         $this->subscription = Subscription::findOrFail($id);
+       
 
         // Populate fields
         $this->subscriber_id = $this->subscription->subscriber_id;
         $this->subscriber_search = optional($this->subscription->subscriber)->first_name . ' ' . optional($this->subscription->subscriber)->last_name;
         $this->plan_id = $this->subscription->plan_id;
 
-
+        
         $this->splitter_id = $this->subscription->splitter_id;
-        $this->splitter = Splitter::findOrFail($this->splitter_id);
-        $this->sector_id = $this->splitter->napbox->pon->sector->id;
-        $this->pon_id = $this->splitter->napbox->pon->id;
-        $this->napbox_id = $this->splitter->napbox->id;
+        $this->splitter = Splitter::find($this->splitter_id);
+        $this->sector_id = $this->splitter ? $this->splitter->napbox->pon->sector->id : null;
+        $this->pon_id =  $this->splitter ? $this->splitter->napbox->pon->id : null;
+        $this->napbox_id =  $this->splitter ? $this->splitter->napbox->id : null;
 
 
 

@@ -57,9 +57,9 @@ class EditSplitter extends Component
 
         $this->name = $splitter->name;
         $this->description = $splitter->description;
-        $this->sector_id = $splitter->napbox->pon->sector->id;
-        $this->pon_id = $splitter->napbox->pon->id;
-        $this->napbox_id = $splitter->napbox_id;
+        $this->sector_id = $splitter->napbox ? $splitter->napbox->pon->sector->id : null;
+        $this->pon_id = $splitter->napbox ? $splitter->napbox->pon->id : null;
+        $this->napbox_id = $splitter->napbox ? $splitter->napbox_id :null;
         $this->is_active = (bool) $splitter->is_active;
     }
 

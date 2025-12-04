@@ -112,7 +112,9 @@ class EditPayment extends Component
             ->where('status', 'Approved')
             ->sum('paid_amount');
 
-        $this->expected_amount = max($expected - $alreadyPaid, 0);
+        // $this->expected_amount = max($expected - $alreadyPaid, 0);
+        $remaining = max($expected - $alreadyPaid, 0);
+        $this->expected_amount = $remaining + (fmod($remaining, 1) !== 0 ? 1 : 0) - $this->discount_amount;
     }
 
     public function save()

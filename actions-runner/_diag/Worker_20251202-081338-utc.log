@@ -1,4 +1,0 @@
-[2025-12-02 08:13:38Z INFO HostContext] No proxy settings were found based on environmental variables (http_proxy/https_proxy/HTTP_PROXY/HTTPS_PROXY)
-[2025-12-02 08:13:38Z INFO HostContext] Well known directory 'Bin': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\bin'
-[2025-12-02 08:13:38Z INFO HostContext] Well known directory 'Root': 'C:\xampp\htdocs\subscription-monitoring\actions-runner'
-[2025-12-02 08:13:38Z INFO HostContext] Well known config file 'Credentials': 'C:\xampp\htdocs\subscription-monitoring\actions-runner\.credentials'
