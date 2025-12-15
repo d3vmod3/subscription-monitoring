@@ -23,8 +23,8 @@
             <flux:dropdown>
                 <flux:button icon:trailing="chevron-down" class="w-xs">Filter Status</flux:button>
                 <flux:menu class="w-xs">
-                    <flux:menu.checkbox keep-open wire:model.live="statusAll" checked>All</flux:menu.checkbox>
-                    <flux:menu.checkbox keep-open wire:model.live="statusApproved" checked>Approved</flux:menu.checkbox>
+                    <flux:menu.checkbox keep-open wire:model.live="statusAll">All</flux:menu.checkbox>
+                    <flux:menu.checkbox keep-open wire:model.live="statusApproved">Approved</flux:menu.checkbox>
                     <flux:menu.checkbox keep-open wire:model.live="statusDisapproved">Disapproved</flux:menu.checkbox>
                     <flux:menu.checkbox keep-open wire:model.live="statusPending">Pending</flux:menu.checkbox>
                 </flux:menu>
@@ -57,9 +57,10 @@
         </div>
         {{ $payments->links() }}
     </div>
-    @can('edit payments')
+    
     {{-- ⚙️ Bulk Status  --}}
     <div class="flex items-center justify-end gap-4 mb-4">
+        @can('edit payments')
         @error('status') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
         <select wire:model.defer="status"
             class="border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 
@@ -70,11 +71,18 @@
             <option value="Pending">Pending</option>
         </select>
         <flux:button variant="primary" color="orange" wire:click="applyBulkStatus">Apply</flux:button>
+        @endcan
+        
     </div>
-    @endcan
+    
+    
+    
     {{-- Table wrapper for horizontal scroll on mobile --}}
     <div class="overflow-x-auto">
-        @error('selectAll') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
+        <div class="flex items-center justify-between">
+         <span class="text-red-400 text-sm">@error('selectAll'){{ $message }}@enderror</span> 
+        <div>Total: <span class="font-bold">₱{{ number_format($totalSelectedAmount, 2) }}</span></div>
+        </div>
         <table class="min-w-full border border-gray-200">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
@@ -143,7 +151,7 @@
                     @forelse ($payments as $payment)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
                             <td class="px-4 py-2 border whitespace-nowrap">
-                                <flux:checkbox value="{{ $payment->id }}" wire:click="resetError" wire:model="selectedItems" /> {{ $payment->name }}
+                                <flux:checkbox value="{{ $payment->id }}" wire:click="resetError" wire:model="selectedItems" />
                             </td>
                             <td class="px-4 py-2 border whitespace-nowrap">
                                 {{ $payment->subscription->subscriber->full_name ?? $payment->subscription->mikrotik_name ?? 'N/A' }}

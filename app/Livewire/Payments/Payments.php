@@ -19,10 +19,12 @@ class Payments extends Component
     public $sortDirection = 'desc';
 
     public $statusAll = false;
+    public $status;
     public $statusApproved = false;
     public $statusDisapproved = false;
     public $statusPending = true;
     public $selectedStatuses = [];
+    public $totalSelectedAmount=0;
 
     public $filter_status;
 
@@ -104,17 +106,20 @@ class Payments extends Component
         if ($value) {
             $payments = $this->getPayments();
             $this->selectedItems = $payments->pluck('id')->toArray();
+            $this->totalSelectedAmount = $payments->sum('paid_amount');
             $this->resetValidation();
         } else {
             $this->selectedItems = [];
+            $this->totalSelectedAmount = 0;
         }
     }
 
-    public function updatedSelectedItems()
+    public function updatedSelectedItems($value)
     {
         $this->resetValidation();
         $payments = $this->getPayments();
         $this->selectAll = count($this->selectedItems) === $payments->count();
+        $this->totalSelectedAmount = Payment::whereIn('id', $this->selectedItems)->sum('paid_amount');
     }
 
     public function resetError()
@@ -133,14 +138,13 @@ class Payments extends Component
             }
             foreach ($this->selectedItems as $id) {
                 Payment::where('id', $id)
-                ->where('status','Pending')
-                ->orWhere('status','Disapproved')->update([
+                    ->update([
                     'status' => $this->status,
                 ]);
             }
 
             // Reset selection
-            $this->selectedItems = [];
+            // $this->selectedItems = [];
             $this->selectAll = false;
 
             $this->dispatch('show-toast', [
