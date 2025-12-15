@@ -150,8 +150,14 @@
                     
                     @forelse ($payments as $payment)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 dark:hover:text-white transition-colors duration-150">
-                            <td class="px-4 py-2 border whitespace-nowrap">
-                                <flux:checkbox value="{{ $payment->id }}" wire:click="resetError" wire:model="selectedItems" />
+                            <td class="px-4 py-2 border whitespace-nowrap" >
+                                <input type="checkbox"
+                                        value="{{ $payment->id }}"
+                                        wire:model="selectedItems"
+                                        class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
+                                        @if(in_array($payment->id, $selectedItems)) checked @endif
+                                >
+                                <!-- <flux:checkbox  wire:click="resetError" wire:model="selectedItems" /> -->
                             </td>
                             <td class="px-4 py-2 border whitespace-nowrap">
                                 {{ $payment->subscription->subscriber->full_name ?? $payment->subscription->mikrotik_name ?? 'N/A' }}

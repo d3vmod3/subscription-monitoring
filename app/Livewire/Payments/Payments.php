@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Payment;
 use Livewire\Attributes\Url;
+use Illuminate\Support\Facades\DB;
 use Auth;
 
 class Payments extends Component
@@ -104,11 +105,17 @@ class Payments extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
+            DB::enableQueryLog();
             $payments = $this->getPayments();
+            $queries = DB::getQueryLog();
             $this->selectedItems = $payments->pluck('id')->toArray();
+            // dd($this->selectedItems);
             $this->totalSelectedAmount = $payments->sum('paid_amount');
+            
+            
             $this->resetValidation();
         } else {
+            
             $this->selectedItems = [];
             $this->totalSelectedAmount = 0;
         }
@@ -119,6 +126,7 @@ class Payments extends Component
         $this->resetValidation();
         $payments = $this->getPayments();
         $this->selectAll = count($this->selectedItems) === $payments->count();
+        
         $this->totalSelectedAmount = Payment::whereIn('id', $this->selectedItems)->sum('paid_amount');
     }
 
@@ -204,7 +212,7 @@ class Payments extends Component
         if (empty($selectedStatuses)) {
             return Payment::where('id', null)->paginate($this->per_page);
         }
-
+        
         $query->whereIn('payments.status', $selectedStatuses);
 
         // 📌 Sorting logic (unchanged)
