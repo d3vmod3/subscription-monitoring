@@ -126,7 +126,7 @@ class Payments extends Component
         $this->resetValidation();
         $payments = $this->getPayments();
         $this->selectAll = count($this->selectedItems) === $payments->count();
-        
+        // dd("working")
         $this->totalSelectedAmount = Payment::whereIn('id', $this->selectedItems)->sum('paid_amount');
     }
 

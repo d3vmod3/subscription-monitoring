@@ -153,7 +153,7 @@
                             <td class="px-4 py-2 border whitespace-nowrap" >
                                 <input type="checkbox"
                                         value="{{ $payment->id }}"
-                                        wire:model="selectedItems"
+                                        wire:model.live="selectedItems"
                                         class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
                                         @if(in_array($payment->id, $selectedItems)) checked @endif
                                 >
