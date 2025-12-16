@@ -10,16 +10,16 @@
         </h1>
     </div>
     {{-- Top controls --}}
-    <div class="flex flex-col sm:flex-row justify-between items-cenrter mb-4 gap-4">
-        <div class="flex flex-col sm:flex-row items-center w-full gap-3">
+    <div class="flex flex-col sm:flex-row justify-between items-end mb-4 gap-4">
+        <div class="flex flex-col sm:flex-row items-end w-full gap-3">
             {{-- 🔍 Search or Filter --}}
             <input 
                 type="text" 
                 wire:model.live="search" 
-                placeholder="Search payments (Mikrotik Name or Ref #)..." 
+                placeholder="Search(Mikrotik Name/Ref #/Collector/Subscriber)" 
                 class="border rounded px-3 py-2 w-full sm:w-1/3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
-
+            <!-- filter status -->
             <flux:dropdown>
                 <flux:button icon:trailing="chevron-down" class="w-xs">Filter Status</flux:button>
                 <flux:menu class="w-xs">
@@ -29,6 +29,28 @@
                     <flux:menu.checkbox keep-open wire:model.live="statusPending">Pending</flux:menu.checkbox>
                 </flux:menu>
             </flux:dropdown>
+            <div>
+                <p class="text-red-600 text-xs">@error('dateTo'){{ $message }}@enderror</p>
+                <div class="flex items-center justify-between gap-2">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Date From</label>
+                        <input 
+                            type="date" 
+                            wire:model.live="dateFrom" 
+                            class="w-full border rounded px-3 py-2"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Date From</label>
+                        <input 
+                            type="date" 
+                            wire:model.live="dateTo"
+                            class="w-full border rounded px-3 py-2"
+                        >
+                    </div>
+                </div>
+                
+            </div>
         </div>
 
         {{-- ➕ Add Payment Button --}}
@@ -78,10 +100,11 @@
     
     
     {{-- Table wrapper for horizontal scroll on mobile --}}
+    <div>Total: <span class="font-bold">₱{{ number_format($totalSelectedAmount, 2) }}</span></div>
     <div class="overflow-x-auto">
         <div class="flex items-center justify-between">
          <span class="text-red-400 text-sm">@error('selectAll'){{ $message }}@enderror</span> 
-        <div>Total: <span class="font-bold">₱{{ number_format($totalSelectedAmount, 2) }}</span></div>
+        
         </div>
         <table class="min-w-full border border-gray-200">
                 <thead class="bg-gray-50 dark:bg-gray-700">

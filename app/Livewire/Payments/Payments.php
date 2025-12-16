@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Payment;
 use Livewire\Attributes\Url;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Auth;
 
 class Payments extends Component
@@ -28,6 +29,9 @@ class Payments extends Component
     public $totalSelectedAmount=0;
 
     public $filter_status;
+
+    public $dateFrom;
+    public $dateTo;
 
     public $per_page = 10;
 
@@ -105,9 +109,7 @@ class Payments extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            DB::enableQueryLog();
             $payments = $this->getPayments();
-            $queries = DB::getQueryLog();
             $this->selectedItems = $payments->pluck('id')->toArray();
             // dd($this->selectedItems);
             $this->totalSelectedAmount = $payments->sum('paid_amount');
@@ -179,6 +181,31 @@ class Payments extends Component
         return true;
     }
 
+    public function updatedDateFrom()
+    {
+        $this->validateOnly('dateFrom');
+        $this->validateOnly('dateTo'); // re-check relation
+        $this->resetPage();
+    }
+
+    public function updatedDateTo()
+    {
+        $this->validateOnly('dateTo');
+        $this->resetPage();
+    }
+
+    protected function rules()
+    {
+        return [
+            'dateFrom' => 'nullable|date',
+            'dateTo'   => 'nullable|date|after_or_equal:dateFrom',
+        ];
+    }
+
+    protected $messages = [
+        'dateTo.after_or_equal' => 'Date To must be the same or later than Date From.',
+    ];
+    
     public function getPayments()
     {
         $query = Payment::query()
@@ -201,12 +228,24 @@ class Payments extends Component
             });
         }
 
+        if ($this->dateFrom && $this->dateTo) {
+            $query->whereBetween('payments.paid_at', [
+                Carbon::parse($this->dateFrom)->startOfDay(),
+                Carbon::parse($this->dateTo)->endOfDay(),
+            ]);
+        } elseif ($this->dateFrom) {
+            $query->whereDate('payments.paid_at', '>=', $this->dateFrom);
+        } elseif ($this->dateTo) {
+            $query->whereDate('payments.paid_at', '<=', $this->dateTo);
+        }
+
         // ✅ STATUS FILTER
         $selectedStatuses = [];
 
         if ($this->statusApproved)     $selectedStatuses[] = 'Approved';
         if ($this->statusDisapproved)  $selectedStatuses[] = 'Disapproved';
         if ($this->statusPending)      $selectedStatuses[] = 'Pending';
+        
 
         // If none selected → show nothing
         if (empty($selectedStatuses)) {
@@ -228,6 +267,12 @@ class Payments extends Component
             ->orderBy($sortField, $this->sortDirection)
             ->select('payments.*')
             ->paginate($this->per_page);
+    }
+
+    public function mount()
+    {
+        $this->dateFrom = Carbon::parse(now())->format('Y-m-d');
+        $this->dateTo = Carbon::parse(now())->format('Y-m-d');
     }
 
 
