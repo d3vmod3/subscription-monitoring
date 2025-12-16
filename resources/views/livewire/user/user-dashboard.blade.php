@@ -26,13 +26,13 @@
                     color="lime"
                     class="px-6 py-2 text-sm md:text-base font-medium transition-transform hover:scale-105"
                 >
-                    Add Payment
+                    Click here
                 </flux:button>
             </div>
 
         </div>
         @endcan
-        @can('view billings')
+        @can('view subscribers')
         <div class="p-6 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-lg w-full flex flex-col h-full space-y-6 transition-transform hover:-translate-y-1 hover:shadow-2xl duration-200">
             <!-- Header -->
             <div class="flex items-center space-x-3">
@@ -40,7 +40,7 @@
                     <flux:icon.credit-card class="w-6 h-6 text-lime-600 dark:text-lime-100" />
                 </div>
                 <h2 class="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                    View Billings
+                    Subscribers (Billings)
                 </h2>
             </div>
 
@@ -57,7 +57,7 @@
                     color="lime"
                     class="px-6 py-2 text-sm md:text-base font-medium transition-transform hover:scale-105"
                 >
-                    View
+                    Click here
                 </flux:button>
             </div>
 
