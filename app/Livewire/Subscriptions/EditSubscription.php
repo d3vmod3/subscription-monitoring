@@ -82,7 +82,7 @@ class EditSubscription extends Component
             'plan_id' => 'required|exists:plans,id',
             'splitter_id' => 'nullable|exists:splitters,id',
             'mikrotik_name' => 'required|string|max:255|unique:subscriptions,mikrotik_name,' . $this->subscription->id,
-            'start_date' => 'required|date',
+            'start_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,disconnected',
         ];
     }

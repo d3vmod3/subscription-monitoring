@@ -19,7 +19,7 @@ class AddSubscription extends Component
     public $splitter_id;
     public $mikrotik_name;
     public $start_date;
-    public $status = 'inactive';
+    public $status = 'active';
 
     public $module=["sector","pon","napbox","splitter"];
 
@@ -34,7 +34,7 @@ class AddSubscription extends Component
         'plan_id' => 'required|exists:plans,id',
         'splitter_id' => 'nullable|exists:splitters,id',
         'mikrotik_name' => 'required|string|unique:subscriptions,mikrotik_name|max:255',
-        'start_date' => 'required|date',
+        'start_date' => 'nullable|date',
         'status' => 'required|in:active,inactive,disconnected',
     ];
 
