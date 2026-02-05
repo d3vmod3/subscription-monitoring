@@ -50,7 +50,7 @@
                             @if($sortDirection == 'asc') ▲ @else ▼ @endif 
                         @endif
                     </th>
-                    @can('edit subscribers')
+                    @can('edit subscriptions')
                     <th class="px-4 py-2 border">Actions</th>
                     @endcan
                 </tr>
@@ -73,7 +73,7 @@
                                 {{ ucfirst($subscription->status) }}
                             </span>
                         </td>
-                        @can('add subscribers')
+                        @can('edit subscriptions')
                         <td class="px-4 py-2 border text-center">
                             <flux:link 
                                 href="{{ route('subscription.edit', ['hash' => $hashids->encode($subscription->id)]) }}">

@@ -92,11 +92,12 @@ class EditNapbox extends Component
             'pon_id' => $this->pon_id,
         ]);
 
-        $this->dispatch('show-toast', [
-            'message' => 'Napbox updated successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Napbox updated successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('napboxes');
     }
 
     public function render()

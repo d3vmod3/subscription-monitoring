@@ -56,6 +56,10 @@
                 <span class="text-blue-600 font-bold">₱{{ number_format($totalPaid, 2) }}</span>
             </div>
             <div class="flex justify-between">
+                <span class="font-semibold">Remaining Balance:</span>
+                <span class="text-blue-600 font-bold">₱{{ number_format($expectedTotal - $totalPaid - $totalDiscount , 2) }}</span>
+            </div>
+            <div class="flex justify-between">
                 <span class="font-semibold">Total Discounts:</span>
                 <span class="text-blue-600 font-bold">₱{{ number_format($totalDiscount, 2) }}</span>
             </div>

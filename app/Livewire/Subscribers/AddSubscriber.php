@@ -35,7 +35,7 @@ class AddSubscriber extends Component
         'email' => 'nullable|email|unique:subscribers,email',
         'birthdate' => 'nullable|date',
         'gender' => 'nullable|in:male,female,other',
-        'contact_number' => 'required|string|max:20',
+        'contact_number' => 'nullable|string|max:20',
         'address_line_1' => 'nullable|string|max:255',
         'address_line_2' => 'nullable|string|max:255',
         'region_id' => 'nullable|integer',
@@ -101,12 +101,12 @@ class AddSubscriber extends Component
         // Redirect to edit page (if using hashids, inject or instantiate $hashids)
         $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
         $hash = $hashids->encode($subscriber->id);
-        $this->dispatch('show-toast', [
-            'message' => 'Subscriber added successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
-        return redirect()->route('subscribers.edit', ['hash' => $hash]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Subscriber added successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('subscribers');
     }
 
     public function render()

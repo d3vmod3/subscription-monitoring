@@ -78,11 +78,12 @@ class EditExpense extends Component
         ]);
 
         
-        $this->dispatch('show-toast', [
-            'message' => 'Expenses Updated successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Expenses Updated successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('expenses');
     }
 
     public function render()

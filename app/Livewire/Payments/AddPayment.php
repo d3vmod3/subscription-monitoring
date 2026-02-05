@@ -140,7 +140,7 @@ class AddPayment extends Component
 
         // $this->expected_amount = max($expected - $alreadyPaid, 0);
         $remaining = max($expected - $alreadyPaid, 0);
-        $this->expected_amount = $remaining + (fmod($remaining, 1) !== 0 ? 1 : 0);
+        $this->expected_amount = (int) ceil($remaining);
     }
 
 

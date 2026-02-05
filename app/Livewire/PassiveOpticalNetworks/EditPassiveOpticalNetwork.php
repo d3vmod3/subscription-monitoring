@@ -66,11 +66,12 @@ class EditPassiveOpticalNetwork extends Component
             'sector_id' => $this->sector_id,
         ]);
 
-        $this->dispatch('show-toast', [
-            'message' => 'PON updated successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'PON updated successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('pons');
     }
 
     public function render()

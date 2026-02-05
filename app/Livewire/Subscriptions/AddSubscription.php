@@ -117,6 +117,7 @@ class AddSubscription extends Component
             'type' => 'success',
             'duration' => 3000,
         ]);
+        return redirect()->route('subscriptions');
     }
 
     public function render()

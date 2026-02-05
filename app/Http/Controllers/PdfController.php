@@ -26,9 +26,11 @@ class PdfController extends Controller
         $from =  $monthCoverFrom ? : null;
         $to = $monthCoverTo ? : null;
         $billingSummary = $this->generateBillingSummary($subscription, $from, $to);
+        $totals = $this->calculateTotalsForPdf($subscription, $from, $to);
 
         $pdf = Pdf::loadView('components.pdf.billing', [
             'billingSummary' => $billingSummary,
+            'totals' => $totals,
             'full_name' => $subscription->subscriber->full_name,
             'Mikrotik_Name' => $subscription->mikrotik_name,
             'Month_Cover_From' => $from ? Carbon::parse($from . '-01')->startOfMonth() : Carbon::parse($subscription->start_date)->startOfMonth(),
@@ -74,7 +76,8 @@ class PdfController extends Controller
                 ->sum('discount_amount');
 
             $remaining = max($expectedAmount - $paidAmount, 0);
-            $status = $remaining - $discountAmount == 0 ? 'Paid' : 'Not Paid';
+            $totalCovered = $paidAmount + $discountAmount;
+            $status = ($totalCovered >= $expectedAmount) ? 'Paid' : 'Not Paid';
 
             $billingSummary->push([
                 'month' => $billingStart->format('F Y'),
@@ -90,5 +93,74 @@ class PdfController extends Controller
 
         return $billingSummary;
     }
+
+    protected function calculateTotalsForPdf(Subscription $subscription, $from = null, $to = null)
+    {
+        if (!$subscription || !$subscription->plan) {
+            return [
+                'expected_total' => 0,
+                'total_paid' => 0,
+                'remaining_balance' => 0,
+                'total_discount' => 0,
+            ];
+        }
+
+        $planPrice = abs((float) ($subscription->plan->price ?? 0));
+
+        $billingStart = $from
+            ? Carbon::parse($from . '-01')->startOfMonth()
+            : Carbon::parse($subscription->start_date)->startOfMonth();
+
+        $billingEnd = $to
+            ? Carbon::parse($to . '-01')->endOfMonth()
+            : now()->endOfMonth();
+
+        $totalExpected = 0;
+        $totalPaid = 0;
+        $totalDiscount = 0;
+
+        $subscriptionStart = Carbon::parse($subscription->start_date);
+
+        while ($billingStart->lessThanOrEqualTo($billingEnd)) {
+            $monthCover = $billingStart->format('Y-m');
+
+            // First month prorate
+            if (
+                $billingStart->format('Y-m') === $subscriptionStart->format('Y-m') &&
+                $subscriptionStart->day !== 1
+            ) {
+                $daysInMonth = $billingStart->daysInMonth;
+                $daysUsed = $daysInMonth - $subscriptionStart->day + 1;
+
+                $expectedAmount = ceil(($planPrice / $daysInMonth) * $daysUsed);
+            } else {
+                $expectedAmount = $planPrice;
+            }
+
+            $paidAmount = $subscription->payments
+                ->where('month_year_cover', $monthCover)
+                ->where('status', 'Approved')
+                ->sum('paid_amount');
+
+            $discountAmount = $subscription->payments
+                ->where('month_year_cover', $monthCover)
+                ->where('status', 'Approved')
+                ->sum('discount_amount');
+
+            $totalExpected += $expectedAmount;
+            $totalPaid += $paidAmount;
+            $totalDiscount += $discountAmount;
+
+            $billingStart->addMonth();
+        }
+
+        return [
+            'expected_total' => $totalExpected,
+            'total_paid' => $totalPaid,
+            'remaining_balance' => max($totalExpected - $totalPaid - $totalDiscount, 0),
+            'total_discount' => $totalDiscount,
+        ];
+    }
+
 
 }

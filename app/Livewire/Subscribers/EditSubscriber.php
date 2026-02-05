@@ -91,17 +91,17 @@ class EditSubscriber extends Component
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'nullable|required|email|max:255',
-            'birthdate' => 'nullable|required|date',
+            'email' => 'nullable|email|unique:subscribers,email',
+            'birthdate' => 'nullable|date',
             'gender' => 'nullable|in:male,female,other',
-            'contact_number' => 'required|string|max:20',
+            'contact_number' => 'nullable|string|max:20',
             'address_line_1' => 'nullable|string|max:255',
             'address_line_2' => 'nullable|string|max:255',
             'region_id' => 'nullable|integer',
             'province_id' => 'nullable|integer',
             'municipality_id' => 'nullable|integer',
             'barangay_id' => 'nullable|integer',
-            'is_active' => 'required|boolean',
+            'is_active' => 'boolean',
         ]);
         // dd($this->barangay_id);
         $this->subscriber->update([
@@ -121,11 +121,12 @@ class EditSubscriber extends Component
             'is_active' => $this->is_active,
         ]);
 
-        $this->dispatch('show-toast', [
-            'message' => 'Subscriber updated successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Subscriber updated successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('subscribers');
     }
 
     public function render()

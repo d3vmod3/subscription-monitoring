@@ -209,7 +209,10 @@ class Payments extends Component
     public function getPayments()
     {
         $query = Payment::query()
-            ->with(['subscription.subscriber','subscription.plan','paymentMethod']);
+            ->with(['subscription.subscriber','subscription.plan','paymentMethod'])
+            ->when(auth()->user()->hasRole('user'), function ($query) {
+                $query->where('payments.user_id', auth()->id());
+            });
 
         // 🔍 Search logic (unchanged)
         if ($this->search) {

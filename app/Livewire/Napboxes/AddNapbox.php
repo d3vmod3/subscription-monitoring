@@ -69,11 +69,12 @@ class AddNapbox extends Component
 
         $this->dispatch('napbox-added');
 
-        $this->dispatch('show-toast', [
-            'message' => 'Napbox added successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Napbox added successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('napboxes');
     }
 
     public function render()

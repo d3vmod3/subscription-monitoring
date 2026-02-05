@@ -46,13 +46,13 @@
         </div>
 
         {{-- Birthdate & Gender --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+        <div>
+            <!-- <div>
                 <label class="block font-medium text-zinc-900 dark:text-zinc-100">Birthdate</label>
                 <input type="date" wire:model.live="birthdate"
                     class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-zinc-400 focus:outline-none">
-                @error('birthdate') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-            </div>
+                error('birthdate') <span class="text-red-600 text-sm">$message</span> enderror
+            </div> -->
             <div>
                 <label class="block font-medium text-zinc-900 dark:text-zinc-100">Gender</label>
                 <select wire:model.live="gender"
@@ -80,7 +80,7 @@
                 class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-zinc-400 focus:outline-none"></textarea>
             @error('address_line_1') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
-        <div>
+        <div hidden>
             <label class="block font-medium text-zinc-900 dark:text-zinc-100">Address Line 2</label>
             <textarea wire:model.live="address_line_2"
                 class="w-full border rounded px-3 py-2 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-zinc-400 focus:outline-none"></textarea>
@@ -88,7 +88,7 @@
         </div>
 
         {{-- Location Dropdowns --}}
-        <div class="mt-4">
+        <div class="mt-4" hidden>
             <livewire:address.location-dropdowns 
                 :region-id="$region_id"
                 :province-id="$province_id"

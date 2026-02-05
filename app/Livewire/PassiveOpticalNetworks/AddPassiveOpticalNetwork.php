@@ -52,11 +52,12 @@ class AddPassiveOpticalNetwork extends Component
 
         $this->dispatch('pon-added');
 
-        $this->dispatch('show-toast', [
-            'message' => 'PON added successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'PON added successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('pons');
     }
 
     public function render()

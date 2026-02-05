@@ -78,7 +78,7 @@ class EditSubscription extends Component
     protected function rules()
     {
         return [
-            'subscriber_id' => 'require:exists:subscribers,id',
+            'subscriber_id' => 'required:exists:subscribers,id',
             'plan_id' => 'required|exists:plans,id',
             'splitter_id' => 'nullable|exists:splitters,id',
             'mikrotik_name' => 'required|string|max:255|unique:subscriptions,mikrotik_name,' . $this->subscription->id,
@@ -141,11 +141,12 @@ class EditSubscription extends Component
             'status' => $this->status,
         ]);
 
-        $this->dispatch('show-toast', [
-            'message' => 'Subscription updated successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Subscription updated successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('subscriptions');
     }
 
     public function render()

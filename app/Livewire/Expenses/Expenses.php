@@ -61,6 +61,12 @@ class Expenses extends Component
 
         $expenses = Expense::query()
             ->with('user')
+
+            // 🔒 If role is "user", only show their own expenses
+            ->when(auth()->user()->hasRole('user'), function ($query) {
+                $query->where('expenses.user_id', auth()->id());
+            })
+
             ->when($this->search, function ($query) {
                 $search = $this->search;
                 $query->where(function ($q) use ($search) {
@@ -68,7 +74,7 @@ class Expenses extends Component
                     ->orWhere('description', 'like', "%$search%")
                     ->orWhereHas('user', function ($uq) use ($search) {
                         $uq->whereRaw(
-                            "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", 
+                            "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?",
                             ["%$search%"]
                         );
                     })
@@ -76,9 +82,15 @@ class Expenses extends Component
                     ->orWhereDate('date_issued', 'like', "%$search%");
                 });
             })
+
             ->leftJoin('users', 'users.id', '=', 'expenses.user_id') // only for sorting
             ->select('expenses.*')
-            ->orderBy($this->sortField == 'user.first_name' ? 'users.first_name' : $this->sortField, $this->sortDirection)
+            ->orderBy(
+                $this->sortField === 'user.first_name'
+                    ? 'users.first_name'
+                    : $this->sortField,
+                $this->sortDirection
+            )
             ->paginate($this->per_page);
 
         // Encode IDs for frontend routes

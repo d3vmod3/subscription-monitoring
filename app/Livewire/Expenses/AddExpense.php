@@ -60,11 +60,12 @@ class AddExpense extends Component
         // Reset fields after submission
         $this->reset(['title', 'description', 'date_time_issued', 'amount', 'payment_method_id', 'reference_number']);
         $this->dispatch('expense-added');
-        $this->dispatch('show-toast', [
-            'message' => 'Payment added successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Payment added successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('expenses');
     }
 
     public function render()

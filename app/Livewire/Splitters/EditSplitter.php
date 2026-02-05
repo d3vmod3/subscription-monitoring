@@ -80,11 +80,12 @@ class EditSplitter extends Component
             'napbox_id' => $this->napbox_id,
         ]);
 
-        $this->dispatch('show-toast', [
-            'message' => 'Splitter updated successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Splitter updated successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('splitters');
     }
 
     public function render()

@@ -63,11 +63,12 @@ class AddSplitter extends Component
         $this->dispatch('splitter-added');
 
         // Show toast notification
-        $this->dispatch('show-toast', [
-            'message' => 'Splitter added successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
+        // $this->dispatch('show-toast', [
+        //     'message' => 'Splitter added successfully!',
+        //     'type' => 'success',
+        //     'duration' => 3000,
+        // ]);
+        return redirect()->route('splitters');
     }
 
     public function render()
