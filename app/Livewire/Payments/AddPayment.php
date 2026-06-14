@@ -3,11 +3,9 @@
 namespace App\Livewire\Payments;
 
 use Livewire\Component;
-use App\Models\Payment;
 use App\Models\Subscription;
 use App\Models\PaymentMethod;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
+use App\Services\PaymentService;
 use Auth;
 
 class AddPayment extends Component
@@ -31,6 +29,13 @@ class AddPayment extends Component
     public $selectedSubscription;
     public $expected_amount = 0; // computed based on month_year_cover
 
+    protected PaymentService $paymentService;
+
+    public function boot(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     protected $rules = [
         'subscription_id' => 'required|exists:subscriptions,id',
         'payment_method_id' => 'required|exists:payment_methods,id',
@@ -47,6 +52,8 @@ class AddPayment extends Component
         'subscription_id.required' => 'The Mikrotik Name field is required.',
         'payment_method_id.required' => 'The Payment Method field is required.',
     ];
+
+    
 
     public function mount()
     {
@@ -109,94 +116,70 @@ class AddPayment extends Component
     {
         $this->expected_amount = 0;
 
-        if (!$this->selectedSubscription || !$this->selectedSubscription->plan || !$this->month_year_cover) {
+        if (! $this->selectedSubscription || ! $this->month_year_cover) {
             return;
         }
 
-        $planPrice = $this->selectedSubscription->plan->price;
-        $subscriptionStart = Carbon::parse($this->selectedSubscription->start_date);
-        $coverMonthStart = Carbon::parse($this->month_year_cover . '-01');
-
-        // First month scenario: subscription starts mid-month
-        if ($subscriptionStart->format('Y-m') == $coverMonthStart->format('Y-m')) {
-            // Set the end date as the 7th of next month
-            $coverMonthEnd = $coverMonthStart->copy()->addMonth()->day(1);
-
-            // Calculate active days from start date until 7th of next month
-            $activeDays = $subscriptionStart->diffInDays($coverMonthEnd);
-
-            $totalDaysInMonth = $coverMonthStart->daysInMonth;
-            $expected = round(($planPrice / $totalDaysInMonth) * $activeDays);
-
-        } else {
-            $expected = $planPrice;
-        }
-
-        // Subtract any payments already made for this subscription in this month
-        $alreadyPaid = Payment::where('subscription_id', $this->selectedSubscription->id)
-            ->where('month_year_cover', $this->month_year_cover)
-            ->where('status', 'Approved')
-            ->sum('paid_amount');
-
-        // $this->expected_amount = max($expected - $alreadyPaid, 0);
-        $remaining = max($expected - $alreadyPaid, 0);
-        $this->expected_amount = (int) ceil($remaining);
+        $this->expected_amount = $this->paymentService->computeExpectedAmount(
+            $this->selectedSubscription,
+            $this->month_year_cover
+        );
     }
 
 
 
     public function save()
     {
-        if (!Auth::user()->can('add payments'))
-        {
+        if (!Auth::user()->can('add payments')) {
             abort(403, 'Unauthorized action');
         }
+
         $this->validate();
-        
-        if ($this->paid_amount > $this->expected_amount) {
-            $this->addError('paid_amount', "The amount ₱{$this->paid_amount} exceeds the expected ₱{$this->expected_amount} for {$this->month_year_cover}.");
-            return;
+
+        try {
+            $this->paymentService->create([
+                'subscription_id' => $this->subscription_id,
+                'payment_method_id' => $this->payment_method_id,
+                'reference_number' => $this->reference_number,
+                'paid_at' => $this->paid_at,
+                'month_year_cover' => $this->month_year_cover,
+                'paid_amount' => $this->paid_amount,
+                'is_discounted' => $this->is_discounted,
+                'discount_amount' => $this->discount_amount,
+                'remarks' => $this->remarks,
+                'account_name' => $this->account_name,
+                'expected_amount' => $this->expected_amount,
+            ], Auth::user());
+
+            $this->reset([
+                'subscription_id',
+                'subscriber_search',
+                'subscriber_results',
+                'selectedSubscription',
+                'payment_method_id',
+                'reference_number',
+                'paid_at',
+                'paid_amount',
+                'is_discounted',
+                'discount_amount',
+                'remarks',
+                'account_name',
+                'expected_amount',
+            ]);
+
+            $this->paid_at = now()->format('Y-m-d');
+
+            $this->dispatch('payment-added');
+
+            $this->dispatch('show-toast', [
+                'message' => 'Payment added successfully!',
+                'type' => 'success',
+                'duration' => 3000,
+            ]);
+
+        } catch (\Exception $e) {
+            $this->addError('payment', $e->getMessage());
         }
-
-        Payment::create([
-            'subscription_id' => $this->subscription_id,
-            'user_id' => Auth::user()->id,
-            'payment_method_id' => $this->payment_method_id,
-            'reference_number' => $this->reference_number,
-            'paid_at' => $this->paid_at,
-            'month_year_cover' => $this->month_year_cover,
-            'paid_amount' => $this->paid_amount,
-            'status' => 'Pending',
-            'is_discounted' => $this->is_discounted,
-            'discount_amount' => $this->discount_amount,
-            'remarks' => $this->remarks,
-            'account_name' => $this->account_name,
-        ]);
-
-        $this->reset([
-            'subscription_id',
-            'subscriber_search',
-            'subscriber_results',
-            'selectedSubscription',
-            'payment_method_id',
-            'reference_number',
-            'paid_at',
-            'paid_amount',
-            'is_discounted',
-            'discount_amount',
-            'remarks',
-            'account_name',
-            'expected_amount',
-        ]);
-
-        $this->subscriber_results=[];
-
-        $this->dispatch('payment-added');
-        $this->dispatch('show-toast', [
-            'message' => 'Payment added successfully!',
-            'type' => 'success',
-            'duration' => 3000,
-        ]);
     }
 
     public function render()

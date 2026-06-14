@@ -14,7 +14,7 @@
             <ul class="absolute z-10 bg-gray-100 dark:bg-gray-700 border rounded mt-1 w-full shadow-md max-h-48 overflow-y-auto">
                 @foreach($subscriber_results as $sub)
                     <li 
-                        wire:click="selectSubscriber({{ $sub->id }}, '{{ $sub->mikrotik_name }}')" 
+                        wire:click="selectSubscriber({{ $sub->id }}, @js($sub->mikrotik_name))"
                         class="px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
                     >
                         {{ $sub->display_name }}
