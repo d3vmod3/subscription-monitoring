@@ -23,3 +23,9 @@ yarn-error.log
 /.vscode
 /.zed
 /actions-runner/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
