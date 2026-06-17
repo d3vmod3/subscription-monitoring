@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hashids\Hashids;
 
 class Subscriber extends Model
 {
@@ -44,5 +45,11 @@ class Subscriber extends Model
     public function subscriptions()
     {
         return $this->hasMany(\App\Models\Subscription::class);
+    }
+
+    public function getHashedId()
+    {
+        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        return $hashids->encode($this->id);
     }
 }

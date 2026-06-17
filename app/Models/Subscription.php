@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Hashids\Hashids;
 
 class Subscription extends Model
 {
@@ -69,5 +70,11 @@ class Subscription extends Model
             ->whereMonth('paid_at', $month)
             ->whereYear('paid_at', $year)
             ->exists();
+    }
+
+    public function getHashedId()
+    {
+        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        return $hashids->encode($this->id);
     }
 }
