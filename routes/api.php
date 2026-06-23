@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Subsribers
     Route::get('/subscribers', [SubscribersController::class, 'list']);
     Route::get('/mikrotik-names/{id}', [SubscribersController::class, 'mikrotikNames']);
+    Route::get('/subscription-totals/{id}', [SubscribersController::class, 'subscriptionTotals']);
     // Payments
     Route::post('/payments', [PaymentController::class, 'store']);
 });

@@ -58,4 +58,45 @@ class SubscribersController extends Controller
         return response()->json($microticNames);
         
     }
+
+
+    public function subscriptionTotals($id, Request $request)
+    {
+        $hashids = new Hashids(
+            config('hashids.salt'),
+            config('hashids.min_length')
+        );
+
+        $decoded = $hashids->decode($id);
+
+        if (empty($decoded)) {
+            return response()->json(['message' => 'Invalid Subscriber'], 404);
+        }
+
+        $subscriberId = $decoded[0];
+
+        $mikrotikName = $request->input('mikrotik_name');
+
+        $subscriber = Subscriber::with([
+            'subscriptions.plan',
+            'subscriptions.payments'
+        ])->findOrFail($subscriberId);
+
+        // filter subscriptions by mikrotik_name if provided
+        if ($mikrotikName) {
+            $subscriber->setRelation(
+                'subscriptions',
+                $subscriber->subscriptions->where('mikrotik_name', $mikrotikName)
+            );
+        }
+
+        $service = new \App\Services\BillingService();
+
+        $from = $request->input('from'); // 2026-01
+        $to = $request->input('to');     // 2026-06
+
+        return response()->json(
+            $service->calculate($subscriber,$from,$to)
+        );
+    }
 }
