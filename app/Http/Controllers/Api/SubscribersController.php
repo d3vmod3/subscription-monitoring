@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Subscriber;
 use App\Models\Subscription;
 use Hashids\Hashids;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class SubscribersController extends Controller
 {
@@ -99,4 +101,42 @@ class SubscribersController extends Controller
             $service->calculate($subscriber,$from,$to)
         );
     }
+
+    public function generatePdf($subscriptionHash, $from, $to)
+    {
+        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        $decoded = $hashids->decode($subscriptionHash);
+
+        if (empty($decoded)) {
+            abort(404, 'Invalid subscription.');
+        }
+
+        $subscription = Subscription::with('plan', 'payments', 'subscriber')
+            ->findOrFail($decoded[0]);
+
+        $service = app(\App\Services\BillingService::class);
+
+        $result = $service->generate($subscription, $from, $to);
+
+        $pdf = Pdf::loadView('components.pdf.billing', [
+            'billingSummary' => $result['billing_summary'],
+            'totals' => $result['totals'],
+
+            'full_name' => $subscription->subscriber->full_name,
+            'Mikrotik_Name' => $subscription->mikrotik_name,
+
+            'Month_Cover_From' => $from
+                ? Carbon::parse($from . '-01')->startOfMonth()
+                : Carbon::parse($subscription->start_date)->startOfMonth(),
+
+            'Month_Cover_To' => $to
+                ? Carbon::parse($to . '-01')->endOfMonth()
+                : now()->endOfMonth(),
+        ]);
+
+        $filename = preg_replace('/[^\pL\pN\s\-\_]/u', '', $subscription->subscriber->full_name) ?: 'billing';
+
+        return $pdf->stream($filename . '.pdf');
+    }
+
 }
