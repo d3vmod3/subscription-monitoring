@@ -18,9 +18,16 @@ class PaymentMethod extends Model
         'description',
         'is_active',
     ];
+    
 
     // Optional: cast fields
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function getHashedId()
+    {
+        $hashids = new Hashids(config('hashids.salt'), config('hashids.min_length'));
+        return $hashids->encode($this->id);
+    }
 }

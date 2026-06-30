@@ -48,7 +48,7 @@ class SubscribersController extends Controller
         ->get()
         ->map(function ($subscription) {
             return [
-                'id' => $subscription->getHashedId(),
+                'subscription_id' => $subscription->getHashedId(),
                 'subscriber_id' => $subscription->subscriber_id,
                 'mikrotik_name' => $subscription->mikrotik_name,
                 'start_date' => $subscription->start_date,

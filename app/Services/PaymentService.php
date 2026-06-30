@@ -9,15 +9,11 @@ use Carbon\Carbon;
 
 class PaymentService
 {
-    public function create(array $data, $user)
+    public function create(array $data, $user_id)
     {
-        if (! $user->can('add payments')) {
-            abort(403, 'Unauthorized action');
-        }
-
         return Payment::create([
             'subscription_id' => $data['subscription_id'],
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'payment_method_id' => $data['payment_method_id'],
             'reference_number' => $data['reference_number'] ?? null,
             'paid_at' => $data['paid_at'],

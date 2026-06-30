@@ -149,7 +149,7 @@ class AddPayment extends Component
                 'remarks' => $this->remarks,
                 'account_name' => $this->account_name,
                 'expected_amount' => $this->expected_amount,
-            ], Auth::user());
+            ], Auth::user()->id);
 
             $this->reset([
                 'subscription_id',
