@@ -12,7 +12,7 @@ class PaymentMethodService
     public function paymentMethodsList()
     {
         $hashids = new Hashids(
-            config('hashids.salt') . 'payment_method',
+            config('hashids.salt'),
             config('hashids.min_length')
         );
         $payment_methods = PaymentMethod::where('is_active',true)

@@ -64,14 +64,14 @@ class PaymentController extends Controller
                 config('hashids.salt'),
                 config('hashids.min_length')
             );
+
             $decoded = $hashids->decode($subscriptionHash);
             if (empty($decoded)) {
                 return response()->json([
-                    'message' => 'Invalid ID'
+                    'message' => 'Invalid ID: ' . $subscriptionHash
                 ], 404);
             }
             $subscription_id = $decoded[0];
-
             $decoded_payment_method_id = $hashids->decode($request->payment_method_id);
             if (empty($decoded_payment_method_id)) {
                 return response()->json([
@@ -93,7 +93,6 @@ class PaymentController extends Controller
                 'discount_amount' => $request->discount_amount,
                 'remarks' => $request->remarks,
                 'account_name' => $request->account_name,
-                'expected_amount' => $request->expected_amount,
             ], $request->user()->id );
             
 
