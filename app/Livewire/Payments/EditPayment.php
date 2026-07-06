@@ -147,7 +147,7 @@ class EditPayment extends Component
         }
         $this->payment->delete();
         $this->dispatch('show-toast', [
-            'message' => 'Expenses deleted successfully!',
+            'message' => 'Payment deleted successfully!',
             'type' => 'success',
             'duration' => 3000,
         ]);
