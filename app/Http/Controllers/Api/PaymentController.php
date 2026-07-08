@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Hashids\Hashids;
 use Illuminate\Validation\Rule;
 use App\Services\PaymentService;
+use App\Services\AttachmentService;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -46,7 +48,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function store($subscriptionHash, Request $request)
+    public function store(string $subscriptionHash, Request $request)
     {
         // $validated = $request->validate([
         //     'payment_method_id' => 'required|exists:payment_methods,id',
@@ -57,52 +59,73 @@ class PaymentController extends Controller
         //     'is_discounted' => 'boolean',
         //     'discount_amount' => 'nullable|numeric|required_if:is_discounted,true',
         //     'account_name' => 'required|string|max:255',
+        //     'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
         // ]);
 
-        // try {
-            $hashids = new Hashids(
-                config('hashids.salt'),
-                config('hashids.min_length')
-            );
+        $hashids = new Hashids(
+            config('hashids.salt'),
+            config('hashids.min_length')
+        );
 
-            $decoded = $hashids->decode($subscriptionHash);
-            if (empty($decoded)) {
-                return response()->json([
-                    'message' => 'Invalid ID: ' . $subscriptionHash
-                ], 404);
+        $decodedSubscription = $hashids->decode($subscriptionHash);
+
+        if (empty($decodedSubscription)) {
+            return response()->json([
+                'message' => 'Invalid subscription.'
+            ], 404);
+        }
+
+        $decodedPaymentMethod = $hashids->decode($request->payment_method_id);
+
+        if (empty($decodedPaymentMethod)) {
+            return response()->json([
+                'message' => 'Payment method not found.'
+            ], 404);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $paymentService = new PaymentService();
+
+            $payment = $paymentService->create([
+                'subscription_id'   => $decodedSubscription[0],
+                'payment_method_id' => $decodedPaymentMethod[0],
+                'reference_number'  => $request->reference_number,
+                'paid_at'           => $request->paid_at,
+                'month_year_cover'  => $request->month_year_cover,
+                'paid_amount'       => $request->paid_amount,
+                'is_discounted'     => $request->boolean('is_discounted'),
+                'discount_amount'   => $request->discount_amount ?? 0,
+                'remarks'           => $request->remarks,
+                'account_name'      => $request->account_name,
+            ], $request->user()->id);
+
+            if ($request->hasFile('receipt')) {
+                $attachmentService = new AttachmentService();
+
+                $attachmentService->upload(
+                    $request->file('receipt'),
+                    'payment',
+                    $payment->id,
+                    'receipts'
+                );
             }
-            $subscription_id = $decoded[0];
-            $decoded_payment_method_id = $hashids->decode($request->payment_method_id);
-            if (empty($decoded_payment_method_id)) {
-                return response()->json([
-                    'message' => 'Payment method not found'
-                ], 404);
-            }
 
-            $payment_method_id = $decoded_payment_method_id[0];
+            DB::commit();
 
-            $service = new PaymentService();
-            $service->create([
-                'subscription_id' => $subscription_id,
-                'payment_method_id' => $payment_method_id,
-                'reference_number' => $request->reference_number,
-                'paid_at' => $request->paid_at,
-                'month_year_cover' => $request->month_year_cover,
-                'paid_amount' => $request->paid_amount,
-                'is_discounted' => $request->is_discounted,
-                'discount_amount' => $request->discount_amount,
-                'remarks' => $request->remarks,
-                'account_name' => $request->account_name,
-            ], $request->user()->id );
-            
+            return response()->json([
+                'message' => 'Payment added successfully.',
+                'data' => $payment,
+            ], 201);
 
-            return response()->json(
-                ['message' => 'payment added successfully'],
-            );
-        // } catch (\Exception $e) {
-        //     return response()->json(
-        //         ['message' => $e->getMessage()]
-        //     );
-        // }
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Failed to create payment.',
+                'error' => $e->getMessage(), // Remove this in production
+            ], 500);
+        }
     }
 }

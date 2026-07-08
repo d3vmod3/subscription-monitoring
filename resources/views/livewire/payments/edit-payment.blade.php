@@ -1,9 +1,49 @@
 <div class="max-w-3xl mx-auto p-6 bg-white dark:bg-zinc-700 rounded-lg shadow space-y-6 dark:shadow-lg">
     @if($payment)
-    {{-- 🧾 Title --}}
-    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
-        Update Payment Status
-    </h2>
+    <div class="flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row 2xl:flex-row items-start justify-between">
+        {{-- 🧾 Title --}}
+        <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100 text-center sm:text-left">
+            Update Payment Status
+        </h2>
+        {{-- Image --}}
+        <div>
+            @if($payment->attachment)
+                <flux:modal.trigger name="receipt-preview">
+                    <flux:button>Preview Receipt</flux:button>
+                </flux:modal.trigger>
+
+                <flux:modal name="receipt-preview" class="max-w-4xl">
+
+                    <div class="space-y-4">
+
+                        <flux:heading size="lg">
+                            Payment Receipt
+                        </flux:heading>
+
+                        <div class="flex justify-center">
+                            <img
+                                src="{{ $receiptUrl }}"
+                                alt="Receipt"
+                                class="max-h-[75vh] rounded-lg border"
+                            >
+                        </div>
+
+                        <div class="flex justify-end">
+                            <flux:modal.close>
+                                <flux:button variant="ghost">
+                                    Close
+                                </flux:button>
+                            </flux:modal.close>
+                        </div>
+
+                    </div>
+
+                </flux:modal>
+            @else
+                <p class="text-gray-500">No receipt uploaded.</p>
+            @endif
+        </div>
+    </div>
     
     {{-- 👤 Subscriber --}}
     <div>
@@ -73,6 +113,7 @@
 
         
     </div>
+    
     {{-- Paid at  }}
     <div>
         <label class="block font-medium text-zinc-900 dark:text-zinc-100">Paid At</label>

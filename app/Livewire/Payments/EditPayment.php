@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Payment;
 use Hashids\Hashids;
 use Carbon\Carbon;
+use App\Services\AttachmentService;
 use Auth;
 
 class EditPayment extends Component
@@ -21,6 +22,7 @@ class EditPayment extends Component
     public $discount_amount;
     public $remarks;
     public $account_name;
+    public $receiptUrl;
 
     public $selectedSubscription; // to show plan info
     public $total_paid = 0;
@@ -64,6 +66,12 @@ class EditPayment extends Component
         // Compute total paid for the same subscription and month_year_cover
         $this->computeTotalPaid();
         $this->computeExpectedAmount();
+
+        if ($this->payment->attachment) {
+            $this->receiptUrl = app(AttachmentService::class)
+                ->temporaryUrl($this->payment->attachment);
+        }
+        // dd($this->payment->attachment);
     }
 
     public function computeTotalPaid()

@@ -43,4 +43,10 @@ class Payment extends Model
     {
         return $this->belongsTo(PaymentMethod::class);
     }
+
+    public function attachment()
+    {
+        return $this->hasOne(Attachment::class, 'module_id')
+            ->where('module', 'payment');
+    }
 }
