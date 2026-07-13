@@ -14,7 +14,7 @@ class SubscribersController extends Controller
 {
     public function list()
     {
-        $subscribers = Subscriber::all()->map(function ($subscriber) {
+        $subscribers = Subscriber::orderBy('first_name','asc')->get()->map(function ($subscriber) {
             return [
                 'id' => $subscriber->getHashedId(),
                 'first_name' => $subscriber->first_name,
