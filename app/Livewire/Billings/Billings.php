@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Subscriber;
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Number;
 use Hashids\Hashids;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Auth;
@@ -26,6 +27,7 @@ class Billings extends Component
     public $month_cover_from;
     public $month_cover_to;
     public $billingSummary = [];
+    public $totalRemaining=0.00;
 
 
     public function mount($hash)
@@ -158,6 +160,7 @@ class Billings extends Component
             $totalExpected += $expectedAmount;
             $totalPaid += $paidAmount;
             $totalDiscount += $discountAmount;
+            
 
             $billingStart->addMonth();
         }
@@ -165,6 +168,7 @@ class Billings extends Component
         $this->expectedTotal = $totalExpected;
         $this->totalPaid = $totalPaid;
         $this->totalDiscount = $totalDiscount;
+        $this->totalRemaining = Number::format(max(0,$totalExpected - $totalPaid - $totalDiscount) , precision:2);
     }
 
     protected function generateBillingSummary($from, $to)

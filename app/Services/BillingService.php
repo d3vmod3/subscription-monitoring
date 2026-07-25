@@ -100,14 +100,14 @@ class BillingService
                 'total_paid' => $totalPaid,
                 'total_discount' => $totalDiscount,
 
-                'balance' => $totalExpected - $totalPaid - $totalDiscount,
+                'balance' => max(0,$totalExpected - $totalPaid - $totalDiscount),
             ];
         }
 
         return [
             'year' => now()->year,
             'subscriptions' => $result,
-
+            'balance' => collect($result)->sum('balance'),
             'grand_total_expected' => collect($result)->sum('expected_total'),
             'grand_total_paid' => collect($result)->sum('total_paid'),
             'grand_total_discount' => collect($result)->sum('total_discount'),
@@ -179,7 +179,11 @@ class BillingService
                 ->where('status', 'Approved')
                 ->sum('discount_amount');
 
-            $remaining = max($expectedAmount - $paidAmount - $discountAmount, 0);
+            $remaining = 0;
+            if($discountAmount == $remaining)
+            {
+                $remaining = 0.00;
+            }
             $status = ($paidAmount + $discountAmount >= $expectedAmount)
                 ? 'Paid'
                 : 'Not Paid';
@@ -213,7 +217,7 @@ class BillingService
                 'expected_total' => $totalExpected,
                 'total_paid' => $totalPaid,
                 'total_discount' => $totalDiscount,
-                'remaining_balance' => max($totalExpected - $totalPaid - $totalDiscount, 0),
+                'remaining_balance' => max(0, $totalExpected - $totalPaid - $totalDiscount),
             ],
         ];
     }
